@@ -2,552 +2,3853 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>LCA Project Command Center</title>
 <style>
-  :root {
-    --bg: #0f172a;
-    --surface: #1e293b;
-    --surface2: #334155;
-    --border: #475569;
-    --text: #f1f5f9;
-    --muted: #94a3b8;
-    --blue: #3b82f6;
-    --amber: #f59e0b;
-    --purple: #a855f7;
-    --green: #22c55e;
-    --red: #ef4444;
-    --blue-dim: rgba(59,130,246,0.15);
-    --amber-dim: rgba(245,158,11,0.15);
-    --purple-dim: rgba(168,85,247,0.15);
-    --green-dim: rgba(34,197,94,0.15);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
-
-  /* HEADER */
-  .header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
-  .header-title { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
-  .header-title span { color: var(--blue); }
-  .header-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
-  .badge-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid var(--blue); }
-  .badge-green { background: var(--green-dim); color: var(--green); border: 1px solid var(--green); }
-  .badge-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid var(--amber); }
-  .badge-muted { background: var(--surface2); color: var(--muted); }
-  .snap-date { font-size: 11px; color: var(--muted); }
-
-  /* SUMMARY BAR */
-  .summary-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 12px 20px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
-  .stat-pill { display: flex; align-items: center; gap: 6px; }
-  .stat-pill .dot { width: 10px; height: 10px; border-radius: 50%; }
-  .stat-pill .label { font-size: 12px; color: var(--muted); }
-  .stat-pill .val { font-size: 13px; font-weight: 600; }
-  .total-badge { font-size: 14px; font-weight: 700; color: var(--text); margin-left: auto; }
-
-  /* LAYOUT */
-  .layout { display: flex; height: calc(100vh - 110px); overflow: hidden; }
-  .sidebar { width: 320px; min-width: 260px; overflow-y: auto; border-right: 1px solid var(--border); background: var(--surface); }
-  .main { flex: 1; overflow-y: auto; padding: 16px; background: var(--bg); }
-
-  /* PROJECT CARDS */
-  .proj-card { padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background 0.1s; }
-  .proj-card:hover { background: var(--surface2); }
-  .proj-card.active { background: var(--blue-dim); border-left: 3px solid var(--blue); }
-  .proj-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
-  .proj-name { font-size: 13px; font-weight: 600; }
-  .proj-pid { font-size: 10px; color: var(--muted); }
-  .proj-badges { display: flex; gap: 4px; align-items: center; }
-  .email-badge { font-size: 10px; padding: 1px 6px; border-radius: 10px; background: var(--blue-dim); color: var(--blue); font-weight: 600; }
-  .prior-badge { font-size: 10px; padding: 1px 6px; border-radius: 10px; background: var(--surface2); color: var(--muted); }
-
-  /* PIPELINE BAR */
-  .pipe-bar { display: flex; height: 8px; border-radius: 4px; overflow: hidden; margin-bottom: 6px; background: var(--surface2); }
-  .pipe-seg { height: 100%; transition: width 0.3s; }
-  .seg-setup { background: var(--blue); }
-  .seg-field { background: var(--amber); }
-  .seg-reporting { background: var(--purple); }
-  .seg-done { background: var(--green); }
-
-  /* UNIT CHIPS */
-  .unit-chips { display: flex; gap: 4px; flex-wrap: wrap; }
-  .chip { font-size: 10px; padding: 1px 7px; border-radius: 10px; font-weight: 500; }
-  .chip-setup { background: var(--blue-dim); color: var(--blue); }
-  .chip-field { background: var(--amber-dim); color: var(--amber); }
-  .chip-reporting { background: var(--purple-dim); color: var(--purple); }
-  .chip-done { background: var(--green-dim); color: var(--green); }
-  .pct-text { font-size: 10px; color: var(--muted); margin-left: auto; }
-
-  /* DETAIL VIEW */
-  .detail-header { margin-bottom: 16px; }
-  .detail-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-  .detail-sub { font-size: 13px; color: var(--muted); }
-  .stat-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px,1fr)); gap: 10px; margin-bottom: 20px; }
-  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
-  .stat-card .sc-val { font-size: 24px; font-weight: 700; }
-  .stat-card .sc-label { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .stat-card.sc-setup { border-top: 3px solid var(--blue); }
-  .stat-card.sc-field { border-top: 3px solid var(--amber); }
-  .stat-card.sc-reporting { border-top: 3px solid var(--purple); }
-  .stat-card.sc-done { border-top: 3px solid var(--green); }
-
-  /* EMAIL THREADS */
-  .section-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; margin-top: 20px; }
-  .thread-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 12px; margin-bottom: 8px; }
-  .thread-subj { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
-  .thread-meta { font-size: 11px; color: var(--muted); margin-bottom: 6px; }
-  .thread-snip { font-size: 12px; color: #cbd5e1; line-height: 1.4; }
-  .no-threads { font-size: 13px; color: var(--muted); font-style: italic; padding: 10px 0; }
-
-  /* UNIT TABLE */
-  .unit-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 8px; }
-  .unit-table th { text-align: left; padding: 6px 10px; background: var(--surface2); color: var(--muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; position: sticky; top: 0; }
-  .unit-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); color: var(--text); }
-  .unit-table tr:hover td { background: var(--surface); }
-  .seg-pill { font-size: 10px; padding: 2px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
-
-  /* ACTION ITEMS */
-  .action-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-  .action-item { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px; }
-  .action-icon { font-size: 16px; flex-shrink: 0; }
-  .action-text { font-size: 13px; line-height: 1.4; }
-  .action-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .pri-hi { border-left: 3px solid var(--red); }
-  .pri-md { border-left: 3px solid var(--amber); }
-  .pri-lo { border-left: 3px solid var(--blue); }
-
-  /* GMAIL LOADING */
-  .gmail-loading { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--muted); }
-  .spinner { width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* OVERVIEW */
-  .overview-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 12px; }
-  .overview-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: border-color 0.15s; }
-  .overview-card:hover { border-color: var(--blue); }
-
-  /* TABS */
-  .tabs { display: flex; gap: 2px; margin-bottom: 16px; background: var(--surface); border-radius: 8px; padding: 3px; width: fit-content; }
-  .tab { padding: 6px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; color: var(--muted); transition: all 0.15s; }
-  .tab.active { background: var(--surface2); color: var(--text); }
-
-  .scrollable-table { max-height: 400px; overflow-y: auto; border-radius: 8px; border: 1px solid var(--border); }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0f1117;color:#e2e8f0;min-height:100vh}
+  .header{background:linear-gradient(135deg,#1e2533 0%,#16213e 100%);padding:16px 24px;display:flex;align-items:center;gap:16px;border-bottom:1px solid #2d3748}
+  .header h1{font-size:20px;font-weight:700;color:#fff}
+  .header .meta{font-size:12px;color:#718096;margin-left:auto;display:flex;gap:12px;align-items:center}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:600}
+  .badge-blue{background:#1e40af22;color:#60a5fa;border:1px solid #1e40af}
+  .badge-green{background:#06652222;color:#34d399;border:1px solid #065f46}
+  .badge-amber{background:#92400e22;color:#fbbf24;border:1px solid #92400e}
+  .badge-purple{background:#6b21a822;color:#c084fc;border:1px solid #6b21a8}
+  .badge-gray{background:#37415122;color:#9ca3af;border:1px solid #374151}
+  .badge-red{background:#7f1d1d22;color:#f87171;border:1px solid #7f1d1d}
+  .main{display:grid;grid-template-columns:1fr 320px;gap:0;height:calc(100vh - 58px)}
+  .left{padding:16px;overflow-y:auto}
+  .right{background:#1a1f2e;border-left:1px solid #2d3748;padding:16px;overflow-y:auto}
+  .section-title{font-size:13px;font-weight:600;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px}
+  .project-grid{display:grid;gap:10px}
+  .project-card{background:#1e2533;border:1px solid #2d3748;border-radius:10px;padding:14px;cursor:pointer;transition:all .15s;position:relative}
+  .project-card:hover{border-color:#4a5568;background:#242b3d}
+  .project-card.active{border-color:#3b82f6;background:#1e2d47}
+  .project-card .top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .project-card .pid{font-size:11px;color:#6b7280;font-family:monospace}
+  .project-card .name{font-size:14px;font-weight:600;color:#e2e8f0}
+  .project-card .email-badge{margin-left:auto;background:#7c3aed22;color:#c084fc;border:1px solid #7c3aed44;padding:2px 6px;border-radius:8px;font-size:11px}
+  .pipeline{display:flex;height:6px;border-radius:3px;overflow:hidden;gap:1px;margin-bottom:8px}
+  .seg-setup{background:#3b82f6}
+  .seg-field{background:#f59e0b}
+  .seg-reporting{background:#8b5cf6}
+  .seg-done{background:#10b981}
+  .seg-empty{background:#2d3748}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11px;padding:2px 7px;border-radius:10px;font-weight:500}
+  .chip-setup{background:#1e40af22;color:#93c5fd}
+  .chip-field{background:#92400e22;color:#fcd34d}
+  .chip-reporting{background:#5b21b622;color:#c084fc}
+  .chip-done{background:#06520022;color:#6ee7b7}
+  .pct{font-size:11px;color:#6b7280;margin-left:auto}
+  .prior-badge{position:absolute;top:10px;right:10px;background:#374151;color:#9ca3af;font-size:10px;padding:2px 6px;border-radius:6px}
+  
+  /* Detail panel */
+  .detail{display:none}
+  .detail.open{display:block}
+  .detail-header{margin-bottom:12px}
+  .detail-name{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px}
+  .detail-pid{font-size:12px;color:#6b7280;font-family:monospace}
+  .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+  .stat-card{background:#242b3d;border-radius:8px;padding:10px}
+  .stat-card .val{font-size:22px;font-weight:700;color:#fff}
+  .stat-card .lbl{font-size:11px;color:#6b7280;margin-top:2px}
+  .email-list{margin-bottom:14px}
+  .email-item{background:#242b3d;border-radius:6px;padding:8px 10px;margin-bottom:6px;border-left:3px solid #7c3aed}
+  .email-item .subj{font-size:12px;font-weight:600;color:#e2e8f0;margin-bottom:3px}
+  .email-item .snip{font-size:11px;color:#9ca3af;line-height:1.4}
+  .email-item .meta{font-size:10px;color:#6b7280;margin-top:3px}
+  .unit-table{width:100%;border-collapse:collapse;font-size:11px}
+  .unit-table th{color:#9ca3af;text-align:left;padding:4px 6px;border-bottom:1px solid #2d3748;font-weight:500}
+  .unit-table td{padding:3px 6px;border-bottom:1px solid #1a1f2e;color:#d1d5db}
+  .unit-table tr:hover td{background:#242b3d}
+  .seg-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+  .dot-setup{background:#3b82f6}
+  .dot-field{background:#f59e0b}
+  .dot-reporting{background:#8b5cf6}
+  .dot-done{background:#10b981}
+  
+  /* Actions panel */
+  .action-item{display:flex;gap:8px;padding:8px;background:#1e2533;border-radius:6px;margin-bottom:6px;border-left:3px solid transparent}
+  .action-item.hi{border-color:#ef4444}
+  .action-item.md{border-color:#f59e0b}
+  .action-item.lo{border-color:#374151}
+  .action-item .icon{font-size:14px;flex-shrink:0}
+  .action-item .text{font-size:12px;color:#d1d5db;line-height:1.4}
+  .action-item .src{font-size:10px;color:#6b7280;margin-top:2px}
+  
+  .overview-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px}
+  .ov-stat{background:#1e2533;border-radius:8px;padding:10px;text-align:center}
+  .ov-stat .val{font-size:20px;font-weight:700}
+  .ov-stat .lbl{font-size:10px;color:#6b7280;margin-top:2px}
+  .ov-stat.blue .val{color:#60a5fa}
+  .ov-stat.amber .val{color:#fbbf24}
+  .ov-stat.purple .val{color:#c084fc}
+  .ov-stat.green .val{color:#34d399}
+  
+  .tabs{display:flex;gap:2px;margin-bottom:12px;background:#0f1117;border-radius:8px;padding:3px}
+  .tab{flex:1;text-align:center;padding:6px;font-size:12px;border-radius:6px;cursor:pointer;color:#6b7280;transition:all .15s}
+  .tab.active{background:#1e2533;color:#e2e8f0;font-weight:600}
+  
+  .gmail-live-section{margin-bottom:12px;padding:10px;background:#1a1f2e;border-radius:8px;border:1px solid #2d3748}
+  .gmail-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:#34d399;background:#06520022;border:1px solid #065f4644;padding:3px 8px;border-radius:10px;cursor:pointer}
+  .gmail-pill.static{color:#6b7280;background:#37415122;border-color:#37415144;cursor:default}
 </style>
 </head>
 <body>
-
 <div class="header">
   <div>
-    <div class="header-title">LCA <span>Project Command Center</span></div>
-    <div class="snap-date">Live xlsx data · Snapshot May 06, 2026</div>
+    <div style="font-size:11px;color:#6b7280;margin-bottom:2px">LCA GROUP</div>
+    <h1>Project Command Center</h1>
   </div>
-  <div class="header-meta">
-    <span class="badge badge-blue">13 Active Projects</span>
-    <span class="badge badge-green">7% Overall Done</span>
-    <span class="badge badge-muted" id="gmail-status">
-      Static snapshot · May 06, 2026
-    </span>
+  <div class="meta">
+    <span class="badge badge-green">● Live xlsx data</span>
+    <span style="color:#4a5568">Refreshed May 07, 2026 10:08 UTC</span>
   </div>
 </div>
 
-<div class="summary-bar">
-  <div class="stat-pill"><div class="dot" style="background:var(--blue)"></div><span class="label">Setup</span><span class="val" id="tot-setup">—</span></div>
-  <div class="stat-pill"><div class="dot" style="background:var(--amber)"></div><span class="label">Field</span><span class="val" id="tot-field">—</span></div>
-  <div class="stat-pill"><div class="dot" style="background:var(--purple)"></div><span class="label">Reporting</span><span class="val" id="tot-reporting">—</span></div>
-  <div class="stat-pill"><div class="dot" style="background:var(--green)"></div><span class="label">Done</span><span class="val" id="tot-done">—</span></div>
-  <div class="total-badge">534 Total Units</div>
-</div>
-
-<div class="layout">
-  <div class="sidebar" id="sidebar"><!-- project cards injected --></div>
-  <div class="main" id="main"><!-- detail view injected --></div>
+<div class="main">
+  <div class="left">
+    <div id="overview-panel">
+      <div class="overview-stats" id="overview-stats"></div>
+      <div class="section-title">Active Projects</div>
+      <div class="project-grid" id="project-grid"></div>
+    </div>
+    <div class="detail" id="detail-panel">
+      <div style="margin-bottom:12px">
+        <button onclick="closeDetail()" style="background:#1e2533;border:1px solid #2d3748;color:#9ca3af;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:12px">← Back</button>
+      </div>
+      <div class="detail-header">
+        <div class="detail-name" id="d-name"></div>
+        <div class="detail-pid" id="d-pid"></div>
+      </div>
+      <div class="stat-grid" id="d-stats"></div>
+      <div class="tabs">
+        <div class="tab active" onclick="setTab('units',this)">Units</div>
+        <div class="tab" onclick="setTab('emails',this)">Emails</div>
+      </div>
+      <div id="tab-units"></div>
+      <div id="tab-emails" style="display:none"></div>
+    </div>
+  </div>
+  
+  <div class="right">
+    <div class="gmail-live-section" id="gmail-live-section">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <div class="section-title" style="margin:0">Gmail Signals</div>
+        <span id="gmail-pill static" class="gmail-pill static" >Static snapshot · 2026-05-07</span>
+      </div>
+      <div id="gmail-live-content" style="font-size:11px;color:#6b7280">Click to fetch latest emails</div>
+    </div>
+    
+    <div class="section-title">Action Items</div>
+    <div id="action-items-list"></div>
+  </div>
 </div>
 
 <script>
-const SNAP_DATE = "May 06, 2026";
 const PROJECTS = [
   {
-    pid: "24-101",
-    name: "Fort Carson",
-    total: 70,
-    pct: 0,
-    emails: 8,
-    priorYear: true,
-    acmLabel: "ACM",
-    seg: {"Setup": 24, "Field": 6, "Reporting": 40, "Done": 0},
-    units: [{"addr": "5620 Remagen Road", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5621 Cherbourg Circle", "status": "Lab Submitted", "seg": "Field", "m": ""}, {"addr": "5622 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5623 Cherbourg Circle", "status": "Lab Submitted", "seg": "Field", "m": ""}, {"addr": "5624 Cherbourg Circle", "status": "Lab Submitted", "seg": "Field", "m": ""}, {"addr": "5625 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5626 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5627 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5628 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5629 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5630 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5631 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": ""}, {"addr": "5632 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5633 Cherbourg Circle", "status": "", "seg": "Setup", "m": ""}, {"addr": "5634 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5635 Cherbourg Circle", "status": "", "seg": "Setup", "m": ""}, {"addr": "5636 Cherbourg Circle", "status": "", "seg": "Setup", "m": ""}, {"addr": "5637 Cherbourg Circle", "status": "", "seg": "Setup", "m": ""}, {"addr": "5638 Remagen Road", "status": "Report Reviewed", "seg": "Reporting", "m": ""}, {"addr": "5639 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5640 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5641 Remagen Road", "status": "Report Created", "seg": "Reporting", "m": ""}, {"addr": "5642 Cherbourg Circle", "status": "", "seg": "Setup", "m": ""}, {"addr": "5643 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5645 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5646 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5647 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5648 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": ""}, {"addr": "5649 Cherbourg Circle", "status": "", "seg": "Setup", "m": ""}, {"addr": "5650 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5651 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5652 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5653 Normandy Road", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5654 Cherbourg Circle", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5655 Cherbourg Circle", "status": "", "seg": "Setup", "m": ""}, {"addr": "5656 Remagen Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5657 Normandy Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5658 Normandy Road", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5659 Normandy Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5660 Normandy Road", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5702 Remagen Road", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5703 Remagen Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5704 Remagen Road", "status": "Inspection Complete", "seg": "Field", "m": ""}, {"addr": "5705 Remagen Road", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5706 Remagen Road", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5707 Remagen Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5708 Remagen Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5709 Remagen Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5710 Remagen Road", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5711 Remagen Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5712 Remagen Road", "status": "Report Reviewed", "seg": "Reporting", "m": ""}, {"addr": "5713 Remagen Road", "status": "Report Reviewed", "seg": "Reporting", "m": ""}, {"addr": "5714 Remagen Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5715 Normandy Road", "status": "", "seg": "Setup", "m": ""}, {"addr": "5716 Harr Avenue", "status": "", "seg": "Setup", "m": ""}, {"addr": "5717 Harr Avenue", "status": "", "seg": "Setup", "m": ""}, {"addr": "5718 Harr Avenue", "status": "", "seg": "Setup", "m": ""}, {"addr": "5719 Harr Avenue", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5720 Harr Avenue", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5721 Harr Avenue", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5722 Harr Avenue", "status": "", "seg": "Setup", "m": ""}, {"addr": "5723 Harr Avenue", "status": "", "seg": "Setup", "m": ""}, {"addr": "5724 Harr Avenue", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5725 Harr Avenue", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5726 Harr Avenue", "status": "", "seg": "Setup", "m": ""}, {"addr": "5727 Harr Avenue", "status": "Report Reviewed", "seg": "Reporting", "m": "\u2713"}, {"addr": "5728 Harr Avenue", "status": "", "seg": "Setup", "m": ""}, {"addr": "5729 Harr Avenue", "status": "Report Reviewed", "seg": "Reporting", "m": ""}, {"addr": "5730 Harr Avenue", "status": "Inspection Complete", "seg": "Field", "m": ""}, {"addr": "5703 Harr Avenue", "status": "Inspection Complete", "seg": "Field", "m": ""}],
-    threads: [{"subject": "RES 745128-1 - 24-101, 5730 Harr Avenue, Fort Carson, CO", "snippet": "Scott Minyard Eurofins Built Environment Testing East, LLC 730 SE Maynard Rd Cary, NC 27511 Direct: (919) 481-1413 cei-r", "sender": "built@reports.et.eurofinsus.com", "date": "2026-05-02T19:51:36Z"}, {"subject": "RES 745133-1 - 24-101, 5704 Remagen Road, Fort Carson, CO", "snippet": "Kathryn Wescott Eurofins Built Environment Testing East, LLC 730 SE Maynard Rd Cary, NC 27511 Direct: (919) 481-1413 cei", "sender": "built@reports.et.eurofinsus.com", "date": "2026-05-02T18:10:05Z"}, {"subject": "RES 745135-1 - 24-101, 5703 Harr Ave, Fort Carson, CO", "snippet": "Kathryn Wescott Eurofins Built Environment Testing East, LLC 730 SE Maynard Rd Cary, NC 27511 Direct: (919) 481-1413 cei", "sender": "built@reports.et.eurofinsus.com", "date": "2026-05-02T18:07:10Z"}, {"subject": "Employee Residency Status", "snippet": "All, Fort Carson&#39;s Garrison Commander is requesting that we provide the information contained within the attached sp", "sender": "rcovert@balfourbeattyus.com", "date": "2026-04-30T21:24:14Z"}, {"subject": "RE: Fort Carson - Soil Summary", "snippet": "Thank you, Scott! Elliott Johnson Project Engineer | Balfour Beatty C: 251-923-9402 E: ELJohnson@balfourbeattyus.com | w", "sender": "ElJohnson@balfourbeattyus.com", "date": "2026-03-27T19:20:03Z"}]
+    "id": "26-001",
+    "name": "New London",
+    "total": 48,
+    "pct": 12,
+    "segs": {
+      "Setup": 1,
+      "Field": 35,
+      "Reporting": 6,
+      "Done": 6
+    },
+    "emailCount": 7,
+    "units": [
+      {
+        "a": "102 Georgia Street",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "104 Dewey Avenue",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "118 Georgia Street",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "15 Sycamore Lane",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "21 Day Street",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "258 Ohio Avenue",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "26 HIghland Avenue (clearance)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "28 Driftwood Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "3 Cole Street",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "37 Driftwood Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "45 Raintree Circle",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "48 Ibis Lane",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "60 Ibis Lane",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "60 Ibis Lane (clearance)",
+        "s": "PO Received / Issued",
+        "g": "Setup",
+        "m": ""
+      },
+      {
+        "a": "63 Pelican Drive",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "70 Hawthorn Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "73 Michigan Drive",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "82 Mallard Drive",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "9 Hickory Drive",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "31 Edison Drive, Polaris Park, Groton CT",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "15 Day Street, Groton, CT",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "24 Locust Street, Groton, CT",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "281 Osprey Drive, Groton, CT",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "21 Raintree Circle, Groton, CT",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "9 Cole Street, Groton, CT",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "JBWS NEW LONDON",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS NEW LONDON",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Carlisle Barracks Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Picatinny Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "West Point (USMA)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [
+      {
+        "subject": "Revised Mitchell Summary of Samples to be Taken",
+        "snippet": "Revised Mitchell Summary",
+        "sender": "justin@lcagrp.com",
+        "date": "2026-05-06",
+        "id": "19dfea174a281ef5"
+      },
+      {
+        "subject": "RE: New London - Information for Thursday",
+        "snippet": "Scott, FYI \u2013 the occupants at 20 Crane Road did not allow our inspector to damage any building materials.",
+        "sender": "steve@bigeastlabs.com",
+        "date": "2026-05-06",
+        "id": "19dfdb0f61b9d7ec"
+      },
+      {
+        "subject": "Mitchell Manor - Breakdown by Building",
+        "snippet": "Please see the first version of the table I promised.",
+        "sender": "justin@lcagrp.com",
+        "date": "2026-05-05",
+        "id": "19dfa0c3d0806df4"
+      },
+      {
+        "subject": "RE: New London - Thursday",
+        "snippet": "Thanks, Scott! Including my team.",
+        "sender": "MArias@bbcgrp.com",
+        "date": "2026-05-05",
+        "id": "19df9cb2cff36d71"
+      },
+      {
+        "subject": "RE: New London - Next Week",
+        "snippet": "Thursday May 7 is available.",
+        "sender": "steve@bigeastlabs.com",
+        "date": "2026-04-30",
+        "id": "19ddfa3422353cc3"
+      },
+      {
+        "subject": "New London - Invoice for 21 Raintree Circle",
+        "snippet": "Drew, Please find the attached invoice for 21 Raintree Circle.",
+        "sender": "scott@lcagrp.com",
+        "date": "2026-04-30",
+        "id": "19ddeb947da4d4f3"
+      },
+      {
+        "subject": "New London - Report for 9 Cole Street",
+        "snippet": "Nick, Please find the attached report for 9 Cole Street.",
+        "sender": "scott@lcagrp.com",
+        "date": "2026-05-06",
+        "id": "19ddeabb8e3653d6"
+      }
+    ],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-001",
-    name: "New London",
-    total: 48,
-    pct: 12,
-    emails: 7,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 32, "Field": 4, "Reporting": 6, "Done": 6},
-    units: [{"addr": "102 Georgia Street", "status": "Report Sent", "seg": "Reporting"}, {"addr": "104 Dewey Avenue", "status": "Report Sent", "seg": "Reporting"}, {"addr": "118 Georgia Street", "status": "", "seg": "Setup"}, {"addr": "15 Sycamore Lane", "status": "", "seg": "Setup"}, {"addr": "21 Day Street", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "258 Ohio Avenue", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "26 HIghland Avenue (clearance)", "status": "", "seg": "Setup"}, {"addr": "28 Driftwood Circle", "status": "", "seg": "Setup"}, {"addr": "3 Cole Street", "status": "Report Created", "seg": "Reporting"}, {"addr": "37 Driftwood Circle", "status": "", "seg": "Setup"}, {"addr": "45 Raintree Circle", "status": "Report Sent", "seg": "Reporting"}, {"addr": "48 Ibis Lane", "status": "Report Sent", "seg": "Reporting"}, {"addr": "60 Ibis Lane", "status": "Lab Submitted", "seg": "Field"}, {"addr": "60 Ibis Lane (clearance)", "status": "PO Received / Issued", "seg": "Setup"}, {"addr": "63 Pelican Drive", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "70 Hawthorn Road", "status": "", "seg": "Setup"}, {"addr": "73 Michigan Drive", "status": "Report Sent", "seg": "Reporting"}, {"addr": "82 Mallard Drive", "status": "", "seg": "Setup"}, {"addr": "9 Hickory Drive", "status": "", "seg": "Setup"}, {"addr": "31 Edison Drive, Polaris Park, Groton CT", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "15 Day Street, Groton, CT", "status": "Lab Submitted", "seg": "Field"}, {"addr": "24 Locust Street, Groton, CT", "status": "Lab Submitted", "seg": "Field"}, {"addr": "281 Osprey Drive, Groton, CT", "status": "Lab Submitted", "seg": "Field"}, {"addr": "21 Raintree Circle, Groton, CT", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "9 Cole Street, Groton, CT", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "451 Fletcher Road, Carlisle, PA 17013", "status": "", "seg": "Setup"}, {"addr": "117A Farley Avenue, Dover, NJ 07801", "status": "", "seg": "Setup"}, {"addr": "126 Washington Road, West Point, NY 10996", "status": "", "seg": "Setup"}],
-    threads: [{"subject": "RE: New London - Thursday", "snippet": "Thanks, Scott! Including my team, just in case. @McMicken, Thomas@Hagerty, Drew@Perez, Nick@Metzermacher, Michael Manuel", "sender": "MArias@bbcgrp.com", "date": "2026-05-05T20:18:47Z"}, {"subject": "RE: [EXTERNAL] New London - Next Week", "snippet": "Thursday May 7 is available. Steve DiNapoli, LEP Big East Environmental, LLC 57 Chestnut Street, Unit 10 Norwalk, CT 068", "sender": "steve@bigeastlabs.com", "date": "2026-04-30T18:25:06Z"}, {"subject": "RE: [EXTERNAL] Re: [EXTERNAL] New London - Next Week", "snippet": "Looks like it will be Jake from our staff. Steve DiNapoli, LEP Big East Environmental, LLC 57 Chestnut Street, Unit 10 N", "sender": "steve@bigeastlabs.com", "date": "2026-04-30T18:47:16Z"}, {"subject": "New London - Invoice for 21 Raintree Circle", "snippet": "Drew, Please find the attached invoice for 21 Raintree Circle. We appreciate the opportunity to provide consulting servi", "sender": "scott@lcagrp.com", "date": "2026-04-30T14:09:23Z"}, {"subject": "Automatic reply: New London - Report for 9 Cole Street", "snippet": "I am out of the office until 5/1. If this is an emergency, please call 445-232-9269. Thanks! This email may contain info", "sender": "MArias@bbcgrp.com", "date": "2026-04-30T13:55:38Z"}]
+    "id": "26-002",
+    "name": "Newport",
+    "total": 27,
+    "pct": 0,
+    "segs": {
+      "Setup": 0,
+      "Field": 27,
+      "Reporting": 0,
+      "Done": 0
+    },
+    "emailCount": 6,
+    "units": [
+      {
+        "a": "23 Reliance Row",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "24 Constellation Court",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "502 Read Street",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "8 Reliance Row",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS NEWPORT",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS NEWPORT",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Carlisle Barracks Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Picatinny Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "West Point (USMA)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [
+      {
+        "subject": "T86 Firehouse Newport",
+        "snippet": "Scott, We are going to need some ACM testing on the Firehouse in Newport (Fort Adams).",
+        "sender": "AFreitas@bbcgrp.com",
+        "date": "2026-04-17",
+        "id": "19d72c82a075d9f3"
+      },
+      {
+        "subject": "Newport - Proposals for Clearance Testing",
+        "snippet": "Mike, Please find the attached proposal for clearance testing at 147 Puritan Drive and 502 Read Street",
+        "sender": "scott@lcagrp.com",
+        "date": "2026-05-06",
+        "id": "19df97bbb4435834"
+      },
+      {
+        "subject": "Newport - Clearance Letter for 428 Ver Dartanian Street",
+        "snippet": "Mike, Please find the attached report for 428 Ver Dartanian Street.",
+        "sender": "scott@lcagrp.com",
+        "date": "2026-05-06",
+        "id": "19df96ddec2269b4"
+      },
+      {
+        "subject": "Quarters K radon test",
+        "snippet": "Good morning Scott, Would you have any availability to test for Radon at Quarters K upcoming?",
+        "sender": "MOlenik@bbcgrp.com",
+        "date": "2026-04-30",
+        "id": "19dded446475395a"
+      },
+      {
+        "subject": "Completed: Sign with Docusign: BBC-0075-FA-P2601 \u2013 Fort Adams - Environmental Testing - LCA.docx",
+        "snippet": "Fort Adams Environmental Testing - Newport contract signed.",
+        "sender": "dse@docusign.net",
+        "date": "2026-05-04",
+        "id": "19df323331537bd7"
+      },
+      {
+        "subject": "Newport - Clearance Letters for April 8, 2026",
+        "snippet": "Mike, Please find the attached reports for 8 Reliance Row and 23 Reliance Row.",
+        "sender": "scott@lcagrp.com",
+        "date": "2026-05-04",
+        "id": "19df3c8a52b0c08d"
+      }
+    ],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-002",
-    name: "Newport",
-    total: 27,
-    pct: 0,
-    emails: 10,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 25, "Field": 2, "Reporting": 0, "Done": 0},
-    units: [{"addr": "23 Reliance Row", "status": "Lab Submitted", "seg": "Field"}, {"addr": "24 Constellation Court", "status": "", "seg": "Setup"}, {"addr": "502 Read Street", "status": "", "seg": "Setup"}, {"addr": "8 Reliance Row", "status": "Lab Submitted", "seg": "Field"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "451 Fletcher Road, Carlisle, PA 17013", "status": "", "seg": "Setup"}, {"addr": "117A Farley Avenue, Dover, NJ 07801", "status": "", "seg": "Setup"}, {"addr": "126 Washington Road, West Point, NY 10996", "status": "", "seg": "Setup"}],
-    threads: [{"subject": "Newport - Proposals for Clearance Testing", "snippet": "Mike, Please find the attached proposal for clearance testing at the following properties: 147 Puritan Drive 502 Read St", "sender": "scott@lcagrp.com", "date": "2026-05-05T18:51:55Z"}, {"subject": "RE: Newport - Proposals for Clearance Testing", "snippet": "Good afternoon, The 147 Puritan proposal seems to have the incorrect address it currently states 502 Read Street. May yo", "sender": "RPrieto@bbcgrp.com", "date": "2026-05-05T19:27:46Z"}, {"subject": "Re: Newport - Proposals for Clearance Testing", "snippet": "Rogelio, Sorry for the typo. Please find the attached revised proposals. Best Regards, Scott Mori Gill Vice President mo", "sender": "scott@lcagrp.com", "date": "2026-05-05T19:32:31Z"}, {"subject": "RE: Newport - Proposals for Clearance Testing", "snippet": "No problem! Thank you! Rogelio A. Prieto Regional Environmental Specialist | Fort Bliss Family Homes T: 610-504-5516 | M", "sender": "accounting@lcagrp.com", "date": "2026-05-05T19:40:08Z"}, {"subject": "Newport - Clearance Letter for 428 Ver Dartanian Street", "snippet": "Mike, Please find the attached report for 428 Ver Dartanian Street. Don&#39;t hesitate to reach out if you need any furt", "sender": "scott@lcagrp.com", "date": "2026-05-05T18:36:42Z"}]
+    "id": "26-003",
+    "name": "Earle",
+    "total": 26,
+    "pct": 0,
+    "segs": {
+      "Setup": 0,
+      "Field": 26,
+      "Reporting": 0,
+      "Done": 0
+    },
+    "emailCount": 0,
+    "units": [
+      {
+        "a": "607A Blandy Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "612A Blandy Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "739AB Homicki Court",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS EARLE",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS EARLE",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Carlisle Barracks Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Picatinny Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "West Point (USMA)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-003",
-    name: "Earle",
-    total: 26,
-    pct: 0,
-    emails: 0,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 26, "Field": 0, "Reporting": 0, "Done": 0},
-    units: [{"addr": "607A Blandy Road", "status": "", "seg": "Setup"}, {"addr": "612A Blandy Road", "status": "", "seg": "Setup"}, {"addr": "739AB Homicki Court", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "451 Fletcher Road, Carlisle, PA 17013", "status": "", "seg": "Setup"}, {"addr": "117A Farley Avenue, Dover, NJ 07801", "status": "", "seg": "Setup"}, {"addr": "126 Washington Road, West Point, NY 10996", "status": "", "seg": "Setup"}],
-    threads: []
+    "id": "26-004",
+    "name": "Lakehurst",
+    "total": 29,
+    "pct": 0,
+    "segs": {
+      "Setup": 0,
+      "Field": 29,
+      "Reporting": 0,
+      "Done": 0
+    },
+    "emailCount": 0,
+    "units": [
+      {
+        "a": "1602 Pinehurst Estates",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "1904 Pinehurst Estates",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "202 Lansdowne Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "208 Lansdowne Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "316 Cecil Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "421 Stevens Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS LAKEHURST",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS LAKEHURST",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Carlisle Barracks Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Picatinny Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "West Point (USMA)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-004",
-    name: "Lakehurst",
-    total: 29,
-    pct: 0,
-    emails: 0,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 29, "Field": 0, "Reporting": 0, "Done": 0},
-    units: [{"addr": "1602 Pinehurst Estates", "status": "", "seg": "Setup"}, {"addr": "1904 Pinehurst Estates", "status": "", "seg": "Setup"}, {"addr": "202 Lansdowne Road", "status": "", "seg": "Setup"}, {"addr": "208 Lansdowne Road", "status": "", "seg": "Setup"}, {"addr": "316 Cecil Road", "status": "", "seg": "Setup"}, {"addr": "421 Stevens Circle", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "451 Fletcher Road, Carlisle, PA 17013", "status": "", "seg": "Setup"}, {"addr": "117A Farley Avenue, Dover, NJ 07801", "status": "", "seg": "Setup"}, {"addr": "126 Washington Road, West Point, NY 10996", "status": "", "seg": "Setup"}],
-    threads: []
+    "id": "26-005",
+    "name": "Charleston",
+    "total": 65,
+    "pct": 12,
+    "segs": {
+      "Setup": 0,
+      "Field": 40,
+      "Reporting": 17,
+      "Done": 8
+    },
+    "emailCount": 2,
+    "units": [
+      {
+        "a": "4 Jefferson Avenue, Goose Creek, SC",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "4 Jefferson Avenue, Goose Creek, SC",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "29 Lafayette Street, Goose Creek, SC",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "100 Sunbird Street, Goose Creek, SC",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "20 Lafayette Street, Goose Creek, SC",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "29 Lafayette Street, Goose Creek, SC",
+        "s": "Inspection Complete",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "329 Guadalcanal Street, Goose Creek, SC",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "334 Guadalcanal Street, Goose Creek, SC",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "345 Guadalcanal Street, Goose Creek, SC",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "400 Parnassus Road, Goose Creek, SC",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "406 Knutson Street, Goose Creek, SC",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "423 Knutson Street, Goose Creek, SC",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "46 Boone Avenue, Goose Creek, SC",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "643 Chanticleer Street, Goose Creek, SC",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "831 Petrel Street, Goose Creek, SC",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "6 Lafayette Street, Goose Creek, SC",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "7 Lafayette Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "25 Lafayette Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "56 Lafayette Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "73 Lafayette Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "84 Lafayette Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "85 Lafayette Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "87 Lafayette Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "93 Lafayette Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "105 Lafayette Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "12 Edison Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "3 Tecumseh Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "6 Tecumseh Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "14 Marshall Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "15 Marshall Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "2 Hamilton Street, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "33 Kittiwake Street, Goose Creek, SC",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "41 Kittiwake Street, Goose Creek, SC",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "45 Kittiwake Street, Goose Creek, SC",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "15 Coucal Street, Goose Creek, SC",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "17 Coucal Street, Goose Creek, SC",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "23 Lafayette Street, Goose Creek, SC",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "74 Lafayette Street, Goose Creek, SC",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "425 Knutson Street, Goose Creek, SC",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "445 Knutson, Goose Creek, SC",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "10 Keklico Street, Goose Creek, SC",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "142 Sunbird Street, Goose Creek, SC",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "JBWS Charleston",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS Charleston",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Carlisle Barracks Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Picatinny Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "West Point (USMA)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [
+      {
+        "subject": "Charleston - Invoice for 445 Knutson Street",
+        "snippet": "Jim, Please find the attached invoice and signed work order for 445 Knutson Street.",
+        "sender": "scott@lcagrp.com",
+        "date": "2026-05-05",
+        "id": "19df9bad2a2ccd4c"
+      },
+      {
+        "subject": "RE: Charleston - ACM/LBP Testing",
+        "snippet": "Good afternoon and thanks for reaching out. We can take care of this as needed.",
+        "sender": "kevinleedy@tridentenvironmental.com",
+        "date": "2026-04-30",
+        "id": "19ddf7cacd0eac42"
+      }
+    ],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-005",
-    name: "Charleston",
-    total: 65,
-    pct: 12,
-    emails: 5,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 23, "Field": 17, "Reporting": 17, "Done": 8},
-    units: [{"addr": "4 Jefferson Avenue, Goose Creek, SC", "status": "Report Created", "seg": "Reporting"}, {"addr": "4 Jefferson Avenue, Goose Creek, SC", "status": "Report Created", "seg": "Reporting"}, {"addr": "29 Lafayette Street, Goose Creek, SC", "status": "Report Sent", "seg": "Reporting"}, {"addr": "100 Sunbird Street, Goose Creek, SC", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "20 Lafayette Street, Goose Creek, SC", "status": "Report Sent", "seg": "Reporting"}, {"addr": "29 Lafayette Street, Goose Creek, SC", "status": "Inspection Complete", "seg": "Field"}, {"addr": "329 Guadalcanal Street, Goose Creek, SC", "status": "Report Sent", "seg": "Reporting"}, {"addr": "334 Guadalcanal Street, Goose Creek, SC", "status": "Report Sent", "seg": "Reporting"}, {"addr": "345 Guadalcanal Street, Goose Creek, SC", "status": "Report Sent", "seg": "Reporting"}, {"addr": "400 Parnassus Road, Goose Creek, SC", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "406 Knutson Street, Goose Creek, SC", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "423 Knutson Street, Goose Creek, SC", "status": "Report Sent", "seg": "Reporting"}, {"addr": "46 Boone Avenue, Goose Creek, SC", "status": "Report Sent", "seg": "Reporting"}, {"addr": "643 Chanticleer Street, Goose Creek, SC", "status": "Report Sent", "seg": "Reporting"}, {"addr": "831 Petrel Street, Goose Creek, SC", "status": "Report Sent", "seg": "Reporting"}, {"addr": "6 Lafayette Street, Goose Creek, SC", "status": "Report Created", "seg": "Reporting"}, {"addr": "7 Lafayette Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "25 Lafayette Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "56 Lafayette Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "73 Lafayette Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "84 Lafayette Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "85 Lafayette Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "87 Lafayette Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "93 Lafayette Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "105 Lafayette Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "12 Edison Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "3 Tecumseh Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "6 Tecumseh Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "14 Marshall Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "15 Marshall Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "2 Hamilton Street, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "33 Kittiwake Street, Goose Creek, SC", "status": "Report Created", "seg": "Reporting"}, {"addr": "41 Kittiwake Street, Goose Creek, SC", "status": "Report Created", "seg": "Reporting"}, {"addr": "45 Kittiwake Street, Goose Creek, SC", "status": "Report Created", "seg": "Reporting"}, {"addr": "15 Coucal Street, Goose Creek, SC", "status": "Report Created", "seg": "Reporting"}, {"addr": "17 Coucal Street, Goose Creek, SC", "status": "Report Created", "seg": "Reporting"}, {"addr": "23 Lafayette Street, Goose Creek, SC", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "74 Lafayette Street, Goose Creek, SC", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "425 Knutson Street, Goose Creek, SC", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "445 Knutson, Goose Creek, SC", "status": "Lab Submitted", "seg": "Field"}, {"addr": "10 Keklico Street, Goose Creek, SC", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "142 Sunbird Street, Goose Creek, SC", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "451 Fletcher Road, Carlisle, PA 17013", "status": "", "seg": "Setup"}, {"addr": "117A Farley Avenue, Dover, NJ 07801", "status": "", "seg": "Setup"}, {"addr": "126 Washington Road, West Point, NY 10996", "status": "", "seg": "Setup"}],
-    threads: [{"subject": "Charleston - Invoice for 445 Knutson Street", "snippet": "Jim, Please find the attached invoice and signed work order for 445 Knutson Street. We appreciate the opportunity to pro", "sender": "scott@lcagrp.com", "date": "2026-05-05T20:00:48Z"}, {"subject": "RE: Charleston - ACM/LBP Testing", "snippet": "Good afternoon and thanks for reaching out. We can take care of this as needed, but our lead inspector status remains th", "sender": "kevinleedy@tridentenvironmental.com", "date": "2026-04-30T17:41:51Z"}, {"subject": "ACM/LBP testing needed", "snippet": "Scott, We have a home that we need drywall tested in please. 607 Hickory Hall vacant home, Eastside, 4Bd, 2 story Jennif", "sender": "JPirkel@bbcgrp.com", "date": "2026-04-29T17:22:20Z"}, {"subject": "RE: ACM/LBP testing needed", "snippet": "Morning sir, At this time we would like testing of the drywall to clear the home if we need to do any additional work th", "sender": "JAPerry@bbcgrp.com", "date": "2026-04-30T15:01:01Z"}, {"subject": "RE: 445 Knutson - Testing for Roofing Material |WO 10406033", "snippet": "Sorry I gave Miss Tamangala the wrong info on the type of home, this home is a 2story home. Jim Perry Facility Director ", "sender": "accounting@lcagrp.com", "date": "2026-03-13T14:33:13Z"}]
+    "id": "26-006",
+    "name": "Fort Jackson",
+    "total": 23,
+    "pct": 0,
+    "segs": {
+      "Setup": 0,
+      "Field": 23,
+      "Reporting": 0,
+      "Done": 0
+    },
+    "emailCount": 0,
+    "units": [
+      {
+        "a": "JBWS FORT JACKSON",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS FORT JACKSON",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Carlisle Barracks Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Picatinny Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "West Point (USMA)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-006",
-    name: "Fort Jackson",
-    total: 23,
-    pct: 0,
-    emails: 0,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 23, "Field": 0, "Reporting": 0, "Done": 0},
-    units: [{"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "451 Fletcher Road, Carlisle, PA 17013", "status": "", "seg": "Setup"}, {"addr": "117A Farley Avenue, Dover, NJ 07801", "status": "", "seg": "Setup"}, {"addr": "126 Washington Road, West Point, NY 10996", "status": "", "seg": "Setup"}],
-    threads: []
+    "id": "26-007",
+    "name": "Fort Detrick",
+    "total": 23,
+    "pct": 0,
+    "segs": {
+      "Setup": 0,
+      "Field": 23,
+      "Reporting": 0,
+      "Done": 0
+    },
+    "emailCount": 0,
+    "units": [
+      {
+        "a": "JBWS FORT DETRICK",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS FORT DETRICK",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Carlisle Barracks Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Picatinny Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "West Point (USMA)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-007",
-    name: "Fort Detrick",
-    total: 23,
-    pct: 0,
-    emails: 0,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 23, "Field": 0, "Reporting": 0, "Done": 0},
-    units: [{"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "451 Fletcher Road, Carlisle, PA 17013", "status": "", "seg": "Setup"}, {"addr": "117A Farley Avenue, Dover, NJ 07801", "status": "", "seg": "Setup"}, {"addr": "126 Washington Road, West Point, NY 10996", "status": "", "seg": "Setup"}],
-    threads: []
+    "id": "26-009",
+    "name": "Fort Eustis",
+    "total": 32,
+    "pct": 6,
+    "segs": {
+      "Setup": 0,
+      "Field": 29,
+      "Reporting": 1,
+      "Done": 2
+    },
+    "emailCount": 3,
+    "units": [
+      {
+        "a": "2107A Irwin Street",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "2946A Summerall Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "2946B Summerall Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "304F Madison Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "307G 26th Street",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "330B Sternberg Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "331A Sternberg Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "327E 26th Street, Fort Eustis, VA",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "303B/C Madison Avenue, Fort Eustis, VA",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "JBWS FORT EUSTIS",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS FORT EUSTIS",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Carlisle Barracks Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Picatinny Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "West Point (USMA)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [
+      {
+        "subject": "310A",
+        "snippet": "Scott please send Lead testing Proposal for testing of drywall in kitchen behind cabinet. Work Order #10451985",
+        "sender": "LBecker@bbcgrp.com",
+        "date": "2026-05-06",
+        "id": "19dfe6f159aa75b1"
+      },
+      {
+        "subject": "Fort Eustis - Invoice for 303B/C Madison Avenue",
+        "snippet": "Laurie, Please find the attached invoice for 303B/C Madison Avenue.",
+        "sender": "scott@lcagrp.com",
+        "date": "2026-05-05",
+        "id": "19df9adf51d42fc2"
+      },
+      {
+        "subject": "Fort Eustis - Report for 303B/C Madison Avenue",
+        "snippet": "Laurie, Please find the attached report for 303B/C Madison Avenue.",
+        "sender": "scott@lcagrp.com",
+        "date": "2026-05-01",
+        "id": "19dded5b1d4d6507"
+      }
+    ],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-009",
-    name: "Fort Eustis",
-    total: 32,
-    pct: 6,
-    emails: 11,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 29, "Field": 0, "Reporting": 1, "Done": 2},
-    units: [{"addr": "2107A Irwin Street", "status": "", "seg": "Setup"}, {"addr": "2946A Summerall Circle", "status": "", "seg": "Setup"}, {"addr": "2946B Summerall Circle", "status": "", "seg": "Setup"}, {"addr": "304F Madison Avenue", "status": "", "seg": "Setup"}, {"addr": "307G 26th Street", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "330B Sternberg Avenue", "status": "", "seg": "Setup"}, {"addr": "331A Sternberg Avenue", "status": "", "seg": "Setup"}, {"addr": "327E 26th Street, Fort Eustis, VA", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "303B/C Madison Avenue, Fort Eustis, VA", "status": "Report Sent", "seg": "Reporting"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "451 Fletcher Road, Carlisle, PA 17013", "status": "", "seg": "Setup"}, {"addr": "117A Farley Avenue, Dover, NJ 07801", "status": "", "seg": "Setup"}, {"addr": "126 Washington Road, West Point, NY 10996", "status": "", "seg": "Setup"}],
-    threads: [{"subject": "Fort Eustis - Invoice for 303B/C Madison Avenue", "snippet": "Laurie, Please find the attached invoice for 303B/C Madison Avenue. We appreciate the opportunity to provide consulting ", "sender": "scott@lcagrp.com", "date": "2026-05-05T19:46:45Z"}, {"subject": "Fort Eustis - Report for 303B/C Madison Avenue", "snippet": "Laurie, Please find the attached report for 303B/C Madison Avenue. Don&#39;t hesitate to reach out if you need any furth", "sender": "scott@lcagrp.com", "date": "2026-04-30T14:40:19Z"}, {"subject": "Re: Fort Eustis - Report for 303B/C Madison Avenue", "snippet": "Scott, I can&#39;t find a proposal for this. Rob Gabriel rob@lcagrp.com accounting@lcagrp.com 220 Davidson Ave, Suite 20", "sender": "rob@lcagrp.com", "date": "2026-04-30T15:43:09Z"}, {"subject": "Re: Fort Eustis - Report for 303B/C Madison Avenue", "snippet": "Hi Laurie, Could you please provide a purchase order and work order number for 303B/C Madison Avenue so that I can proce", "sender": "rob@lcagrp.com", "date": "2026-04-30T15:47:36Z"}, {"subject": "RE: Fort Eustis - Report for 303B/C Madison Avenue", "snippet": "PO 1824104 Laurie Becker Maintenance Manager | Fort Eustis Family Homes T: 757-369-8344 | M: 267-473-2332 | E: lbecker@b", "sender": "LBecker@bbcgrp.com", "date": "2026-04-30T16:32:30Z"}]
+    "id": "26-010",
+    "name": "USMA Facilities",
+    "total": 25,
+    "pct": 4,
+    "segs": {
+      "Setup": 0,
+      "Field": 23,
+      "Reporting": 1,
+      "Done": 1
+    },
+    "emailCount": 0,
+    "units": [
+      {
+        "a": "61 Schofield Place",
+        "s": "Invoiced / Closed",
+        "g": "Done",
+        "m": ""
+      },
+      {
+        "a": "303C Wilby Place, West Point, NY 10996",
+        "s": "Report Sent",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "JBWS USMA",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "JBWS USMA",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Eustis Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Gordon Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Stewart Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Story Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Hunter AAF Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NAS Jacksonville Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "NS Mayport Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Tinker AFB Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Fort Jackson Family Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Carlisle Barracks Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Picatinny Homes",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "West Point (USMA)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-010",
-    name: "USMA \u2013 Facilities",
-    total: 25,
-    pct: 4,
-    emails: 0,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 23, "Field": 0, "Reporting": 1, "Done": 1},
-    units: [{"addr": "61 Schofield Place", "status": "Invoiced / Closed", "seg": "Done"}, {"addr": "303C Wilby Place, West Point, NY 10996", "status": "Report Sent", "seg": "Reporting"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "Building 742 Fletcher Street, Goose Creek, SC 29445", "status": "", "seg": "Setup"}, {"addr": "126 Madison Avenue, Fort Eustis, VA 23604", "status": "", "seg": "Setup"}, {"addr": "155 3rd Avenue, Fort Gordon, GA 30905", "status": "", "seg": "Setup"}, {"addr": "50 Austin Road, Building LW50, Fort Stewart, GA 31315", "status": "", "seg": "Setup"}, {"addr": "560A Cape Henry Road, Virginia Beach, VA 23451", "status": "", "seg": "Setup"}, {"addr": "1 Gannam Avenue, Savannah, GA 31405", "status": "", "seg": "Setup"}, {"addr": "960 Ballard Street, Jacksonville, FL 32212", "status": "", "seg": "Setup"}, {"addr": "289 Moale Avenue, Building 289, Jacksonville, FL 32227", "status": "", "seg": "Setup"}, {"addr": "5601 Twining Drive, Tinker AFB, OK 73145", "status": "", "seg": "Setup"}, {"addr": "520 Brown Avenue, Columbia, SC 29206", "status": "", "seg": "Setup"}, {"addr": "451 Fletcher Road, Carlisle, PA 17013", "status": "", "seg": "Setup"}, {"addr": "117A Farley Avenue, Dover, NJ 07801", "status": "", "seg": "Setup"}, {"addr": "126 Washington Road, West Point, NY 10996", "status": "", "seg": "Setup"}],
-    threads: []
+    "id": "26-011",
+    "name": "USMA Renovations",
+    "total": 18,
+    "pct": 0,
+    "segs": {
+      "Setup": 0,
+      "Field": 18,
+      "Reporting": 0,
+      "Done": 0
+    },
+    "emailCount": 0,
+    "units": [
+      {
+        "a": "68A Schofield Place",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "165E Grant Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "280B Bowman Loop",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "296A Grant Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "396B Grant Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "401 Merritt Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "405 Merritt Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "421A Bailey Loop",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "427 Biddle Loop",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "431 Biddle Loop",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "504E E Moore Loop",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "510E Tillman Place",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "$18,980.00",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "12 MFH properties (addresses TBD \u2014 to be provided by client)",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "2/27/2026",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Task 1: Limited Asbestos Survey | Task 2: Limited LBP Inspection | Task 3: Report of Findings | Task 4: RRP Paint Stabilization Work Plan",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "PLM (ELAP 198.1 & 198.6) + TEM (ELAP 198.4) \u2014 72-hr TAT | ~8 bulk samples/unit",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "Invoice upon submittal of final report per unit. Monthly invoices by 15th of month.",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [],
+    "isPrior": false,
+    "hasAcm": false,
+    "acmLabel": ""
   },
   {
-    pid: "26-011",
-    name: "USMA \u2013 Renovations",
-    total: 18,
-    pct: 0,
-    emails: 0,
-    priorYear: false,
-    acmLabel: "",
-    seg: {"Setup": 18, "Field": 0, "Reporting": 0, "Done": 0},
-    units: [{"addr": "68A Schofield Place", "status": "", "seg": "Setup"}, {"addr": "165E Grant Avenue", "status": "", "seg": "Setup"}, {"addr": "280B Bowman Loop", "status": "", "seg": "Setup"}, {"addr": "296A Grant Avenue", "status": "", "seg": "Setup"}, {"addr": "396B Grant Avenue", "status": "", "seg": "Setup"}, {"addr": "401 Merritt Road", "status": "", "seg": "Setup"}, {"addr": "405 Merritt Road", "status": "", "seg": "Setup"}, {"addr": "421A Bailey Loop", "status": "", "seg": "Setup"}, {"addr": "427 Biddle Loop", "status": "", "seg": "Setup"}, {"addr": "431 Biddle Loop", "status": "", "seg": "Setup"}, {"addr": "504E E Moore Loop", "status": "", "seg": "Setup"}, {"addr": "510E Tillman Place", "status": "", "seg": "Setup"}, {"addr": "$18,980.00", "status": "", "seg": "Setup"}, {"addr": "12 MFH properties (addresses TBD \u2014 to be provided by client)", "status": "", "seg": "Setup"}, {"addr": "2/27/2026", "status": "", "seg": "Setup"}, {"addr": "Task 1: Limited Asbestos Survey | Task 2: Limited LBP Inspection | Task 3: Report of Findings | Task 4: RRP Paint Stabilization Work Plan", "status": "", "seg": "Setup"}, {"addr": "PLM (ELAP 198.1 & 198.6) + TEM (ELAP 198.4) \u2014 72-hr TAT | ~8 bulk samples/unit", "status": "", "seg": "Setup"}, {"addr": "Invoice upon submittal of final report per unit. Monthly invoices by 15th of month.", "status": "", "seg": "Setup"}],
-    threads: []
+    "id": "26-024",
+    "name": "Minot AFB",
+    "total": 113,
+    "pct": 0,
+    "segs": {
+      "Setup": 0,
+      "Field": 113,
+      "Reporting": 0,
+      "Done": 0
+    },
+    "emailCount": 5,
+    "units": [
+      {
+        "a": "1-1 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "1-2 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "2-1 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "2-2 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "3-1 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "3-2 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "4-1 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "4-2 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "5-1 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "5-2 Polar Place",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "21-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "21-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "23-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "23-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "25-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "25-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "27-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "27-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "29-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "29-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "30-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "30-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "31-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "31-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "32-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "32-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "33-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "33-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "34-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "34-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "35-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "35-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "36-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "36-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "37-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "37-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "38-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "38-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "39-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "39-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "40-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "40-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "41-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "41-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "42-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "42-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "43-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "43-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "44-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "44-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "46-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "46-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "69-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "69-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "75-1 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "75-2 Dundee Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "106-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "106-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "107-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "107-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "108-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "108-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "109-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "109-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "110-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "110-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "111-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "111-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "112-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "112-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "113-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "113-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "114-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "114-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "116-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "116-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "118-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "118-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "120-1 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "120-2 H Street",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "123-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "123-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "125-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "125-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "127-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "127-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "129-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "Yes"
+      },
+      {
+        "a": "129-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "130-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "130-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "132-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "132-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "134-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "134-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "136-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "136-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "138-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "138-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "140-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "140-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "142-1 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "142-2 Winding Way",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "183-1 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "183-2 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "185-1 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "185-2 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "187-1 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "187-2 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "189-1 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "189-2 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "191-1 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "191-2 Delta Drive",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": "No"
+      },
+      {
+        "a": "112 units",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [
+      {
+        "subject": "Minot Reports",
+        "snippet": "Attached is the latest output from erblue.",
+        "sender": "josh@lcagrp.com",
+        "date": "2026-05-04",
+        "id": "19def33b6bff7da2"
+      },
+      {
+        "subject": "Minot - Report for Radon Testing",
+        "snippet": "David, Please find the attached report for radon testing at Minot AFB.",
+        "sender": "scott@lcagrp.com",
+        "date": "2026-05-04",
+        "id": "19de514e08a3bd65"
+      },
+      {
+        "subject": "Minot - erblue Report",
+        "snippet": "Please see attached. This was created by Josh in minutes using erBlue.",
+        "sender": "justin@lcagrp.com",
+        "date": "2026-05-01",
+        "id": "19de454d465ae9a4"
+      },
+      {
+        "subject": "Fwd: Minot Radon Testing",
+        "snippet": "Looks good.",
+        "sender": "justin@lcagrp.com",
+        "date": "2026-05-01",
+        "id": "19de3c4852ae9943"
+      },
+      {
+        "subject": "Draft Minot ACM Report - 40-1 & 40-2 Dundee",
+        "snippet": "Attached is the report draft for 40-1 & 40-2 Dundee Drive. Please review and revise.",
+        "sender": "justin@lcagrp.com",
+        "date": "2026-04-30",
+        "id": "19ddf618fb547315"
+      }
+    ],
+    "isPrior": false,
+    "hasAcm": true,
+    "acmLabel": "ACM"
   },
   {
-    pid: "26-024",
-    name: "Minot AFB",
-    total: 113,
-    pct: 0,
-    emails: 11,
-    priorYear: false,
-    acmLabel: "ACM",
-    seg: {"Setup": 0, "Field": 111, "Reporting": 2, "Done": 0},
-    units: [{"addr": "1-1 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "1-2 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "2-1 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "2-2 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "3-1 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "3-2 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "4-1 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "4-2 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "5-1 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "5-2 Polar Place", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "21-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "21-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "23-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "23-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "25-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "25-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "27-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "27-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "29-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "29-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "30-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "30-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "31-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "31-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "32-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "32-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "33-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "33-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "34-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "34-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "35-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "35-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "36-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "36-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "37-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "37-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "38-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "38-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "39-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "39-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "40-1 Dundee Drive", "status": "Report Created", "seg": "Reporting", "m": "No"}, {"addr": "40-2 Dundee Drive", "status": "Report Created", "seg": "Reporting", "m": "No"}, {"addr": "41-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "41-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "42-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "42-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "43-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "43-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "44-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "44-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "46-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "46-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "69-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "69-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "75-1 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "75-2 Dundee Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "106-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "106-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "107-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "107-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "108-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "108-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "109-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "109-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "110-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "110-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "111-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "111-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "112-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "112-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "113-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "113-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "114-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "114-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "116-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "116-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "118-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "118-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "120-1 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "120-2 H Street", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "123-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "123-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "125-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "125-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "127-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "127-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "129-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "Yes"}, {"addr": "129-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "130-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "130-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "132-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "132-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "134-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "134-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "136-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "136-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "138-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "138-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "140-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "140-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "142-1 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "142-2 Winding Way", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "183-1 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "183-2 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "185-1 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "185-2 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "187-1 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "187-2 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "189-1 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "189-2 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "191-1 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "191-2 Delta Drive", "status": "Lab Submitted", "seg": "Field", "m": "No"}, {"addr": "112 units", "status": "Lab Submitted", "seg": "Field", "m": ""}],
-    threads: [{"subject": "Minot Reports", "snippet": "Afternoon, Attached is the latest output from erblue. I was able to get it to run a single report, then a batch of 5 rep", "sender": "josh@lcagrp.com", "date": "2026-05-03T18:56:57Z"}, {"subject": "Re: Minot Reports", "snippet": "Nice. We will take a look. This is fantastic!!! Sent from my iPhone &gt; On May 3, 2026, at 2:57 PM, Josh Simpkins &lt;j", "sender": "justin@lcagrp.com", "date": "2026-05-03T19:11:37Z"}, {"subject": "Re: Minot Reports", "snippet": "I will defer to Scott. Really is based on the inspector&#39;s judgement. Mastics are generally lumped into Category I wh", "sender": "justin@lcagrp.com", "date": "2026-05-04T14:08:48Z"}, {"subject": "Automatic reply: Minot - Report for Radon Testing", "snippet": "Hello, I currently on a site visit and will get back to you as soon as possible. Thank you, Gene Price Regional Faciliti", "sender": "GPrice@bbcgrp.com", "date": "2026-05-01T20:11:22Z"}, {"subject": "Minot - Report for Radon Testing", "snippet": "David, Please find the attached report for radon testing performed at Minot AFB. Don&#39;t hesitate to reach out if you ", "sender": "scott@lcagrp.com", "date": "2026-05-01T19:47:08Z"}]
-  },
-  {
-    pid: "26-025",
-    name: "Portsmouth Water",
-    total: 35,
-    pct: 51,
-    emails: 7,
-    priorYear: false,
-    acmLabel: "Lead Result",
-    seg: {"Setup": 0, "Field": 10, "Reporting": 7, "Done": 18},
-    units: [{"addr": "QTRS A", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "12.3 \u00b5g/L"}, {"addr": "QTRS B", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "2.45 \u00b5g/L"}, {"addr": "QTRS C", "status": "\ud83d\udea8 EXCEEDS ACTION LEVEL", "seg": "Reporting", "m": "\u26a0", "lead": "84.8 \u00b5g/L"}, {"addr": "QTRS D", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "9.98 \u00b5g/L"}, {"addr": "QTRS E", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "4.16 \u00b5g/L"}, {"addr": "QTRS F", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "1.04 \u00b5g/L"}, {"addr": "QTRS G", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "3.83 \u00b5g/L"}, {"addr": "QTRS H", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "2.57 \u00b5g/L"}, {"addr": "QTRS H-27", "status": "\ud83d\udea8 EXCEEDS ACTION LEVEL", "seg": "Reporting", "m": "\u26a0", "lead": "24.1 \u00b5g/L"}, {"addr": "QTRS H-3", "status": "\ud83d\udea8 EXCEEDS ACTION LEVEL", "seg": "Reporting", "m": "\u26a0", "lead": "51.6 \u00b5g/L"}, {"addr": "QTRS H-4", "status": "\ud83d\udea8 EXCEEDS ACTION LEVEL", "seg": "Reporting", "m": "\u26a0", "lead": "33.2 \u00b5g/L"}, {"addr": "QTRS H-5", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "1.37 \u00b5g/L"}, {"addr": "QTRS I", "status": "\ud83d\udea8 EXCEEDS ACTION LEVEL", "seg": "Reporting", "m": "\u26a0", "lead": "28.9 \u00b5g/L"}, {"addr": "QTRS J", "status": "\ud83d\udea8 EXCEEDS ACTION LEVEL", "seg": "Reporting", "m": "\u26a0", "lead": "16.5 \u00b5g/L"}, {"addr": "QTRS K", "status": "\u2713 Not Detected", "seg": "Done", "m": "\u2713", "lead": "ND"}, {"addr": "QTRS L", "status": "\u2713 Not Detected", "seg": "Done", "m": "\u2713", "lead": "ND"}, {"addr": "QTRS M", "status": "Pending \u2014 Results filed in folder", "seg": "Field", "m": "", "lead": "\u2014"}, {"addr": "QTRS O", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "7.4 \u00b5g/L"}, {"addr": "QTRS P", "status": "\ud83d\udea8 EXCEEDS ACTION LEVEL", "seg": "Reporting", "m": "\u26a0", "lead": "165.0 \u00b5g/L"}, {"addr": "QTRS Q", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "1.87 \u00b5g/L"}, {"addr": "QTRS V", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "10.6 \u00b5g/L"}, {"addr": "QTRS W", "status": "\u2713 Not Detected", "seg": "Done", "m": "\u2713", "lead": "ND"}, {"addr": "QTRS Y", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "2.13 \u00b5g/L"}, {"addr": "QTRS 192A", "status": "\u2713 Not Detected", "seg": "Done", "m": "\u2713", "lead": "ND"}, {"addr": "QTRS 192B", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "3.08 \u00b5g/L"}, {"addr": "QTRS 68", "status": "\u2713 Detected \u2013 Below AL", "seg": "Done", "m": "\u2713", "lead": "1.18 \u00b5g/L"}, {"addr": "Total samples analyzed", "status": "", "seg": "Field", "m": "", "lead": ""}, {"addr": "\ud83d\udea8  UNITS REQUIRING REMEDIATION / FOLLOW-UP  (Exceeded 15 \u00b5g/L EPA Action Level)", "status": "", "seg": "Field", "m": "", "lead": ""}, {"addr": "QTRS C", "status": "", "seg": "Field", "m": "", "lead": ""}, {"addr": "QTRS H-27", "status": "", "seg": "Field", "m": "", "lead": ""}, {"addr": "QTRS H-3", "status": "", "seg": "Field", "m": "", "lead": ""}, {"addr": "QTRS H-4", "status": "", "seg": "Field", "m": "", "lead": ""}, {"addr": "QTRS I", "status": "", "seg": "Field", "m": "", "lead": ""}, {"addr": "QTRS J", "status": "", "seg": "Field", "m": "", "lead": ""}, {"addr": "QTRS P", "status": "", "seg": "Field", "m": "", "lead": ""}],
-    threads: [{"subject": "Portsmouth Invoice", "snippet": "Rob, Can you create an invoice for this proposal? Thanks, \ufffc Scott Mori Gill Vice President mobile: (732) 673-7353 email:", "sender": "scott@lcagrp.com", "date": "2026-05-05T19:00:50Z"}, {"subject": "Portsmouth Water Testing - next week", "snippet": "Hi Scott, Are you still available to re-test Qtrs I and P next week? Wed or Thurs? Please let me know. Best, Ken Kenneth", "sender": "KSperry@bbcgrp.com", "date": "2026-04-17T13:07:52Z"}, {"subject": "RE: Portsmouth Water Testing - next week", "snippet": "Hi Scott, Yes, next Weds morning (4/22) works. We will confirm with the resident for 0800. Slight change to the sampling", "sender": "KSperry@bbcgrp.com", "date": "2026-04-17T14:15:38Z"}, {"subject": "RE: Portsmouth Water Testing - next week", "snippet": "Ken we are good to go just confirmed with resident. Anthony S Brown, CAM Operations Director | NSY Portsmouth Homes T: 2", "sender": "ABrown@bbcgrp.com", "date": "2026-04-17T14:20:20Z"}, {"subject": "RE: Portsmouth Water Testing - next week", "snippet": "Hi Anthony, I let Scott (LCA) know we will need to post-pone water sampling originally planned for tomorrow due to water", "sender": "KSperry@bbcgrp.com", "date": "2026-04-21T13:34:11Z"}]
+    "id": "24-101",
+    "name": "Fort Carson",
+    "total": 70,
+    "pct": 0,
+    "segs": {
+      "Setup": 0,
+      "Field": 30,
+      "Reporting": 40,
+      "Done": 0
+    },
+    "emailCount": 6,
+    "units": [
+      {
+        "a": "5620 Remagen Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5621 Cherbourg Circle",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5622 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5623 Cherbourg Circle",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5624 Cherbourg Circle",
+        "s": "Lab Submitted",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5625 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5626 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5627 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5628 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5629 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5630 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5631 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "5632 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5633 Cherbourg Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5634 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5635 Cherbourg Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5636 Cherbourg Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5637 Cherbourg Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5638 Remagen Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "5639 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5640 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5641 Remagen Road",
+        "s": "Report Created",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "5642 Cherbourg Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5643 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5645 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5646 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5647 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5648 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "5649 Cherbourg Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5650 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5651 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5652 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5653 Normandy Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5654 Cherbourg Circle",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5655 Cherbourg Circle",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5656 Remagen Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5657 Normandy Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5658 Normandy Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5659 Normandy Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5660 Normandy Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5702 Remagen Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5703 Remagen Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5704 Remagen Road",
+        "s": "Inspection Complete",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5705 Remagen Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5706 Remagen Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5707 Remagen Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5708 Remagen Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5709 Remagen Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5710 Remagen Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5711 Remagen Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5712 Remagen Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "5713 Remagen Road",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "5714 Remagen Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5715 Normandy Road",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5716 Harr Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5717 Harr Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5718 Harr Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5719 Harr Avenue",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5720 Harr Avenue",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5721 Harr Avenue",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5722 Harr Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5723 Harr Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5724 Harr Avenue",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5725 Harr Avenue",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5726 Harr Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5727 Harr Avenue",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": "\u2713"
+      },
+      {
+        "a": "5728 Harr Avenue",
+        "s": "",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5729 Harr Avenue",
+        "s": "Report Reviewed",
+        "g": "Reporting",
+        "m": ""
+      },
+      {
+        "a": "5730 Harr Avenue",
+        "s": "Inspection Complete",
+        "g": "Field",
+        "m": ""
+      },
+      {
+        "a": "5703 Harr Avenue",
+        "s": "Inspection Complete",
+        "g": "Field",
+        "m": ""
+      }
+    ],
+    "emails": [
+      {
+        "subject": "Fort Carson Soil Proposal: Information Needed (Time-Sensitive)",
+        "snippet": "Scott, Stu had some questions (see below). Hi [Balfour Contact], As we work up the soil proposal you requested for the F",
+        "sender": "justin@lcagrp.com",
+        "date": "2026-05-06",
+        "id": "19dff3ee72f0faa6"
+      },
+      {
+        "subject": "RES 745128-1 - 24-101, 5730 Harr Avenue, Fort Carson, CO",
+        "snippet": "Eurofins Built Environment Testing",
+        "sender": "built@reports.et.eurofinsus.com",
+        "date": "2026-05-02",
+        "id": "19dea3f2f485a347"
+      },
+      {
+        "subject": "RES 745133-1 - 24-101, 5704 Remagen Road, Fort Carson, CO",
+        "snippet": "Eurofins Built Environment Testing",
+        "sender": "built@reports.et.eurofinsus.com",
+        "date": "2026-05-02",
+        "id": "19de9e237d9409ca"
+      },
+      {
+        "subject": "RES 745135-1 - 24-101, 5703 Harr Ave, Fort Carson, CO",
+        "snippet": "Eurofins Built Environment Testing",
+        "sender": "built@reports.et.eurofinsus.com",
+        "date": "2026-05-02",
+        "id": "19de9df8e1d33e58"
+      },
+      {
+        "subject": "Employee Residency Status",
+        "snippet": "Fort Carson's Garrison Commander is requesting employee residency status information.",
+        "sender": "rcovert@balfourbeattyus.com",
+        "date": "2026-05-05",
+        "id": "19de047505d5aafe"
+      },
+      {
+        "subject": "RE: Fort Carson - Soil Summary",
+        "snippet": "Elliott: Provide pricing for pre and post demo soil test for PHII Arapahoe demo.",
+        "sender": "ElJohnson@balfourbeattyus.com",
+        "date": "2026-04-30",
+        "id": "19d30bd6482c2a1c"
+      }
+    ],
+    "isPrior": true,
+    "hasAcm": true,
+    "acmLabel": "ACM Summary"
   }
 ];
-const ACTION_ITEMS = [{"pri": "hi", "icon": "\ud83d\udccb", "text": "Proposal: Newport - Proposals for Clearance Testing", "src": "Gmail", "pid": "26-002"}, {"pri": "hi", "icon": "\ud83d\udccb", "text": "Proposal: RE: Newport - Proposals for Clearance Testing", "src": "Gmail", "pid": "26-002"}, {"pri": "md", "icon": "\ud83d\udcb0", "text": "Invoice: Charleston - Invoice for 445 Knutson Street", "src": "Gmail", "pid": "26-005"}, {"pri": "md", "icon": "\ud83d\udcb0", "text": "Invoice: Fort Eustis - Invoice for 303B/C Madison Avenue", "src": "Gmail", "pid": "26-009"}, {"pri": "md", "icon": "\ud83d\udcc4", "text": "Report: Fort Eustis - Report for 303B/C Madison Avenue", "src": "Gmail", "pid": "26-009"}, {"pri": "md", "icon": "\ud83d\udcb0", "text": "Invoice: Portsmouth Invoice", "src": "Gmail", "pid": "26-025"}, {"pri": "md", "icon": "\ud83d\udcc4", "text": "Report: Minot Reports", "src": "Gmail", "pid": "26-024"}, {"pri": "md", "icon": "\ud83d\udcc4", "text": "Report: Re: Minot Reports", "src": "Gmail", "pid": "26-024"}, {"pri": "md", "icon": "\ud83d\udcc4", "text": "Report: RES 745128-1 - 24-101, 5730 Harr Avenue, Fort Carson, C", "src": "Gmail", "pid": "24-101"}, {"pri": "md", "icon": "\ud83d\udcc4", "text": "Report: RES 745133-1 - 24-101, 5704 Remagen Road, Fort Carson, ", "src": "Gmail", "pid": "24-101"}];
+const ACTION_ITEMS = [
+  {
+    "pri": "hi",
+    "icon": "\ud83d\udce7",
+    "text": "Fort Carson Soil Proposal pending \u2014 Stu has questions (Time-Sensitive)",
+    "src": "Gmail",
+    "pid": "24-101"
+  },
+  {
+    "pri": "hi",
+    "icon": "\ud83d\udce7",
+    "text": "Newport: Awaiting PO/WO for 147 Puritan Dr & 502 Read St clearance proposals",
+    "src": "Gmail",
+    "pid": "26-002"
+  },
+  {
+    "pri": "hi",
+    "icon": "\ud83d\udce7",
+    "text": "Newport: Awaiting PO/WO for 428 Ver Dartanian St invoice",
+    "src": "Gmail",
+    "pid": "26-002"
+  },
+  {
+    "pri": "hi",
+    "icon": "\ud83d\udce7",
+    "text": "Fort Eustis 310A: New lead testing proposal requested, WO #10451985",
+    "src": "Gmail",
+    "pid": "26-009"
+  },
+  {
+    "pri": "hi",
+    "icon": "\ud83d\udce7",
+    "text": "New London: 20 Crane Rd occupants refused sampling \u2014 follow up needed",
+    "src": "Gmail",
+    "pid": "26-001"
+  },
+  {
+    "pri": "md",
+    "icon": "\ud83d\udce7",
+    "text": "Minot ACM Report for 40-1 & 40-2 Dundee Drive: draft awaiting Scott review",
+    "src": "Gmail",
+    "pid": "26-024"
+  },
+  {
+    "pri": "md",
+    "icon": "\ud83d\udce7",
+    "text": "Portsmouth water testing rescheduled \u2014 site visit conflicts May 7-8",
+    "src": "Gmail",
+    "pid": "26-025"
+  },
+  {
+    "pri": "md",
+    "icon": "\ud83d\udce7",
+    "text": "Newport Quarters K: Radon re-test request from Mike Olenik",
+    "src": "Gmail",
+    "pid": "26-002"
+  },
+  {
+    "pri": "md",
+    "icon": "\ud83d\udce7",
+    "text": "Minot: ACM results expected next week per Scott's email to David Booth",
+    "src": "Gmail",
+    "pid": "26-024"
+  },
+  {
+    "pri": "md",
+    "icon": "\ud83d\udce7",
+    "text": "Fort Carson: Elliott Johnson requesting soil testing proposal for PH II Arapahoe demo",
+    "src": "Gmail",
+    "pid": "24-101"
+  },
+  {
+    "pri": "lo",
+    "icon": "\ud83d\udce7",
+    "text": "Verdant bulk import files received from Ken Sperry for ACM data upload",
+    "src": "Gmail",
+    "pid": "26-024"
+  },
+  {
+    "pri": "lo",
+    "icon": "\ud83d\udce7",
+    "text": "Charleston: ACM/LBP testing subcontractor (Trident) confirmed availability",
+    "src": "Gmail",
+    "pid": "26-005"
+  },
+  {
+    "pri": "lo",
+    "icon": "\ud83d\udce7",
+    "text": "Red Bank: Lead certification complete \u2014 report and invoice expected soon",
+    "src": "Gmail",
+    "pid": null
+  },
+  {
+    "pri": "lo",
+    "icon": "\ud83d\udce7",
+    "text": "Carlisle: Radon invoices being processed",
+    "src": "Gmail",
+    "pid": null
+  }
+];
+const SNAP_DATE = "2026-05-07";
 
-// ── Totals ──────────────────────────────────────────────
-const totals = {Setup:0,Field:0,Reporting:0,Done:0};
-PROJECTS.forEach(p => {
-  Object.entries(p.seg).forEach(([k,v]) => totals[k] = (totals[k]||0)+v);
-});
-document.getElementById('tot-setup').textContent = totals.Setup;
-document.getElementById('tot-field').textContent = totals.Field;
-document.getElementById('tot-reporting').textContent = totals.Reporting;
-document.getElementById('tot-done').textContent = totals.Done;
+let activeProject = null;
+let activeTab = 'units';
 
-// ── Helpers ─────────────────────────────────────────────
 function segColor(seg) {
-  return {Setup:'var(--blue)',Field:'var(--amber)',Reporting:'var(--purple)',Done:'var(--green)'}[seg]||'var(--muted)';
+  return {Setup:'#3b82f6',Field:'#f59e0b',Reporting:'#8b5cf6',Done:'#10b981'}[seg] || '#6b7280';
 }
-function segClass(seg) {
-  return {Setup:'chip-setup',Field:'chip-field',Reporting:'chip-reporting',Done:'chip-done'}[seg]||'';
+function segDotClass(seg) {
+  return {Setup:'dot-setup',Field:'dot-field',Reporting:'dot-reporting',Done:'dot-done'}[seg] || '';
 }
-function segPillClass(seg) {
-  return {Setup:'chip-setup',Field:'chip-field',Reporting:'chip-reporting',Done:'chip-done'}[seg]||'';
-}
-
-function pipeBar(seg, total) {
-  const segs = ['Setup','Field','Reporting','Done'];
-  const cls = ['seg-setup','seg-field','seg-reporting','seg-done'];
-  return segs.map((s,i) => {
-    const w = total ? (seg[s]||0)/total*100 : 0;
-    return `<div class="pipe-seg ${cls[i]}" style="width:${w}%"></div>`;
-  }).join('');
+function chipClass(seg) {
+  return {Setup:'chip-setup',Field:'chip-field',Reporting:'chip-reporting',Done:'chip-done'}[seg] || '';
 }
 
-function fmtDate(iso) {
-  if (!iso) return '';
-  try { return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric'}); } catch(e){ return iso.slice(0,10); }
-}
-
-// ── Sidebar ─────────────────────────────────────────────
-let activeCard = null;
-function renderSidebar(liveEmails) {
-  const sb = document.getElementById('sidebar');
-  sb.innerHTML = '';
+function renderOverviewStats() {
+  const segs = {Setup:0,Field:0,Reporting:0,Done:0};
+  let totalUnits = 0;
   PROJECTS.forEach(p => {
-    const total = Object.values(p.seg).reduce((a,b)=>a+b,0);
-    const emailCt = liveEmails ? (liveEmails[p.pid]||[]).length : p.emails;
-    const div = document.createElement('div');
-    div.className = 'proj-card' + (activeCard===p.pid?' active':'');
-    div.innerHTML = `
-      <div class="proj-top">
-        <div>
-          <div class="proj-name">${p.name} ${p.priorYear?'<span class="prior-badge">Prior Yr</span>':''}</div>
-          <div class="proj-pid">${p.pid}</div>
-        </div>
-        <div class="proj-badges">
-          ${emailCt>0?`<span class="email-badge">✉ ${emailCt}</span>`:''}
-        </div>
-      </div>
-      <div class="pipe-bar">${pipeBar(p.seg,total)}</div>
-      <div style="display:flex;align-items:center;gap:4px">
-        <div class="unit-chips">
-          ${p.seg.Setup?`<span class="chip chip-setup">🔧 ${p.seg.Setup}</span>`:''}
-          ${p.seg.Field?`<span class="chip chip-field">🔬 ${p.seg.Field}</span>`:''}
-          ${p.seg.Reporting?`<span class="chip chip-reporting">📄 ${p.seg.Reporting}</span>`:''}
-          ${p.seg.Done?`<span class="chip chip-done">✓ ${p.seg.Done}</span>`:''}
-        </div>
-        <span class="pct-text">${p.pct}%</span>
-      </div>`;
-    div.onclick = () => showDetail(p.pid, liveEmails);
-    sb.appendChild(div);
+    if (!p.isPrior) {
+      Object.entries(p.segs).forEach(([k,v]) => { segs[k] = (segs[k]||0)+v; totalUnits += v; });
+    }
   });
+  document.getElementById('overview-stats').innerHTML = `
+    <div class="ov-stat blue"><div class="val">${segs.Setup}</div><div class="lbl">Setup</div></div>
+    <div class="ov-stat amber"><div class="val">${segs.Field}</div><div class="lbl">Field</div></div>
+    <div class="ov-stat purple"><div class="val">${segs.Reporting}</div><div class="lbl">Reporting</div></div>
+    <div class="ov-stat green"><div class="val">${segs.Done}</div><div class="lbl">Done</div></div>
+  `;
 }
 
-// ── Detail view ──────────────────────────────────────────
-function showDetail(pid, liveEmails) {
-  activeCard = pid;
-  const p = PROJECTS.find(x=>x.pid===pid);
+function renderPipeline(p) {
+  const t = p.total || 1;
+  const segs = ['Setup','Field','Reporting','Done'];
+  return segs.map(s => {
+    const w = Math.round((p.segs[s]||0)/t*100);
+    return w > 0 ? `<div class="seg-${s.toLowerCase()}" style="flex:${w}"></div>` : '';
+  }).join('') + `<div class="seg-empty" style="flex:${100 - Object.values(p.segs).reduce((a,b)=>a+b,0)/t*100}"></div>`;
+}
+
+function renderProjectGrid() {
+  const grid = document.getElementById('project-grid');
+  grid.innerHTML = PROJECTS.map(p => `
+    <div class="project-card${p.isPrior?' prior':''}${activeProject===p.id?' active':''}" onclick="openDetail('${p.id}')">
+      ${p.isPrior ? '<span class="prior-badge">Prior Year</span>' : ''}
+      <div class="top">
+        <span class="pid">${p.id}</span>
+        <span class="name">${p.name}</span>
+        ${p.emailCount > 0 ? `<span class="email-badge">✉ ${p.emailCount}</span>` : ''}
+      </div>
+      <div class="pipeline">${renderPipeline(p)}</div>
+      <div class="chips">
+        ${Object.entries(p.segs).filter(([,v])=>v>0).map(([s,v])=>`<span class="chip chip-${s.toLowerCase()}">${v} ${s}</span>`).join('')}
+        <span class="pct">${p.pct}% done</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openDetail(pid) {
+  activeProject = pid;
+  const p = PROJECTS.find(x=>x.id===pid);
   if (!p) return;
-  renderSidebar(liveEmails);
+  document.getElementById('overview-panel').style.display = 'none';
+  document.getElementById('detail-panel').className = 'detail open';
+  document.getElementById('d-name').textContent = `${p.id} — ${p.name}`;
+  document.getElementById('d-pid').textContent = p.isPrior ? 'Prior Year Project' : 'Active Project';
+  document.getElementById('d-stats').innerHTML = `
+    <div class="stat-card"><div class="val">${p.total}</div><div class="lbl">Total Units</div></div>
+    <div class="stat-card"><div class="val">${p.pct}%</div><div class="lbl">Complete</div></div>
+    <div class="stat-card"><div class="val" style="color:#f59e0b">${p.segs.Field||0}</div><div class="lbl">In Field</div></div>
+    <div class="stat-card"><div class="val" style="color:#8b5cf6">${p.segs.Reporting||0}</div><div class="lbl">Reporting</div></div>
+  `;
+  renderUnitTable(p);
+  renderEmailTab(p);
+}
 
-  const threads = liveEmails ? (liveEmails[pid]||[]) : p.threads;
-  const total = Object.values(p.seg).reduce((a,b)=>a+b,0);
-  const hasAcm = p.acmLabel && p.acmLabel.length > 0;
+function closeDetail() {
+  activeProject = null;
+  document.getElementById('overview-panel').style.display = 'block';
+  document.getElementById('detail-panel').className = 'detail';
+}
 
-  const threadHtml = threads.length === 0
-    ? `<div class="no-threads">No recent email threads found for this project.</div>`
-    : threads.slice(0,6).map(t=>`
-      <div class="thread-card">
-        <div class="thread-subj">${t.subject||'(no subject)'}</div>
-        <div class="thread-meta">From: ${t.sender||'—'} · ${fmtDate(t.date)}</div>
-        <div class="thread-snip">${(t.snippet||'').slice(0,180)}</div>
-      </div>`).join('');
+function setTab(tab, el) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-units').style.display = tab==='units'?'block':'none';
+  document.getElementById('tab-emails').style.display = tab==='emails'?'block':'none';
+}
 
-  const unitRows = p.units.slice(0,200).map(u=>`
+function renderUnitTable(p) {
+  const hasAcm = p.hasAcm;
+  const rows = p.units.map(u => `
     <tr>
-      <td>${u.addr||''}</td>
-      <td><span class="seg-pill ${segPillClass(u.seg)}" style="background:none;color:${segColor(u.seg)};font-weight:600">${u.seg}</span></td>
-      <td style="color:var(--muted)">${u.status||''}</td>
-      ${hasAcm?`<td style="text-align:center">${u.m||''}</td>`:''}
-    </tr>`).join('');
-
-  const main = document.getElementById('main');
-  main.innerHTML = `
-    <div class="detail-header">
-      <div class="detail-title">${p.name} ${p.priorYear?'<span class="badge badge-muted" style="font-size:12px;vertical-align:middle">Prior Year</span>':''}</div>
-      <div class="detail-sub">${p.pid} · ${total} units · ${p.pct}% complete</div>
-    </div>
-
-    <div class="stat-cards">
-      <div class="stat-card sc-setup"><div class="sc-val" style="color:var(--blue)">${p.seg.Setup||0}</div><div class="sc-label">Setup</div></div>
-      <div class="stat-card sc-field"><div class="sc-val" style="color:var(--amber)">${p.seg.Field||0}</div><div class="sc-label">Field</div></div>
-      <div class="stat-card sc-reporting"><div class="sc-val" style="color:var(--purple)">${p.seg.Reporting||0}</div><div class="sc-label">Reporting</div></div>
-      <div class="stat-card sc-done"><div class="sc-val" style="color:var(--green)">${p.seg.Done||0}</div><div class="sc-label">Done</div></div>
-    </div>
-
-    <div class="section-title">Recent Emails</div>
-    ${threadHtml}
-
-    <div class="section-title">Units (${Math.min(p.units.length,200)}${p.units.length>200?' shown':''})</div>
-    <div class="scrollable-table">
-      <table class="unit-table">
-        <thead><tr>
-          <th>Address / Unit</th><th>Segment</th><th>Status</th>
-          ${hasAcm?`<th>${p.acmLabel}</th>`:''}
-        </tr></thead>
-        <tbody>${unitRows}</tbody>
-      </table>
+      <td>${u.a}</td>
+      <td><span class="seg-dot ${segDotClass(u.g)}"></span>${u.s || u.g}</td>
+      ${hasAcm ? `<td>${u.m||''}</td>` : ''}
+    </tr>
+  `).join('');
+  document.getElementById('tab-units').innerHTML = `
+    <div style="max-height:400px;overflow-y:auto">
+    <table class="unit-table">
+      <thead><tr>
+        <th>Address</th><th>Status</th>${hasAcm?`<th>${p.acmLabel}</th>`:''}
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
     </div>
   `;
 }
 
-// ── Overview (home) ──────────────────────────────────────
-function showOverview(liveEmails) {
-  activeCard = null;
-  renderSidebar(liveEmails);
-
-  const projCards = PROJECTS.map(p => {
-    const total = Object.values(p.seg).reduce((a,b)=>a+b,0);
-    const emailCt = liveEmails ? (liveEmails[p.pid]||[]).length : p.emails;
-    return `
-      <div class="overview-card" onclick="showDetail('${p.pid}', currentLiveEmails)">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-          <div>
-            <div style="font-size:14px;font-weight:700">${p.name}</div>
-            <div style="font-size:11px;color:var(--muted)">${p.pid} · ${total} units</div>
-          </div>
-          ${emailCt>0?`<span class="email-badge">✉ ${emailCt}</span>`:''}
-        </div>
-        <div class="pipe-bar" style="height:10px;margin-bottom:8px">${pipeBar(p.seg,total)}</div>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div class="unit-chips">
-            ${p.seg.Field?`<span class="chip chip-field">Field: ${p.seg.Field}</span>`:''}
-            ${p.seg.Reporting?`<span class="chip chip-reporting">Rpt: ${p.seg.Reporting}</span>`:''}
-          </div>
-          <span style="font-size:12px;font-weight:700;color:var(--green)">${p.pct}%</span>
-        </div>
-      </div>`;
-  }).join('');
-
-  const actionHtml = ACTION_ITEMS.length === 0
-    ? '<p style="color:var(--muted);font-size:13px">No action items at this time.</p>'
-    : ACTION_ITEMS.map(a=>`
-      <div class="action-item pri-${a.pri}">
-        <span class="action-icon">${a.icon}</span>
-        <div>
-          <div class="action-text">${a.text}</div>
-          <div class="action-meta">${a.src} · ${a.pid}</div>
-        </div>
-      </div>`).join('');
-
-  document.getElementById('main').innerHTML = `
-    <div class="tabs">
-      <div class="tab active">Overview</div>
+function renderEmailTab(p) {
+  if (!p.emails || p.emails.length === 0) {
+    document.getElementById('tab-emails').innerHTML = '<div style="color:#6b7280;font-size:12px;padding:8px">No recent emails found for this project.</div>';
+    return;
+  }
+  document.getElementById('tab-emails').innerHTML = p.emails.map(e => `
+    <div class="email-item">
+      <div class="subj">${e.subject}</div>
+      <div class="snip">${e.snippet}</div>
+      <div class="meta">${e.sender} · ${e.date}</div>
     </div>
-
-    <div class="section-title">Action Items</div>
-    <div class="action-list">${actionHtml}</div>
-
-    <div class="section-title">All Projects</div>
-    <div class="overview-grid">${projCards}</div>
-  `;
+  `).join('');
 }
 
-// ── Live Gmail fetch ─────────────────────────────────────
-let currentLiveEmails = null;
-const PID_RE = /\b2[4-6]-\d{3}\b/g;
-const NAME_MAP = {
-  'fort carson':'24-101','new london':'26-001','newport':'26-002',
-  'earle':'26-003','lakehurst':'26-004','charleston':'26-005',
-  'fort jackson':'26-006','fort detrick':'26-007','fort eustis':'26-009',
-  'usma':'26-010','minot':'26-024','portsmouth':'26-025'
-};
+function renderActionItems() {
+  document.getElementById('action-items-list').innerHTML = ACTION_ITEMS.map(a => `
+    <div class="action-item ${a.pri}" onclick="${a.pid ? `openDetail('${a.pid}')` : ''}">
+      <span class="icon">${a.icon}</span>
+      <div>
+        <div class="text">${a.text}</div>
+        <div class="src">${a.src}${a.pid?' · '+a.pid:''}</div>
+      </div>
+    </div>
+  `).join('');
+}
 
-async function fetchLiveEmails() {
+async function loadGmailLive() {
+  const pill = document.getElementById('gmail-pill');
+  const content = document.getElementById('gmail-live-content');
+  if (typeof window.cowork === 'undefined') return;
+  pill.textContent = '⟳ Loading...';
   try {
     const result = await window.cowork.callMcpTool(
       'mcp__67d183fc-6aa9-4a14-9fa5-be0bb1098825__search_threads',
-      {query: 'newer_than:14d', pageSize: 50}
+      {query:'newer_than:7d', pageSize:20}
     );
-    const threads = (result && result.threads) ? result.threads : [];
-    const live = {};
-    threads.forEach(t => {
-      t.messages.forEach(msg => {
-        const text = ((msg.subject||'') + ' ' + (msg.snippet||'')).toLowerCase();
-        const matched = new Set();
-        ((msg.subject||'')+' '+(msg.snippet||'')).replace(PID_RE, m => matched.add(m));
-        Object.entries(NAME_MAP).forEach(([nm, pid]) => { if (text.includes(nm)) matched.add(pid); });
-        matched.forEach(pid => {
-          if (!live[pid]) live[pid] = [];
-          live[pid].push({subject:msg.subject, snippet:msg.snippet, sender:msg.sender, date:msg.date});
-        });
-      });
-    });
-    currentLiveEmails = live;
-    const totalEmails = Object.values(live).reduce((a,b)=>a+b.length,0);
-    // document.getElementById('gmail-status').innerHTML = `<span style="color:var(--green);font-size:11px;font-weight:600">✉ ${totalEmails} emails (live)</span>`;
-    renderSidebar(live);
-    if (activeCard) showDetail(activeCard, live);
+    const threads = result?.threads || [];
+    content.innerHTML = threads.slice(0,8).map(t => {
+      const msg = t.messages?.[0] || {};
+      return `<div style="padding:5px 0;border-bottom:1px solid #2d3748">
+        <div style="color:#e2e8f0;font-size:11px;font-weight:600">${msg.subject||'(no subject)'}</div>
+        <div style="color:#9ca3af;font-size:10px">${msg.sender||''} · ${(msg.date||'').split('T')[0]}</div>
+      </div>`;
+    }).join('') || '<div style="color:#6b7280">No threads found</div>';
+    pill.textContent = `✓ ${threads.length} threads`;
+    pill.style.color = '#34d399';
   } catch(e) {
-    // document.getElementById('gmail-status').innerHTML = `<span style="color:var(--muted);font-size:11px">Gmail unavailable</span>`;
+    content.innerHTML = '<div style="color:#6b7280;font-size:11px">Unable to load live Gmail</div>';
+    pill.textContent = '⚠ Error';
   }
 }
 
-// ── Init ─────────────────────────────────────────────────
-showOverview(null);
-// static snapshot - no live Gmail fetch
+// Init
+renderOverviewStats();
+renderProjectGrid();
+renderActionItems();
 </script>
 </body>
 </html>
