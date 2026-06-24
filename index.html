@@ -1,4 +1,17 @@
 <!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Lca Project Command Center",
+  "schemaVersion": 1,
+  "description": "Live LCA Project Command Center — 13 projects, real-time pipeline status from xlsx trackers + Gmail signals",
+  "mcpTools": [
+    "mcp__67d183fc-6aa9-4a14-9fa5-be0bb1098825__search_threads"
+  ],
+  "mcpServerNames": [
+    "Gmail"
+  ]
+}
+</script>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -19,6 +32,7 @@
   .badge-blue{background:#1d4ed8;color:#bfdbfe}
   .badge-gray{background:#374151;color:#d1d5db;cursor:default}
   .badge-amber{background:#92400e;color:#fde68a}
+  .badge-green{background:#052e16;color:#6ee7b7}
   .content{display:flex;height:calc(100vh - 53px)}
   .sidebar{width:300px;min-width:260px;border-right:1px solid var(--border);overflow-y:auto;background:var(--card)}
   .main{flex:1;overflow-y:auto;padding:20px}
@@ -35,7 +49,6 @@
   .email-badge.zero{background:#374151;color:#6b7280}
   .pct-bar{width:100%;height:4px;background:#334155;border-radius:2px;margin-top:4px}
   .pct-fill{height:4px;border-radius:2px;background:var(--green)}
-  /* main view */
   .proj-header{margin-bottom:20px}
   .proj-header h2{font-size:22px;font-weight:700}
   .proj-header .sub{color:var(--sub);font-size:13px;margin-top:4px}
@@ -44,13 +57,12 @@
   .stat-card .val{font-size:28px;font-weight:700}
   .stat-card .lbl{font-size:11px;color:var(--sub);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
   .pipeline{display:flex;gap:0;border-radius:8px;overflow:hidden;margin-bottom:20px;border:1px solid var(--border)}
-  .seg{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:600;cursor:pointer;transition:opacity .15s}
+  .seg{flex:1;padding:10px;text-align:center;font-size:12px;font-weight:600}
   .seg.Setup{background:#1e3a5f;color:var(--blue)}
   .seg.Field{background:#3d2800;color:var(--amber)}
   .seg.Reporting{background:#2e1065;color:var(--purple)}
   .seg.Done{background:#052e16;color:var(--green)}
   .seg .count{font-size:20px;font-weight:800;display:block}
-  .seg:hover{opacity:.8}
   .email-section{margin-bottom:20px}
   .email-section h3{font-size:13px;font-weight:700;margin-bottom:10px;color:var(--sub);text-transform:uppercase;letter-spacing:.5px}
   .email-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:12px;margin-bottom:8px}
@@ -67,7 +79,6 @@
   .seg-chip.Field{background:#3d2800;color:var(--amber)}
   .seg-chip.Reporting{background:#2e1065;color:var(--purple)}
   .seg-chip.Done{background:#052e16;color:var(--green)}
-  /* action items */
   .action-board{margin-top:20px}
   .action-board h3{font-size:14px;font-weight:700;margin-bottom:12px}
   .action-item{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:10px 14px;margin-bottom:8px;display:flex;align-items:center;gap:10px;font-size:13px}
@@ -83,18 +94,34 @@
   <h1>🏗 LCA Project Command Center</h1>
   <div class="header-meta">
     <span class="badge badge-blue">Live xlsx data</span>
-    <span class="badge badge-gray" id="gmail-pill">Static snapshot · June 08, 2026 10:10 UTC</span>
-    <span class="badge badge-amber">Snapshot: 2026-06-08</span>
+    <span class="badge badge-green" id="gmail-pill">⟳ Loading Gmail…</span>
+    <span class="badge badge-amber">Refreshed: 2026-06-24</span>
   </div>
 </div>
 <div class="content">
   <div class="sidebar" id="sidebar"></div>
-  <div class="main" id="main"><div class="loading">Select a project from the sidebar →</div></div>
+  <div class="main" id="main"><div class="loading">Loading projects…</div></div>
 </div>
 
 <script>
-const PROJECTS = [{"pid":"26-001","name":"New London","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":11,"units":[{"a":"37 Sycamore Lane","s":"WO Received","seg":"Setup","m":""},{"a":"67 Poplar Drive","s":"WO Received","seg":"Setup","m":""},{"a":"363 Burningtree Drive","s":"WO Received","seg":"Setup","m":""},{"a":"198 Michigan Avenue","s":"","seg":"Setup","m":""},{"a":"19 Raintree Circle","s":"Report Sent","seg":"Reporting","m":""},{"a":"95 Pelican Drive","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"20 Crane Road","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"161 Burningtree Drive","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"Big East \u2013 5 units (Thu Jun 5)","s":"Inspection Scheduled","seg":"Field","m":""},{"a":"Big East \u2013 Clearance 6/9","s":"Inspection Scheduled","seg":"Field","m":""}],"note":"cached \u2013 tracker offline"},{"pid":"26-002","name":"Newport","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":3,"units":[{"a":"Quarters K","s":"Radon Test Scheduled 6/8","seg":"Field","m":""},{"a":"23 Reliance Row","s":"Lab Submitted","seg":"Field","m":""},{"a":"8 Reliance Row","s":"Lab Submitted","seg":"Field","m":""},{"a":"24 Constellation Court","s":"","seg":"Setup","m":""},{"a":"502 Read Street","s":"","seg":"Setup","m":""}],"note":"cached \u2013 tracker offline"},{"pid":"26-003","name":"Earle","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":0,"units":[{"a":"607A Blandy Road","s":"","seg":"Setup"},{"a":"612A Blandy Road","s":"","seg":"Setup"},{"a":"739AB Homicki Court","s":"","seg":"Setup"}],"note":""},{"pid":"26-004","name":"Lakehurst","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":2,"units":[{"a":"2302 Pinehurst Estates","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"1602 Pinehurst Estates","s":"","seg":"Setup","m":""},{"a":"1904 Pinehurst Estates","s":"","seg":"Setup","m":""},{"a":"202 Lansdowne Road","s":"","seg":"Setup","m":""},{"a":"208 Lansdowne Road","s":"","seg":"Setup","m":""},{"a":"316 Cecil Road","s":"","seg":"Setup","m":""},{"a":"421 Stevens Circle","s":"","seg":"Setup","m":""}],"note":"cached \u2013 tracker offline"},{"pid":"26-005","name":"Charleston","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":5,"units":[{"a":"110 Lafayette Street","s":"Report Created","seg":"Reporting","m":""},{"a":"646 Chanticleer Street","s":"Report Created","seg":"Reporting","m":""},{"a":"519 Hickory Hall Lane","s":"Lab Submitted","seg":"Field","m":""},{"a":"233 Fletcher Street","s":"Inspection Scheduled","seg":"Field","m":""},{"a":"47 Jefferson Avenue","s":"Inspection Scheduled","seg":"Field","m":""},{"a":"217 Fletcher Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"831 Petrel Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"4 Jefferson Avenue","s":"Report Created","seg":"Reporting","m":""},{"a":"29 Lafayette Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"100 Sunbird Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"20 Lafayette Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"329 Guadalcanal Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"334 Guadalcanal Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"345 Guadalcanal Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"400 Parnassus Road","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"406 Knutson Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"423 Knutson Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"46 Boone Avenue","s":"Report Sent","seg":"Reporting","m":""},{"a":"643 Chanticleer Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"7 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"25 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"56 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"73 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"84 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"85 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"87 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"93 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"105 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"33 Kittiwake Street","s":"Report Created","seg":"Reporting","m":""},{"a":"41 Kittiwake Street","s":"Report Created","seg":"Reporting","m":""},{"a":"45 Kittiwake Street","s":"Report Created","seg":"Reporting","m":""},{"a":"23 Lafayette Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"74 Lafayette Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"10 Keklico Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"142 Sunbird Street","s":"Invoiced / Closed","seg":"Done","m":""}],"note":"cached \u2013 tracker offline"},{"pid":"26-006","name":"Fort Jackson","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":0,"units":[{"a":"Tracker in setup \u2013 no units yet","s":"","seg":"Setup","m":""}],"note":"tracker empty"},{"pid":"26-007","name":"Fort Detrick","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":0,"units":[{"a":"Tracker in setup \u2013 no units yet","s":"","seg":"Setup","m":""}],"note":"tracker empty"},{"pid":"26-009","name":"Fort Eustis","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":2,"units":[{"a":"2107A Irwin Street","s":"","seg":"Setup"},{"a":"2946A Summerall Circle","s":"","seg":"Setup"},{"a":"2946B Summerall Circle","s":"","seg":"Setup"},{"a":"304F Madison Avenue","s":"","seg":"Setup"},{"a":"307G 26th Street","s":"Invoiced / Closed","seg":"Done"},{"a":"330B Sternberg Avenue","s":"","seg":"Setup"},{"a":"331A Sternberg Avenue","s":"","seg":"Setup"},{"a":"327E 26th Street, Fort Eustis, VA","s":"Invoiced / Closed","seg":"Done"},{"a":"303B/C Madison Avenue, Fort Eustis, VA","s":"Report Sent","seg":"Reporting"}],"note":""},{"pid":"26-010","name":"USMA \u2013 Facilities","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":5,"units":[{"a":"61 Schofield Place","s":"Invoiced / Closed","seg":"Done"},{"a":"303C Wilby Place, West Point, NY 10996","s":"Report Sent","seg":"Reporting"}],"note":""},{"pid":"26-011","name":"USMA \u2013 Renovations","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":2,"units":[{"a":"431 Biddle Loop","s":"Draft Report","seg":"Reporting","m":""},{"a":"270A Bowman Loop","s":"Water Sampling 6/2","seg":"Field","m":""},{"a":"68A Schofield Place","s":"","seg":"Setup","m":""},{"a":"165E Grant Avenue","s":"","seg":"Setup","m":""},{"a":"280B Bowman Loop","s":"","seg":"Setup","m":""},{"a":"296A Grant Avenue","s":"","seg":"Setup","m":""},{"a":"401 Merritt Road","s":"","seg":"Setup","m":""},{"a":"405 Merritt Road","s":"","seg":"Setup","m":""},{"a":"421A Bailey Loop","s":"","seg":"Setup","m":""},{"a":"427 Biddle Loop","s":"","seg":"Setup","m":""},{"a":"504E E Moore Loop","s":"","seg":"Setup","m":""},{"a":"510E Tillman Place","s":"","seg":"Setup","m":""},{"a":"B132 (proposal phase)","s":"Proposal Sent","seg":"Setup","m":""},{"a":"12 Exteriors \u2013 LBP Stabilization","s":"Work Plan Under Review","seg":"Setup","m":""}],"note":"cached \u2013 tracker offline"},{"pid":"26-024","name":"Minot AFB","prior":false,"hasAcm":true,"acmLabel":"ACM","isWater":false,"emailCount":0,"units":[{"a":"1-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"1-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"2-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"2-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"3-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"3-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"4-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"4-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"5-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"5-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"21-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"21-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"23-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"23-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"25-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"25-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"27-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"27-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"29-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"29-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"30-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"30-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"31-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"31-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"32-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"32-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"33-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"33-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"34-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"34-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"35-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"35-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"36-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"36-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"37-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"37-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"38-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"38-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"39-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"39-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"40-1 Dundee Drive","s":"Report Written","seg":"Reporting","m":"No"},{"a":"40-2 Dundee Drive","s":"Report Written","seg":"Reporting","m":"No"},{"a":"41-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"41-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"42-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"42-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"43-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"43-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"44-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"44-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"46-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"46-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"69-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"69-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"75-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"75-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"106-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"106-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"107-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"107-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"108-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"108-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"109-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"109-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"110-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"110-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"111-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"111-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"112-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"112-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"113-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"113-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"114-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"114-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"116-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"116-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"118-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"118-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"120-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"120-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"123-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"123-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"125-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"125-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"127-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"127-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"129-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"129-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"130-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"130-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"132-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"132-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"134-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"134-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"136-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"136-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"138-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"138-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"140-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"140-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"142-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"142-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"183-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"183-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"185-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"185-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"187-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"187-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"189-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"189-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"191-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"191-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"112 units","s":"Lab Submitted","seg":"Field"}],"note":""},{"pid":"26-025","name":"Portsmouth Water","prior":false,"hasAcm":true,"acmLabel":"Max Lead","isWater":true,"emailCount":2,"units":[{"a":"QTRS A","s":"Complete \u2013 Detected","seg":"Done","m":"12.3 \u00b5g/L"},{"a":"QTRS B","s":"Complete \u2013 Detected","seg":"Done","m":"2.45 \u00b5g/L"},{"a":"QTRS C","s":"Exceeds Action Level","seg":"Reporting","m":"84.8 \u00b5g/L"},{"a":"QTRS D","s":"Complete \u2013 Detected","seg":"Done","m":"9.98 \u00b5g/L"},{"a":"QTRS E","s":"Complete \u2013 Detected","seg":"Done","m":"4.16 \u00b5g/L"},{"a":"QTRS F","s":"Complete \u2013 Detected","seg":"Done","m":"1.04 \u00b5g/L"},{"a":"QTRS G","s":"Complete \u2013 Detected","seg":"Done","m":"3.83 \u00b5g/L"},{"a":"QTRS H","s":"Complete \u2013 Detected","seg":"Done","m":"2.57 \u00b5g/L"},{"a":"QTRS H-27","s":"Exceeds Action Level","seg":"Reporting","m":"24.1 \u00b5g/L"},{"a":"QTRS H-3","s":"Exceeds Action Level","seg":"Reporting","m":"51.6 \u00b5g/L"},{"a":"QTRS H-4","s":"Exceeds Action Level","seg":"Reporting","m":"33.2 \u00b5g/L"},{"a":"QTRS H-5","s":"Complete \u2013 Detected","seg":"Done","m":"1.37 \u00b5g/L"},{"a":"QTRS I","s":"Exceeds Action Level","seg":"Reporting","m":"28.9 \u00b5g/L"},{"a":"QTRS J","s":"Exceeds Action Level","seg":"Reporting","m":"16.5 \u00b5g/L"},{"a":"QTRS K","s":"Complete \u2013 ND","seg":"Done","m":"ND"},{"a":"QTRS L","s":"Complete \u2013 ND","seg":"Done","m":"ND"},{"a":"QTRS M","s":"Invoiced / Closed","seg":"Done","m":"ND"},{"a":"QTRS O","s":"Complete \u2013 Detected","seg":"Done","m":"7.4 \u00b5g/L"},{"a":"QTRS P","s":"Exceeds Action Level","seg":"Reporting","m":"165.0 \u00b5g/L"},{"a":"QTRS Q","s":"Complete \u2013 Detected","seg":"Done","m":"1.87 \u00b5g/L"},{"a":"QTRS V","s":"Complete \u2013 Detected","seg":"Done","m":"10.6 \u00b5g/L"},{"a":"QTRS W","s":"Complete \u2013 ND","seg":"Done","m":"ND"},{"a":"QTRS Y","s":"Complete \u2013 Detected","seg":"Done","m":"2.13 \u00b5g/L"},{"a":"QTRS 192A","s":"Complete \u2013 ND","seg":"Done","m":"ND"},{"a":"QTRS 192B","s":"Complete \u2013 Detected","seg":"Done","m":"3.08 \u00b5g/L"},{"a":"QTRS 68","s":"Complete \u2013 Detected","seg":"Done","m":"1.18 \u00b5g/L"}],"note":""},{"pid":"24-101","name":"Fort Carson","prior":true,"hasAcm":true,"acmLabel":"ACM Summary","isWater":false,"emailCount":0,"units":[{"a":"Arapahoe Village \u2013 Soil Sampling","s":"Proposal Sent","seg":"Setup","m":""},{"a":"Arapahoe Village \u2013 Soil Disposal","s":"Proposal Sent","seg":"Setup","m":""},{"a":"5620 Remagen Road","s":"Report Reviewed","seg":"Reporting","m":"\u2713"},{"a":"5621 Cherbourg Circle","s":"","seg":"Setup","m":""},{"a":"5622 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"\u2713"},{"a":"5625 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"\u2713"},{"a":"5626 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"\u2713"},{"a":"5639 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"\u2713"},{"a":"5640 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"\u2713"},{"a":"5643 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"\u2713"},{"a":"5638 Remagen Road","s":"Lab Submitted","seg":"Field","m":""},{"a":"5641 Remagen Road","s":"Lab Submitted","seg":"Field","m":""},{"a":"5648 Cherbourg Circle","s":"Lab Submitted","seg":"Field","m":""},{"a":"5712 Remagen Road","s":"Lab Submitted","seg":"Field","m":""},{"a":"5713 Remagen Road","s":"Lab Submitted","seg":"Field","m":""}],"note":"cached \u2013 tracker offline"}];
-const ACTION_ITEMS = [{"pri":"hi","icon":"\ud83d\udd34","text":"Charleston: Jim Perry needs estimate/PO for 110 Lafayette Street","src":"Email","pid":"26-005"},{"pri":"hi","icon":"\ud83d\udd34","text":"Portsmouth: Anthony Brown waiting on invoices for water testing Qtrs I, P, J, H27, H4, C, M","src":"Email","pid":"26-025"},{"pri":"hi","icon":"\ud83d\udd34","text":"New London: Missing invoices for 95 Pelican Drive & 161 Burningtree Drive (Allison Ball/BBC)","src":"Email","pid":"26-001"},{"pri":"hi","icon":"\ud83d\udd34","text":"New London: Air clearance at 41 Hawthorn scheduled 6/9 \u2013 confirm with Big East","src":"Email","pid":"26-001"},{"pri":"hi","icon":"\ud83d\udd34","text":"USMA: Water sampling at 270A Bowman proposed for 6/2 \u2013 confirm results & invoice","src":"Email","pid":"26-010"},{"pri":"md","icon":"\ud83d\udfe1","text":"Charleston: Schedule roof material testing at 110 Lafayette, 646 Chanticleer, 233 Fletcher, 47 Jefferson","src":"Email","pid":"26-005"},{"pri":"md","icon":"\ud83d\udfe1","text":"Fort Eustis: Upload MDE reports for XRF review (EHC Impact request)","src":"Email","pid":"26-009"},{"pri":"md","icon":"\ud83d\udfe1","text":"New London: Big East clearance testing at 19 Raintree Circle \u2013 Big East confirmed 6/9","src":"Email","pid":"26-001"},{"pri":"md","icon":"\ud83d\udfe1","text":"USMA: LBP Stabilization Project \u2013 BBC to provide RFI responses (John McGowan/Butler Construction)","src":"Email","pid":"26-011"},{"pri":"lo","icon":"\ud83d\udfe2","text":"Newport: Coordinate radon testing schedule with Coughlin Radon (Nate)","src":"Email","pid":"26-002"},{"pri":"lo","icon":"\ud83d\udfe2","text":"USMA: Proposal for B132 submitted \u2013 awaiting BBC approval","src":"Email","pid":"26-010"},{"pri":"lo","icon":"\ud83d\udfe2","text":"Lakehurst: Report delivered for 2302 Pinehurst Estates \u2013 invoice sent","src":"Email","pid":"26-004"}];
+const PROJECTS = [{"pid":"26-001","name":"New London","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":8,"units":[{"a":"37 Sycamore Lane","s":"WO Received","seg":"Setup","m":""},{"a":"67 Poplar Drive","s":"WO Received","seg":"Setup","m":""},{"a":"363 Burningtree Drive","s":"WO Received","seg":"Setup","m":""},{"a":"198 Michigan Avenue","s":"","seg":"Setup","m":""},{"a":"19 Raintree Circle","s":"Report Sent","seg":"Reporting","m":""},{"a":"95 Pelican Drive","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"20 Crane Road","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"161 Burningtree Drive","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"Big East – 5 units (Mon 6/29)","s":"Inspection Scheduled","seg":"Field","m":""},{"a":"41 Hawthorn Road","s":"Clearance Sent","seg":"Reporting","m":""}],"note":"cached – tracker offline"},{"pid":"26-002","name":"Newport","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":3,"units":[{"a":"Quarters K","s":"Radon Test Scheduling","seg":"Field","m":""},{"a":"23 Reliance Row","s":"Lab Submitted","seg":"Field","m":""},{"a":"8 Reliance Row","s":"Lab Submitted","seg":"Field","m":""},{"a":"24 Constellation Court","s":"","seg":"Setup","m":""},{"a":"502 Read Street","s":"","seg":"Setup","m":""}],"note":"cached – tracker offline"},{"pid":"26-003","name":"Earle","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":3,"units":[{"a":"597 Green Drive","s":"Report Sent","seg":"Reporting"},{"a":"607A Blandy Road","s":"","seg":"Setup"},{"a":"612A Blandy Road","s":"","seg":"Setup"},{"a":"739AB Homicki Court","s":"","seg":"Setup"}],"note":""},{"pid":"26-004","name":"Lakehurst","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":2,"units":[{"a":"2302 Pinehurst Estates","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"1602 Pinehurst Estates","s":"","seg":"Setup","m":""},{"a":"1904 Pinehurst Estates","s":"","seg":"Setup","m":""},{"a":"202 Lansdowne Road","s":"","seg":"Setup","m":""},{"a":"208 Lansdowne Road","s":"","seg":"Setup","m":""},{"a":"316 Cecil Road","s":"","seg":"Setup","m":""},{"a":"421 Stevens Circle","s":"","seg":"Setup","m":""}],"note":"cached – tracker offline"},{"pid":"26-005","name":"Charleston","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":11,"units":[{"a":"110 Lafayette Street","s":"Report Created","seg":"Reporting","m":""},{"a":"646 Chanticleer Street","s":"Report Created","seg":"Reporting","m":""},{"a":"519 Hickory Hall Lane","s":"Lab Submitted","seg":"Field","m":""},{"a":"625 Hickory Hall","s":"Inspection Scheduled","seg":"Field","m":""},{"a":"624 Chanticleer Street","s":"Inspection Scheduled","seg":"Field","m":""},{"a":"122 W Keklico Street","s":"Estimate Requested","seg":"Setup","m":""},{"a":"140 Sunbird Street","s":"Estimate Requested","seg":"Setup","m":""},{"a":"233 Fletcher Street","s":"Invoiced","seg":"Done","m":""},{"a":"47 Jefferson Avenue","s":"Invoiced","seg":"Done","m":""},{"a":"217 Fletcher Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"831 Petrel Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"4 Jefferson Avenue","s":"Report Created","seg":"Reporting","m":""},{"a":"29 Lafayette Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"100 Sunbird Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"20 Lafayette Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"329 Guadalcanal Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"334 Guadalcanal Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"345 Guadalcanal Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"352 Guadalcanal Street","s":"Invoiced","seg":"Done","m":""},{"a":"400 Parnassus Road","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"406 Knutson Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"423 Knutson Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"46 Boone Avenue","s":"Report Sent","seg":"Reporting","m":""},{"a":"643 Chanticleer Street","s":"Report Sent","seg":"Reporting","m":""},{"a":"7 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"25 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"56 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"73 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"84 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"85 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"87 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"93 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"105 Lafayette Street","s":"Lab Submitted","seg":"Field","m":""},{"a":"33 Kittiwake Street","s":"Report Created","seg":"Reporting","m":""},{"a":"41 Kittiwake Street","s":"Report Created","seg":"Reporting","m":""},{"a":"45 Kittiwake Street","s":"Report Created","seg":"Reporting","m":""},{"a":"23 Lafayette Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"74 Lafayette Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"10 Keklico Street","s":"Invoiced / Closed","seg":"Done","m":""},{"a":"142 Sunbird Street","s":"Invoiced / Closed","seg":"Done","m":""}],"note":"cached – tracker offline"},{"pid":"26-006","name":"Fort Jackson","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":0,"units":[{"a":"Tracker in setup – no units yet","s":"","seg":"Setup","m":""}],"note":"tracker empty"},{"pid":"26-007","name":"Fort Detrick","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":0,"units":[{"a":"Tracker in setup – no units yet","s":"","seg":"Setup","m":""}],"note":"tracker empty"},{"pid":"26-009","name":"Fort Eustis","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":4,"units":[{"a":"2107A Irwin Street","s":"","seg":"Setup"},{"a":"2946A Summerall Circle","s":"","seg":"Setup"},{"a":"2946B Summerall Circle","s":"","seg":"Setup"},{"a":"304F Madison Avenue","s":"LBP Testing Scheduled","seg":"Field"},{"a":"307G 26th Street","s":"Invoiced / Closed","seg":"Done"},{"a":"330B Sternberg Avenue","s":"","seg":"Setup"},{"a":"331A Sternberg Avenue","s":"","seg":"Setup"},{"a":"307A 26th Street","s":"XRF Scheduling","seg":"Field"},{"a":"327E 26th Street, Fort Eustis, VA","s":"Invoiced / Closed","seg":"Done"},{"a":"303B/C Madison Avenue, Fort Eustis, VA","s":"Report Sent","seg":"Reporting"}],"note":""},{"pid":"26-010","name":"USMA – Facilities","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":2,"units":[{"a":"61 Schofield Place","s":"Invoiced / Closed","seg":"Done"},{"a":"270A Bowman Loop","s":"Report Sent","seg":"Reporting"},{"a":"303C Wilby Place, West Point, NY 10996","s":"Report Sent","seg":"Reporting"}],"note":""},{"pid":"26-011","name":"USMA – Renovations","prior":false,"hasAcm":false,"acmLabel":"","isWater":false,"emailCount":3,"units":[{"a":"431 Biddle Loop","s":"Draft Report","seg":"Reporting","m":""},{"a":"270A Bowman Loop","s":"Water Sampling 6/2","seg":"Field","m":""},{"a":"68A Schofield Place","s":"","seg":"Setup","m":""},{"a":"165E Grant Avenue","s":"","seg":"Setup","m":""},{"a":"280B Bowman Loop","s":"","seg":"Setup","m":""},{"a":"296A Grant Avenue","s":"","seg":"Setup","m":""},{"a":"401 Merritt Road","s":"LBP Stab. In Progress","seg":"Field","m":""},{"a":"405 Merritt Road","s":"LBP Stab. In Progress","seg":"Field","m":""},{"a":"421A Bailey Loop","s":"","seg":"Setup","m":""},{"a":"427 Biddle Loop","s":"LBP Stab. In Progress","seg":"Field","m":""},{"a":"504E E Moore Loop","s":"","seg":"Setup","m":""},{"a":"510E Tillman Place","s":"","seg":"Setup","m":""},{"a":"B132 (proposal phase)","s":"Proposal Sent","seg":"Setup","m":""},{"a":"12 Exteriors – LBP Stabilization","s":"Work Plan Under Review","seg":"Setup","m":""}],"note":"cached – tracker offline"},{"pid":"26-024","name":"Minot AFB","prior":false,"hasAcm":true,"acmLabel":"ACM","isWater":false,"emailCount":1,"units":[{"a":"1-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"1-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"2-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"2-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"3-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"3-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"4-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"4-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"5-1 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"5-2 Polar Place","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"21-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"21-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"23-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"23-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"25-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"25-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"27-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"27-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"29-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"29-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"30-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"30-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"31-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"31-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"32-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"32-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"33-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"33-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"34-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"34-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"35-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"35-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"36-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"36-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"37-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"37-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"38-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"38-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"39-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"39-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"40-1 Dundee Drive","s":"Report Written","seg":"Reporting","m":"No"},{"a":"40-2 Dundee Drive","s":"Report Written","seg":"Reporting","m":"No"},{"a":"41-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"41-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"42-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"42-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"43-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"43-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"44-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"44-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"46-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"46-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"69-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"69-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"75-1 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"75-2 Dundee Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"106-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"106-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"107-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"107-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"108-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"108-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"109-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"109-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"110-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"110-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"111-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"111-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"112-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"112-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"113-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"113-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"114-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"114-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"116-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"116-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"118-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"118-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"120-1 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"120-2 H Street","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"123-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"123-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"125-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"125-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"127-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"127-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"129-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"Yes"},{"a":"129-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"130-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"130-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"132-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"132-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"134-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"134-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"136-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"136-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"138-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"138-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"140-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"140-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"142-1 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"142-2 Winding Way","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"183-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"183-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"185-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"185-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"187-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"187-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"189-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"189-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"191-1 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"},{"a":"191-2 Delta Drive","s":"Lab Submitted","seg":"Field","m":"No"}],"note":""},{"pid":"26-025","name":"Portsmouth Water","prior":false,"hasAcm":true,"acmLabel":"Max Lead","isWater":true,"emailCount":2,"units":[{"a":"QTRS A","s":"Complete – Detected","seg":"Done","m":"12.3 µg/L"},{"a":"QTRS B","s":"Complete – Detected","seg":"Done","m":"2.45 µg/L"},{"a":"QTRS C","s":"Exceeds Action Level","seg":"Reporting","m":"84.8 µg/L"},{"a":"QTRS D","s":"Complete – Detected","seg":"Done","m":"9.98 µg/L"},{"a":"QTRS E","s":"Complete – Detected","seg":"Done","m":"4.16 µg/L"},{"a":"QTRS F","s":"Complete – Detected","seg":"Done","m":"1.04 µg/L"},{"a":"QTRS G","s":"Complete – Detected","seg":"Done","m":"3.83 µg/L"},{"a":"QTRS H","s":"Complete – Detected","seg":"Done","m":"2.57 µg/L"},{"a":"QTRS H-27","s":"Exceeds Action Level","seg":"Reporting","m":"24.1 µg/L"},{"a":"QTRS H-3","s":"Exceeds Action Level","seg":"Reporting","m":"51.6 µg/L"},{"a":"QTRS H-4","s":"Exceeds Action Level","seg":"Reporting","m":"33.2 µg/L"},{"a":"QTRS H-5","s":"Complete – Detected","seg":"Done","m":"1.37 µg/L"},{"a":"QTRS I","s":"Exceeds Action Level","seg":"Reporting","m":"28.9 µg/L"},{"a":"QTRS J","s":"Exceeds Action Level","seg":"Reporting","m":"16.5 µg/L"},{"a":"QTRS K","s":"Complete – ND","seg":"Done","m":"ND"},{"a":"QTRS L","s":"Complete – ND","seg":"Done","m":"ND"},{"a":"QTRS M","s":"Invoiced / Closed","seg":"Done","m":"ND"},{"a":"QTRS O","s":"Complete – Detected","seg":"Done","m":"7.4 µg/L"},{"a":"QTRS P","s":"Exceeds Action Level","seg":"Reporting","m":"165.0 µg/L"},{"a":"QTRS Q","s":"Complete – Detected","seg":"Done","m":"1.87 µg/L"},{"a":"QTRS V","s":"Complete – Detected","seg":"Done","m":"10.6 µg/L"},{"a":"QTRS W","s":"Complete – ND","seg":"Done","m":"ND"},{"a":"QTRS Y","s":"Complete – Detected","seg":"Done","m":"2.13 µg/L"},{"a":"QTRS 192A","s":"Complete – ND","seg":"Done","m":"ND"},{"a":"QTRS 192B","s":"Complete – Detected","seg":"Done","m":"3.08 µg/L"},{"a":"QTRS 68","s":"Complete – Detected","seg":"Done","m":"1.18 µg/L"}],"note":""},{"pid":"24-101","name":"Fort Carson","prior":true,"hasAcm":true,"acmLabel":"ACM Summary","isWater":false,"emailCount":2,"units":[{"a":"Arapahoe Village – Soil Sampling","s":"Proposal Sent","seg":"Setup","m":""},{"a":"Arapahoe Village – Soil Disposal","s":"Proposal Sent","seg":"Setup","m":""},{"a":"5620 Remagen Road","s":"Report Reviewed","seg":"Reporting","m":"✓"},{"a":"5621 Cherbourg Circle","s":"","seg":"Setup","m":""},{"a":"5622 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"✓"},{"a":"5625 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"✓"},{"a":"5626 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"✓"},{"a":"5639 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"✓"},{"a":"5640 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"✓"},{"a":"5643 Cherbourg Circle","s":"Report Reviewed","seg":"Reporting","m":"✓"},{"a":"5638 Remagen Road","s":"Lab Submitted","seg":"Field","m":""},{"a":"5641 Remagen Road","s":"Lab Submitted","seg":"Field","m":""},{"a":"5648 Cherbourg Circle","s":"Lab Submitted","seg":"Field","m":""},{"a":"5712 Remagen Road","s":"Lab Submitted","seg":"Field","m":""},{"a":"5713 Remagen Road","s":"Lab Submitted","seg":"Field","m":""}],"note":"cached – tracker offline"}];
+const ACTION_ITEMS = [
+  {"pri":"hi","icon":"🔴","text":"Charleston: 625 Hickory Hall – roof covering + drywall scheduled Jun 24, PO 1854154 (Robert Kirtland)","src":"Email","pid":"26-005"},
+  {"pri":"hi","icon":"🔴","text":"Charleston: Jim Perry needs ACM estimate for 122 W Keklico drywall (vacant home)","src":"Email","pid":"26-005"},
+  {"pri":"hi","icon":"🔴","text":"Charleston: Jim Perry needs ACM estimate for 140 Sunbird roofing (4Bd, ADA, vacant)","src":"Email","pid":"26-005"},
+  {"pri":"hi","icon":"🔴","text":"Fort Eustis: 304F Madison – LBP testing 3 living room windows, WO 10539956, PO 1853019 – schedule this week","src":"Email","pid":"26-009"},
+  {"pri":"hi","icon":"🔴","text":"Fort Eustis: 307A 26th St – XRF with EHC Impact scheduling this week (both units)","src":"Email","pid":"26-009"},
+  {"pri":"hi","icon":"🔴","text":"Portsmouth: Invoice PO# mismatch – Anthony Brown says $6990 is under PO 1812824, not 1976778","src":"Email","pid":"26-025"},
+  {"pri":"md","icon":"🟡","text":"New London: Big East sampling Monday 6/29 – confirm TAT with Lindsay Bartlett (Big East)","src":"Email","pid":"26-001"},
+  {"pri":"md","icon":"🟡","text":"Newport: Quarters K radon – Michael Olenik confirmed as POC, ready to schedule date","src":"Email","pid":"26-002"},
+  {"pri":"md","icon":"🟡","text":"Earle: 597 Green Drive – EMSL TEM reanalysis for samples 26 & 27 (Sherry Christy handling)","src":"Email","pid":"26-003"},
+  {"pri":"md","icon":"🟡","text":"Minot: Chris Vincent (BBC) requesting Verdant-compatible ACM data export – set up call","src":"Email","pid":"26-024"},
+  {"pri":"md","icon":"🟡","text":"USMA Reno: LBP Stabilization – Insl-X Lead Block ASTM compliance confirmed, Butler to proceed","src":"Email","pid":"26-011"},
+  {"pri":"lo","icon":"🟢","text":"Newport: B-86 Firehouse – sign final lien waivers from Tina Muniz-Jones (project complete)","src":"Email","pid":"26-002"},
+  {"pri":"lo","icon":"🟢","text":"Grand Forks: Ken Sperry (BBC) requesting asbestos testing protocol/proposal – potential new project","src":"Email","pid":"26-010"},
+  {"pri":"lo","icon":"🟢","text":"Fort Carson: Draw #51 invoice submitted to Justin (May + April destructive testing)","src":"Email","pid":"24-101"}
+];
+const NAME_MAP = {"new london": "26-001", "newport": "26-002", "earle": "26-003", "lakehurst": "26-004", "charleston": "26-005", "fort jackson": "26-006", "fort detrick": "26-007", "fort eustis": "26-009", "usma": "26-010", "minot": "26-024", "portsmouth": "26-025", "fort carson": "24-101"};
 
 function segCounts(units) {
   const c = {Setup:0,Field:0,Reporting:0,Done:0};
@@ -106,27 +133,76 @@ function pct(units) {
   return units.length ? Math.round(done/units.length*100) : 0;
 }
 
-// Build sidebar
+let gmailThreads = {};
+let currentPid = PROJECTS[0].pid;
+
+async function fetchGmail() {
+  try {
+    const pill = document.getElementById('gmail-pill');
+    pill.textContent = '⟳ Fetching Gmail…';
+    const result = await window.cowork.callMcpTool(
+      'mcp__67d183fc-6aa9-4a14-9fa5-be0bb1098825__search_threads',
+      {query:'newer_than:14d', pageSize:50}
+    );
+    const data = result.structuredContent ?? JSON.parse(result.content[0].text);
+    const threads = data.threads || [];
+
+    // Match threads to projects
+    threads.forEach(t => {
+      const msgs = t.messages || [];
+      const last = msgs[msgs.length-1] || {};
+      const text = ((last.subject||'')+(last.snippet||'')).toLowerCase();
+      let matched = null;
+      // Check by project ID pattern
+      const idMatch = text.match(/\b2[4-6]-\d{3}\b/);
+      if(idMatch) matched = idMatch[0];
+      // Check by name
+      if(!matched) {
+        for(const [name,pid] of Object.entries(NAME_MAP)) {
+          if(text.includes(name)) { matched=pid; break; }
+        }
+      }
+      if(matched) {
+        if(!gmailThreads[matched]) gmailThreads[matched]=[];
+        gmailThreads[matched].push({
+          subject:last.subject, snippet:last.snippet,
+          sender:last.sender, date:last.date
+        });
+      }
+    });
+
+    // Update emailCounts in sidebar
+    PROJECTS.forEach(p => {
+      if(gmailThreads[p.pid]) p.emailCount = gmailThreads[p.pid].length;
+    });
+
+    pill.textContent = '✓ Gmail live · '+new Date().toLocaleTimeString();
+    pill.style.background='#052e16';pill.style.color='#6ee7b7';
+    buildSidebar();
+    renderProject(currentPid);
+  } catch(e) {
+    document.getElementById('gmail-pill').textContent = '✗ Gmail error';
+    console.error(e);
+  }
+}
+
 function buildSidebar() {
   const sb = document.getElementById('sidebar');
-  const active26 = PROJECTS.filter(p=>!p.prior);
+  const active = PROJECTS.filter(p=>!p.prior);
   const prior = PROJECTS.filter(p=>p.prior);
+  const hiActions = ACTION_ITEMS.filter(a=>a.pri==='hi');
 
   let html = '<div class="section-label">Active Projects</div>';
-  active26.forEach((p,i) => {
-    const sc = segCounts(p.units);
+  active.forEach((p,i) => {
     const pctDone = pct(p.units);
-    const emailCls = p.emailCount > 0 ? '' : ' zero';
-    html += `<div class="proj-row${i===0?' active':''}" onclick="selectProject('${p.pid}')" id="row-${p.pid}">
+    html += `<div class="proj-row${p.pid===currentPid?' active':''}" onclick="selectProject('${p.pid}')" id="row-${p.pid}">
       <div class="proj-info">
-        <div style="display:flex;align-items:center;gap:6px">
-          <span class="proj-name">${p.name}</span>
-        </div>
+        <span class="proj-name">${p.name}</span>
         <div class="proj-id">${p.pid}</div>
         <div class="pct-bar"><div class="pct-fill" style="width:${pctDone}%"></div></div>
       </div>
       <div class="proj-meta">
-        <span class="email-badge${emailCls}">${p.emailCount}✉</span>
+        <span class="email-badge${p.emailCount>0?'':' zero'}">${p.emailCount}✉</span>
       </div>
     </div>`;
   });
@@ -135,46 +211,40 @@ function buildSidebar() {
     html += '<div class="section-label">Prior Year</div>';
     prior.forEach(p => {
       const pctDone = pct(p.units);
-      html += `<div class="proj-row prior" onclick="selectProject('${p.pid}')" id="row-${p.pid}">
+      html += `<div class="proj-row prior${p.pid===currentPid?' active':''}" onclick="selectProject('${p.pid}')" id="row-${p.pid}">
         <div class="proj-info">
-          <div style="display:flex;align-items:center;gap:6px">
-            <span class="proj-name">${p.name}</span><span class="prior-tag">PY</span>
-          </div>
+          <div style="display:flex;align-items:center;gap:6px"><span class="proj-name">${p.name}</span><span class="prior-tag">PY</span></div>
           <div class="proj-id">${p.pid}</div>
           <div class="pct-bar"><div class="pct-fill" style="width:${pctDone}%"></div></div>
         </div>
-        <div class="proj-meta">
-          <span class="email-badge${p.emailCount>0?'':' zero'}">${p.emailCount}✉</span>
-        </div>
+        <div class="proj-meta"><span class="email-badge${p.emailCount>0?'':' zero'}">${p.emailCount}✉</span></div>
       </div>`;
     });
   }
 
-  html += '<div class="section-label">Action Items</div>';
-  ACTION_ITEMS.filter(a=>a.pri==='hi').forEach(a => {
-    html += `<div style="padding:8px 16px;font-size:12px;border-left:3px solid var(--red);margin:2px 0;cursor:pointer" onclick="selectProject('${a.pid}')">${a.icon} ${a.text.substring(0,60)}…</div>`;
-  });
+  if(hiActions.length) {
+    html += '<div class="section-label" style="color:#ef4444">🔴 High Priority</div>';
+    hiActions.forEach(a => {
+      html += `<div style="padding:7px 16px;font-size:11px;border-left:3px solid var(--red);background:#1e293b;margin:1px 0;cursor:pointer;line-height:1.4" onclick="selectProject('${a.pid}')">${a.text.substring(0,65)}</div>`;
+    });
+  }
 
   sb.innerHTML = html;
 }
 
-let currentPid = null;
-let gmailData = {};
-
 function selectProject(pid) {
   currentPid = pid;
-  document.querySelectorAll('.proj-row').forEach(r => r.classList.remove('active'));
-  const row = document.getElementById('row-'+pid);
-  if(row) row.classList.add('active');
-  renderProject(pid, gmailData[pid]||[]);
+  buildSidebar();
+  renderProject(pid);
 }
 
-function renderProject(pid, emails) {
+function renderProject(pid) {
   const p = PROJECTS.find(x=>x.pid===pid);
   if(!p) return;
   const sc = segCounts(p.units);
   const pctDone = pct(p.units);
   const actions = ACTION_ITEMS.filter(a=>a.pid===pid);
+  const emails = gmailThreads[pid]||[];
 
   let html = `
     <div class="proj-header">
@@ -193,19 +263,16 @@ function renderProject(pid, emails) {
       <div class="seg Field"><span class="count">${sc.Field}</span>Field</div>
       <div class="seg Reporting"><span class="count">${sc.Reporting}</span>Reporting</div>
       <div class="seg Done"><span class="count">${sc.Done}</span>Done</div>
-    </div>
-  `;
+    </div>`;
 
   if(actions.length) {
     html += `<div class="action-board"><h3>⚡ Action Items</h3>`;
-    actions.forEach(a => {
-      html += `<div class="action-item ${a.pri}">${a.icon} ${a.text}</div>`;
-    });
+    actions.forEach(a => { html += `<div class="action-item ${a.pri}">${a.icon} ${a.text}</div>`; });
     html += `</div>`;
   }
 
   if(emails.length) {
-    html += `<div class="email-section"><h3>📧 Recent Email Threads</h3>`;
+    html += `<div class="email-section" style="margin-top:20px"><h3>📧 Recent Email Threads (${emails.length})</h3>`;
     emails.forEach(e => {
       html += `<div class="email-card">
         <div class="email-subject">${e.subject||'(no subject)'}</div>
@@ -221,8 +288,7 @@ function renderProject(pid, emails) {
       <tr><th>Address</th><th>Status</th><th>Stage</th>${p.hasAcm?'<th>'+p.acmLabel+'</th>':''}${p.isWater?'<th>Notes</th>':''}</tr>`;
   p.units.forEach(u => {
     html += `<tr>
-      <td>${u.a||'—'}</td>
-      <td>${u.s||'—'}</td>
+      <td>${u.a||'—'}</td><td>${u.s||'—'}</td>
       <td><span class="seg-chip ${u.seg}">${u.seg}</span></td>
       ${p.hasAcm?`<td>${u.m||'—'}</td>`:''}
       ${p.isWater?`<td>${u.m||'—'}</td>`:''}
@@ -233,8 +299,10 @@ function renderProject(pid, emails) {
   document.getElementById('main').innerHTML = html;
 }
 
+// Boot
 buildSidebar();
-selectProject(PROJECTS[0].pid);
+renderProject(currentPid);
+fetchGmail();
 </script>
 </body>
 </html>
