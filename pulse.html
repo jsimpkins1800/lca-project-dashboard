@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LCA Daily Pulse</title>
+<style>
+:root{
+  color-scheme: light;
+  --bg:#f6f8fb; --card:#ffffff; --border:#e3e8ef; --text:#0f172a; --sub:#64748b;
+  --blue:#2563eb; --blue-soft:#eff6ff;
+  --green:#15803d; --green-soft:#ecfdf3;
+  --amber:#b45309; --amber-soft:#fffbeb;
+  --red:#b91c1c; --red-soft:#fef2f2;
+  --purple:#7c3aed; --purple-soft:#f5f3ff;
+  --conf-confirmed:#1a7f37; --conf-likely:#9a6700; --conf-review:#cf222e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.45}
+.wrap{max-width:1240px;margin:0 auto;padding:16px 18px 40px}
+
+header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+h1{font-size:19px;font-weight:700;letter-spacing:-.2px}
+.range{font-size:12.5px;color:var(--sub);margin-top:3px}
+.stamps{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:11.5px;color:var(--sub)}
+.stamp{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.dot{width:7px;height:7px;border-radius:50%;flex:none}
+.dot.ok{background:var(--green)} .dot.wait{background:var(--amber)} .dot.err{background:var(--red)}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:9px;margin-bottom:14px}
+.tile{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:13px 13px 12px;cursor:pointer;text-align:left;font:inherit;color:inherit;position:relative;transition:border-color .13s,box-shadow .13s}
+.tile:hover{border-color:#c7d2e4;box-shadow:0 2px 8px rgba(15,23,42,.07)}
+.tile.active{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.11)}
+.tile .num{font-size:30px;font-weight:700;line-height:1.05;letter-spacing:-1px}
+.tile .num.ratio{font-size:24px}
+.tile .lbl{font-size:10.5px;font-weight:650;text-transform:uppercase;letter-spacing:.5px;color:var(--sub);margin-top:5px;line-height:1.3}
+.tile .sub{font-size:11px;color:var(--sub);margin-top:4px;min-height:15px}
+.tile .bar{display:flex;gap:2px;margin-top:9px;height:3px;border-radius:2px;overflow:hidden}
+.tile .bar i{display:block;height:3px}
+.delta{position:absolute;top:10px;right:10px;font-size:10px;font-weight:700;padding:2px 5px;border-radius:999px;background:var(--blue-soft);color:var(--blue);border:1px solid #cfe0fd}
+.delta.none{display:none}
+
+.panel{background:var(--card);border:1px solid var(--border);border-radius:11px;overflow:hidden}
+.panel + .panel{margin-top:12px}
+.ph{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 15px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.ph h2{font-size:13.5px;font-weight:680}
+.ph .note{font-size:11.5px;color:var(--sub)}
+.back{background:none;border:1px solid var(--border);border-radius:7px;padding:4px 10px;font:inherit;font-size:11.5px;color:var(--sub);cursor:pointer}
+.back:hover{background:var(--bg);color:var(--text)}
+
+.legend{display:flex;gap:14px;flex-wrap:wrap;padding:10px 15px;background:#fcfdfe;border-bottom:1px solid var(--border);font-size:11.5px;color:var(--sub)}
+.legend b{color:var(--text);font-weight:680}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:9px;height:9px;border-radius:2px;flex:none}
+.banner{padding:10px 15px;background:var(--amber-soft);border-bottom:1px solid #f2e2b8;font-size:12px;color:#7c4a06;line-height:1.5}
+
+.ovw{display:grid;grid-template-columns:1.15fr 1fr;gap:12px}
+@media(max-width:860px){.ovw{grid-template-columns:1fr}}
+.owners{display:flex;flex-direction:column}
+.owner{display:flex;align-items:center;gap:11px;padding:11px 15px;border-bottom:1px solid #f1f4f9;cursor:pointer}
+.owner:last-child{border-bottom:none}
+.owner:hover{background:#fafbfd}
+.av{width:29px;height:29px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:11px;font-weight:700;color:#fff}
+.owner .nm{flex:1;min-width:0}
+.owner .nm b{font-size:13px;font-weight:640;display:block}
+.owner .nm span{font-size:11.5px;color:var(--sub)}
+.cnt{font-size:12px;font-weight:700;padding:2px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--border);color:var(--sub)}
+.cnt.hi{background:var(--red-soft);border-color:#f6cfcf;color:var(--red)}
+
+.progs{padding:5px 0}
+.prog{display:flex;align-items:center;gap:10px;padding:9px 15px;font-size:12.5px}
+.prog .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{font-size:10.5px;font-weight:650;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.pill.active{background:var(--green-soft);color:var(--green)}
+.pill.quiet{background:var(--bg);color:var(--sub)}
+.pill.dormant{background:#f4f4f5;color:#71717a}
+.pill.watch{background:var(--amber-soft);color:var(--amber)}
+
+.rows{display:flex;flex-direction:column}
+.row{border-bottom:1px solid #f1f4f9}
+.row:last-child{border-bottom:none}
+.rhead{display:flex;align-items:flex-start;gap:11px;padding:12px 15px;cursor:pointer;width:100%;background:none;border:none;font:inherit;color:inherit;text-align:left}
+.rhead:hover{background:#fafbfd}
+.rhead .tw{flex:1;min-width:0}
+.rt{font-size:13px;font-weight:640;margin-bottom:3px}
+.rm{font-size:11.5px;color:var(--sub)}
+.tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:10.5px;font-weight:640;padding:2px 7px;border-radius:5px;border:1px solid transparent}
+.tag.cf-Confirmed{background:var(--green-soft);color:var(--conf-confirmed);border-color:#c9ead6}
+.tag.cf-Likely{background:var(--amber-soft);color:var(--conf-likely);border-color:#f2e2b8}
+.tag.cf-Review{background:var(--red-soft);color:var(--conf-review);border-color:#f6cfcf}
+.tag.flag{background:var(--purple-soft);color:var(--purple);border-color:#e3dbfe}
+.tag.flag-bad{background:var(--red-soft);color:var(--red);border-color:#f6cfcf}
+.tag.flag-warn{background:var(--amber-soft);color:var(--amber);border-color:#f2e2b8}
+.tag.flag-good{background:var(--green-soft);color:var(--green);border-color:#c9ead6}
+.tag.st{background:var(--bg);color:var(--sub);border-color:var(--border)}
+.tag.new{background:var(--blue-soft);color:var(--blue);border-color:#cfe0fd}
+.rx{color:#c3ccdb;font-size:11px;padding-top:2px;flex:none;transition:transform .15s}
+.row.open .rx{transform:rotate(90deg);color:var(--blue)}
+.detail{display:none;padding:2px 15px 15px 15px;background:#fcfdfe;border-top:1px dashed var(--border)}
+.row.open .detail{display:block}
+.f{display:grid;grid-template-columns:170px 1fr;gap:4px 14px;padding:9px 0;border-bottom:1px solid #f1f4f9;font-size:12.5px}
+@media(max-width:640px){.f{grid-template-columns:1fr}}
+.f:last-of-type{border-bottom:none}
+.f dt{font-weight:640;color:var(--sub)}
+.ev{margin-top:11px;display:flex;gap:7px;flex-wrap:wrap}
+.ev a{font-size:11.5px;text-decoration:none;color:var(--blue);background:var(--blue-soft);border:1px solid #cfe0fd;padding:3px 9px;border-radius:6px}
+.ev a:hover{background:#e0ecfe}
+.nt{margin-top:10px;font-size:12px;color:var(--sub);font-style:italic;padding-left:9px;border-left:2px solid var(--border)}
+
+.rev{padding:4px 0}
+.rev li{list-style:none;padding:10px 15px;border-bottom:1px solid #f1f4f9;font-size:12.5px;display:flex;gap:9px}
+.rev li:last-child{border-bottom:none}
+.rev li::before{content:"?";flex:none;width:16px;height:16px;border-radius:50%;background:var(--amber-soft);color:var(--amber);font-size:10px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.rev b{font-weight:640}
+.foot{margin-top:14px;font-size:11px;color:var(--sub);text-align:center;line-height:1.65}
+.foot a{color:var(--blue)}
+.empty{padding:26px 15px;text-align:center;color:var(--sub);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><h1>LCA Daily Pulse</h1><div class="range" id="range"></div></div>
+  <div class="stamps">
+    <div class="stamp"><span class="dot ok"></span><span id="baseStamp"></span></div>
+    <div class="stamp"><span class="dot wait" id="liveDot"></span><span id="liveStamp">checking inbox…</span></div>
+  </div>
+</header>
+<div class="tiles" id="tiles"></div>
+<div id="view"></div>
+<div class="foot">
+  Static snapshot of the vetted LCA Snapshot Report baseline, published for mobile. Open the Cowork artifact for the live inbox delta.
+  <br><span id="qcFoot"></span>
+  <br><span id="srcLink"></span>
+</div>
+</div>
+
+<script>
+"use strict";
+
+/* Data block is machine-replaced each morning by scripts/push_pulse_data.js.
+   Everything outside the two markers is the locked UI — do not edit it there. */
+// >>> PULSE_DATA_START
+const DATA = {
+  "rangeLabel": "July 23 – 29, 2026",
+  "baselineStamp": "Baseline: Jul 29, 8:05 PM vetted run",
+  "baselineAfter": "2026/07/29",
+  "baselineISO": "2026-07-30T00:05:00Z",
+  "reportUrl": "https://docs.google.com/document/d/1mwfX5Z9XN0KH8cvv1jyh0OOSP_0gg0MVtXMnaNwe4EA/edit",
+  "qcNote": "QC convention: a QC pass creates a separate Trace report with \"QC\" in its name. Trace has no built-in QC object, status field, or timestamp — its compliance check runs in-session and is not persisted, so a named report is the only durable marker.",
+  "sections": [
+    {
+      "id": "proj",
+      "label": "Active Projects",
+      "accent": "blue",
+      "sub": "12 current + 1 prior-year",
+      "banner": "Project spine is the xlsx trackers behind the Project Command Center — unit-by-unit detail lives there, not here. Trace separately carries 10 projects the tracker spine has never heard of, including this week's live Fort Story, Picatinny and Grand Forks work.",
+      "breakdown": [
+        [
+          "Active with mail this week",
+          5
+        ],
+        [
+          "Quiet this week",
+          8
+        ]
+      ],
+      "keywords": [
+        "project",
+        "tracker",
+        "kickoff",
+        "new project"
+      ],
+      "items": [
+        {
+          "title": "26-001 New London",
+          "meta": "Beacon Point Homes · 6 threads this week",
+          "status": "Very active",
+          "confidence": "Confirmed",
+          "flags": [
+            "Blocked on WO/PO"
+          ],
+          "fields": [
+            [
+              "Pipeline stage",
+              "Field work and delivery running concurrently"
+            ],
+            [
+              "Work type",
+              "ACM / LBP inspections, clearances"
+            ],
+            [
+              "Gmail threads in window",
+              "6"
+            ],
+            [
+              "Trace project",
+              "26-001 (New London - Facilities) — 2 reports"
+            ],
+            [
+              "This week",
+              "Three proposals sent Jul 23 and all three inspected Jul 27; 258 Pelican clearance letter sent Jul 24; 18 Bushnell revised lab report received but WO/PO still missing"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Testing needed (Jul 21–27)",
+              "https://mail.google.com/mail/u/0/#all/19f85f408d1e5cb4"
+            ],
+            [
+              "Gmail: New London - Reports for July 8",
+              "https://mail.google.com/mail/u/0/#all/19f8b1934af9d391"
+            ]
+          ]
+        },
+        {
+          "title": "26-011 / 26-010 USMA (West Point)",
+          "meta": "West Point Family Homes · 4 threads this week",
+          "status": "Very active",
+          "confidence": "Confirmed",
+          "flags": [
+            "Resident health issue",
+            "Invoice held"
+          ],
+          "fields": [
+            [
+              "Pipeline stage",
+              "Delivery plus a new urgent request"
+            ],
+            [
+              "Work type",
+              "Exterior LBP stabilization, radon, lead in water"
+            ],
+            [
+              "Gmail threads in window",
+              "4"
+            ],
+            [
+              "Trace project",
+              "26-011 USMA Exterior LBP Stabilization — 11 reports; plus USMA Facilities Radon Testing and 26-039 USMA Water Testing outside the tracker"
+            ],
+            [
+              "This week",
+              "78A&B Schofield report acknowledged Jul 23, radon report sent Jul 27, its invoice halted Jul 29, and a new urgent 532B lead-in-water request arrived Jul 29"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 532B WO# 10598547 (Jul 29)",
+              "https://mail.google.com/mail/u/0/#all/19faeddd61fb378d"
+            ],
+            [
+              "Gmail: USMA - Radon Testing Report",
+              "https://mail.google.com/mail/u/0/#all/19fa48525483b9c1"
+            ],
+            [
+              "Gmail: USMA - Report for 78A&B Schofield Place",
+              "https://mail.google.com/mail/u/0/#all/19f8b8fde17c6579"
+            ]
+          ]
+        },
+        {
+          "title": "26-002 Newport",
+          "meta": "NAVSTA Newport Homes · 5 threads this week",
+          "status": "Active",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Pipeline stage",
+              "Delivery and billing"
+            ],
+            [
+              "Work type",
+              "Asbestos clearances, radon"
+            ],
+            [
+              "Gmail threads in window",
+              "5"
+            ],
+            [
+              "Trace project",
+              "26-002 (NAVSTA Newport - Facilities) — 2 reports, both matching this week's sent letters"
+            ],
+            [
+              "This week",
+              "147 Puritan and 502 Read clearance letters sent Jul 23 with invoices Jul 24; new proposal for 39 Constellation Court sent Jul 28 and WO/PO returned same day"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Newport - Clearance Letters for May 6",
+              "https://mail.google.com/mail/u/0/#all/19f90491e2d6c0ce"
+            ],
+            [
+              "Gmail: Newport - Proposal for 39 Constellation Court",
+              "https://mail.google.com/mail/u/0/#all/19fa92d21554a7b8"
+            ]
+          ]
+        },
+        {
+          "title": "26-005 Charleston (JBWS)",
+          "meta": "JBWS Charleston · 3 threads this week",
+          "status": "Active",
+          "confidence": "Confirmed",
+          "flags": [
+            "No QC"
+          ],
+          "fields": [
+            [
+              "Pipeline stage",
+              "Delivery and billing"
+            ],
+            [
+              "Work type",
+              "ACM / LBP surveys"
+            ],
+            [
+              "Gmail threads in window",
+              "3"
+            ],
+            [
+              "Trace project",
+              "JBWS Charleston - Facilities — 1 project-level asbestos survey only, no address-specific reports"
+            ],
+            [
+              "This week",
+              "Reports for 50 Boone, 818 Petrel and 949 Tringa sent Jul 27 with invoices the same day; 140 Sunbird invoiced Jul 23"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports from July 20",
+              "https://mail.google.com/mail/u/0/#all/19fa3f9480ebf056"
+            ],
+            [
+              "Gmail: Charleston - Invoices from July 20",
+              "https://mail.google.com/mail/u/0/#all/19fa501fdbc63bb5"
+            ]
+          ]
+        },
+        {
+          "title": "26-009 Fort Eustis",
+          "meta": "Fort Eustis Family Homes · 1 thread this week",
+          "status": "New request in",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Pipeline stage",
+              "Request received, not yet scheduled"
+            ],
+            [
+              "Work type",
+              "LBP testing"
+            ],
+            [
+              "Gmail threads in window",
+              "1"
+            ],
+            [
+              "Trace project",
+              "Fort Eustis Lead Inspections — 0 reports"
+            ],
+            [
+              "This week",
+              "304A Madison LBP request arrived Jul 29 with WO 10565934 and PO 1871954 both already issued — ready to schedule"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 304A Madison (Jul 29)",
+              "https://mail.google.com/mail/u/0/#all/19fae1968b61c337"
+            ]
+          ]
+        },
+        {
+          "title": "24-101 Fort Carson",
+          "meta": "Balfour Beatty · prior-year project, no mail this week",
+          "status": "Quiet",
+          "confidence": "Confirmed",
+          "flags": [
+            "Prior-year carryover"
+          ],
+          "fields": [
+            [
+              "Pipeline stage",
+              "Reporting wind-down"
+            ],
+            [
+              "Work type",
+              "Pre-demolition ACM / LBP survey"
+            ],
+            [
+              "Gmail threads in window",
+              "0"
+            ],
+            [
+              "Trace project",
+              "24-101 Fort Carson - Demolition ACM LBP Testing — 4 reports, most recent 5704 Remagen Road on Jul 15; a separate 26-101 Fort Carson Soil project exists with 0 reports"
+            ],
+            [
+              "This week",
+              "No new Fort Carson mail. The only adjacent signal is a Fort Gordon out-of-office pointing Fort Carson enquiries to Elliot Johnson, which suggests a BBC contact change worth confirming"
+            ]
+          ],
+          "evidence": [
+            [
+              "Trace: Pre-Demolition ACM & LBP Survey - 5704 Remagen Road",
+              "https://trace.erblue.com/#/o/LCA/p/24-101%20Fort%20Carson%20-%20Demolition%20ACM%20LBP%20Testing/r/Pre-Demolition%20ACM%20&%20LBP%20Survey%20-%205704%20Remagen%20Road?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ],
+            [
+              "Gmail: Automatic reply - Fort Gordon Azalea Terrace",
+              "https://mail.google.com/mail/u/0/#all/19f95c196888add7"
+            ]
+          ]
+        },
+        {
+          "title": "26-024 Minot AFB",
+          "meta": "Balfour Beatty · dormant, no mail this week",
+          "status": "Dormant",
+          "confidence": "Confirmed",
+          "flags": [
+            "No Trace record"
+          ],
+          "fields": [
+            [
+              "Pipeline stage",
+              "Wound down"
+            ],
+            [
+              "Work type",
+              "Environmental testing"
+            ],
+            [
+              "Gmail threads in window",
+              "0"
+            ],
+            [
+              "Trace project",
+              "None — Trace has no Minot or Grand Forks record at all"
+            ],
+            [
+              "This week",
+              "Minot itself is quiet, as expected. Its successor is live though: BBC Environmental approved the Grand Forks sampling proposal on Jul 28 and asked for an ESR"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: RE: Grand Forks - Proposal for (Jul 28)",
+              "https://mail.google.com/mail/u/0/#all/19fa9a7a6600c1e0"
+            ]
+          ]
+        },
+        {
+          "title": "26-025 Portsmouth",
+          "meta": "NSY Portsmouth Homes · no mail this week",
+          "status": "Quiet",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Pipeline stage",
+              "Reporting complete, retest pending"
+            ],
+            [
+              "Work type",
+              "Lead in water"
+            ],
+            [
+              "Gmail threads in window",
+              "0"
+            ],
+            [
+              "Trace project",
+              "Portsmouth Lead in Water Testing — 2 reports"
+            ],
+            [
+              "This week",
+              "Nothing new. The Quarters I and P retest conversation last moved Apr 30 and has never been closed out"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Portsmouth Water Testing - next week",
+              "https://mail.google.com/mail/u/0/#all/19d9b8e4ad60f710"
+            ]
+          ]
+        },
+        {
+          "title": "26-003 Earle",
+          "meta": "Naval Weapons Station Earle · no mail this week",
+          "status": "Quiet",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Pipeline stage",
+              "Survey delivered"
+            ],
+            [
+              "Work type",
+              "LBP and asbestos survey"
+            ],
+            [
+              "Gmail threads in window",
+              "0"
+            ],
+            [
+              "Trace project",
+              "Naval Weapons Station Earle — 1 report (597 Green Drive, Jun 23)"
+            ],
+            [
+              "This week",
+              "No activity"
+            ]
+          ],
+          "evidence": [
+            [
+              "Trace: LBP & Asbestos Survey - 597 Green Drive",
+              "https://trace.erblue.com/#/o/LCA/p/Naval%20Weapons%20Station%20Earle/r/LBP%20&%20Asbestos%20Survey%20-%20597%20Green%20Drive?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ]
+          ]
+        },
+        {
+          "title": "26-004 Lakehurst",
+          "meta": "no mail this week",
+          "status": "Quiet",
+          "confidence": "Confirmed",
+          "flags": [
+            "No Trace record"
+          ],
+          "fields": [
+            [
+              "Gmail threads in window",
+              "0"
+            ],
+            [
+              "Trace project",
+              "None"
+            ],
+            [
+              "This week",
+              "No activity; tracker last modified Apr 2"
+            ]
+          ],
+          "evidence": [
+            [
+              "Drive: 26-004_Lakehurst_Site_Tracker.xlsx",
+              "https://drive.google.com/file/d/120TM5MTTxKUvvBeMnzMfaLTsg55fcZ1m/view?usp=drivesdk"
+            ]
+          ]
+        },
+        {
+          "title": "26-006 Fort Jackson",
+          "meta": "no mail this week",
+          "status": "Quiet",
+          "confidence": "Confirmed",
+          "flags": [
+            "No Trace record"
+          ],
+          "fields": [
+            [
+              "Gmail threads in window",
+              "0"
+            ],
+            [
+              "Trace project",
+              "None"
+            ],
+            [
+              "This week",
+              "No activity; tracker last modified Apr 2"
+            ]
+          ],
+          "evidence": [
+            [
+              "Drive: 26-006_FortJackson_Site_Tracker.xlsx",
+              "https://drive.google.com/file/d/1KUtrlZ1K8oUDcszyNRy1JQLAfBlQywlI/view?usp=drivesdk"
+            ]
+          ]
+        },
+        {
+          "title": "26-007 Fort Detrick",
+          "meta": "no mail this week",
+          "status": "Quiet",
+          "confidence": "Confirmed",
+          "flags": [
+            "No Trace record"
+          ],
+          "fields": [
+            [
+              "Gmail threads in window",
+              "0"
+            ],
+            [
+              "Trace project",
+              "None"
+            ],
+            [
+              "This week",
+              "No activity; tracker last modified Apr 2"
+            ]
+          ],
+          "evidence": [
+            [
+              "Drive: 26-007_FortDetrick_Site_Tracker.xlsx",
+              "https://drive.google.com/file/d/1fSLBqVrJEOgCom6fYnNTGO0o6DHctP4M/view?usp=drivesdk"
+            ]
+          ]
+        },
+        {
+          "title": "26-010 USMA Site (separate from 26-011)",
+          "meta": "no mail distinct from 26-011 this week",
+          "status": "Quiet",
+          "confidence": "Likely",
+          "flags": [],
+          "fields": [
+            [
+              "Gmail threads in window",
+              "0 attributable to this tracker specifically"
+            ],
+            [
+              "Trace project",
+              "No direct match; USMA work in Trace sits under 26-011, USMA Facilities Radon Testing and 26-039 Water Testing"
+            ],
+            [
+              "This week",
+              "West Point activity is real but flows through the 26-011 and radon records rather than this tracker"
+            ]
+          ],
+          "evidence": [
+            [
+              "Drive: 26-010_USMA_Site_Tracker.xlsx",
+              "https://drive.google.com/file/d/1INrgRBZGas77K2f7FFuB3kxWeYMWT3Lt/view?usp=drivesdk"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "req",
+      "label": "Proposals Requested",
+      "accent": "amber",
+      "sub": "5 open requests in",
+      "keywords": [
+        "proposal",
+        "quote",
+        "quotation",
+        "estimate",
+        "testing needed",
+        "request for price",
+        "availability",
+        "earliest",
+        "when would",
+        "when can you",
+        "how soon",
+        "need to have",
+        "tested",
+        "testing",
+        "get here",
+        "come out",
+        "schedule us"
+      ],
+      "items": [
+        {
+          "title": "532B West Point — lead-in-water testing",
+          "meta": "West Point Family Homes · requested Jul 29",
+          "status": "Open — needs a date today",
+          "confidence": "Confirmed",
+          "flags": [
+            "Resident health issue",
+            "WO already issued"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Deb Oates, Maintenance Manager"
+            ],
+            [
+              "Work order",
+              "WO# 10598547 — already issued, so no priced proposal needed"
+            ],
+            [
+              "Why urgent",
+              "A 9-month-old resident tested positive for lead; Deb asked for the earliest possible date and then asked to be penciled in"
+            ],
+            [
+              "Next",
+              "Reply with a committed sampling date"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 532B WO# 10598547 (Jul 29)",
+              "https://mail.google.com/mail/u/0/#all/19faeddd61fb378d"
+            ]
+          ],
+          "note": "This is the single most time-sensitive item in the window."
+        },
+        {
+          "title": "Fort Eustis 304A Madison — LBP testing",
+          "meta": "Fort Eustis Family Homes · requested Jul 29",
+          "status": "Open — ready to schedule",
+          "confidence": "Confirmed",
+          "flags": [
+            "WO already issued"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Laurie Becker, with PO from Mendy O'Connor"
+            ],
+            [
+              "Scope",
+              "LBP testing of half-bath ceiling drywall"
+            ],
+            [
+              "Paperwork",
+              "WO 10565934 and PO 1871954 both in hand"
+            ],
+            [
+              "Next",
+              "Slot it into the next Fort Eustis trip"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 304A Madison (Jul 29)",
+              "https://mail.google.com/mail/u/0/#all/19fae1968b61c337"
+            ]
+          ]
+        },
+        {
+          "title": "Picatinny 104 Farley Lane — inspection",
+          "meta": "Picatinny Homes · requested Jul 28",
+          "status": "Converted — proposal sent, PO received",
+          "confidence": "Confirmed",
+          "flags": [
+            "No project number"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Anthony Mark Titus, Facility Manager"
+            ],
+            [
+              "Paperwork",
+              "PO 1871606; Scott will try to collect the WO on site"
+            ],
+            [
+              "Turnaround",
+              "Phone request, proposal out and inspection booked for the next afternoon"
+            ],
+            [
+              "Open question",
+              "Rob still needs a project number to bill it against"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Picatinny - Proposal for 104 Farley Lane",
+              "https://mail.google.com/mail/u/0/#all/19fa99d78d03b776"
+            ]
+          ]
+        },
+        {
+          "title": "NCBC Gulfport — testing schedule",
+          "meta": "Balfour Beatty · asked Jul 21, replied Jul 24",
+          "status": "Open — call owed",
+          "confidence": "Confirmed",
+          "flags": [
+            "No date"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Pat Adair, Director of Proposal Management"
+            ],
+            [
+              "Agreement",
+              "BBC-0092-GP-P2602 executed in early July"
+            ],
+            [
+              "State",
+              "Justin promised a Monday call on Jul 24; that window has passed and Pat is out until Jul 31"
+            ],
+            [
+              "Next",
+              "Call Pat with a proposed testing window"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Service Agreement Review BBC-0092-GP-P2602",
+              "https://mail.google.com/mail/u/0/#all/19f19626454adc44"
+            ]
+          ]
+        },
+        {
+          "title": "Princeton Lawrence Apartments — scoping",
+          "meta": "Princeton University · call held Jul 24",
+          "status": "Open — scoping in progress",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Eric Emery, PE"
+            ],
+            [
+              "What arrived",
+              "Floorplans and the unit list for Lawrence buildings 1 through 7"
+            ],
+            [
+              "Trace",
+              "LBP Proposal - Princeton Lawrence Apartments, dated Jul 17"
+            ],
+            [
+              "Next",
+              "Price the full unit inventory and propose field dates"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Princeton / LCA - Lawrence Apartments Project",
+              "https://mail.google.com/mail/u/0/#all/19f94b1947b60fef"
+            ],
+            [
+              "Trace: LBP Proposal - Princeton Lawrence Apartments",
+              "https://trace.erblue.com/#/o/LCA/p/Princeton%20Lawrence%20Apartments/r/LBP%20Proposal%20-%20Princeton%20Lawrence%20Apartments?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sent",
+      "label": "Proposals Sent",
+      "accent": "blue",
+      "sub": "4 sends, 6 properties",
+      "keywords": [
+        "proposal attached",
+        "please find the attached proposal",
+        "quotation"
+      ],
+      "items": [
+        {
+          "title": "New London — 404 Knutson, 610 Gearing, 503 Ortolan",
+          "meta": "Beacon Point Homes · sent Jul 23",
+          "status": "Accepted and performed",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Robert, with POs 1869278 / 1869280 / 1869282 returned Jul 24"
+            ],
+            [
+              "Outcome",
+              "All three inspected on site Jul 27"
+            ],
+            [
+              "Note",
+              "404 Knutson dropped LBP scope — ACM testing only"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Testing needed",
+              "https://mail.google.com/mail/u/0/#all/19f85f408d1e5cb4"
+            ],
+            [
+              "Gmail: 404 Knutson",
+              "https://mail.google.com/mail/u/0/#all/19f80bcf6bcb50b0"
+            ]
+          ]
+        },
+        {
+          "title": "Newport — 39 Constellation Court",
+          "meta": "NAVSTA Newport Homes · sent Jul 28",
+          "status": "Accepted",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Mike Olenik's office; WO and PO returned by Leticia Zuniga"
+            ],
+            [
+              "Paperwork",
+              "WO 10582489, PO 1871306 — same day"
+            ],
+            [
+              "Next",
+              "Schedule the inspection"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Newport - Proposal for 39 Constellation Court",
+              "https://mail.google.com/mail/u/0/#all/19fa92d21554a7b8"
+            ]
+          ]
+        },
+        {
+          "title": "Picatinny — 104 Farley Lane",
+          "meta": "Picatinny Homes · sent Jul 28",
+          "status": "Accepted, inspected Jul 29",
+          "confidence": "Confirmed",
+          "flags": [
+            "No project number"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Anthony Mark Titus"
+            ],
+            [
+              "Paperwork",
+              "PO 1871606"
+            ],
+            [
+              "Turnaround",
+              "Same-day proposal off a phone call"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Picatinny - Proposal for 104 Farley Lane",
+              "https://mail.google.com/mail/u/0/#all/19fa99d78d03b776"
+            ]
+          ]
+        },
+        {
+          "title": "Fort Gordon — Azalea Terrace Demo",
+          "meta": "Balfour Beatty · sent Jul 24 by Justin",
+          "status": "Awaiting response",
+          "confidence": "Confirmed",
+          "flags": [
+            "Not confirmed"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Balfour Beatty, Fort Gordon"
+            ],
+            [
+              "State",
+              "Auto-reply only; recipient was out until Jul 28 and nothing has come back since"
+            ],
+            [
+              "Trace",
+              "Fort Gordon Azalea Terrace Demo project exists with 0 reports"
+            ],
+            [
+              "Next",
+              "Follow up now that the recipient is back"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Gordon Demo - Proposal",
+              "https://mail.google.com/mail/u/0/#all/19f946f1f444244f"
+            ],
+            [
+              "Gmail: Automatic reply",
+              "https://mail.google.com/mail/u/0/#all/19f95c196888add7"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ready",
+      "label": "Reports Ready",
+      "accent": "purple",
+      "sub": "7 deliverables in the pipe",
+      "countOverride": 7,
+      "keywords": [
+        "lab report",
+        "results attached",
+        "revised report",
+        "field notes"
+      ],
+      "items": [
+        {
+          "title": "Plainfield — 813 W Third, 475 & 477 W Front (3 reports)",
+          "meta": "City of Plainfield · assessed Jul 16, customer chased Jul 27",
+          "status": "Draft exists in Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Overdue"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Jennifer Maldonado"
+            ],
+            [
+              "Trace drafts",
+              "813 W Third (Jul 27), 475 W Front (Jul 27), 477 W Front (Jul 28) — all pending acceptance and export"
+            ],
+            [
+              "Why it matters",
+              "Municipal client asked in writing when to expect the finals; the drafts already exist so this is finalize-and-send"
+            ],
+            [
+              "Next",
+              "Accept and export all three, then send"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Plainfield follow-up (Jul 27)",
+              "https://mail.google.com/mail/u/0/#all/19f4754e862fa64d"
+            ],
+            [
+              "Trace: 813 W Third Street Lead Dust Wipe Report",
+              "https://trace.erblue.com/#/o/LCA/p/NJ%20Lead%20Safe%20-%20813%20W%20Third%20Street/r/813%20W%20Third%20Street%20Lead%20Dust%20Wipe%20Report?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ],
+            [
+              "Trace: 475 W Front Street report",
+              "https://trace.erblue.com/#/o/LCA/p/NJ%20Lead%20Safe%20-%20475%20W%20Front%20Street/r/Lead%20Dust%20Wipe%20Sampling%20Report%20-%20475%20W%20Front%20Street?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ],
+            [
+              "Trace: 477 W Front Street report",
+              "https://trace.erblue.com/#/o/LCA/p/NJ%20Lead%20Safe%20-%20477%20W%20Front%20Street/r/Lead%20Dust%20Wipe%20Sampling%20Report%20-%20477%20W%20Front%20Street?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ]
+          ],
+          "note": "Trace keeps 475 and 477 W Front Street as two separate projects even though the correspondence writes them as one 475-477 address."
+        },
+        {
+          "title": "New London — 404 Knutson, 610 Gearing, 503 Ortolan (3 reports)",
+          "meta": "Beacon Point Homes · inspected Jul 27",
+          "status": "Ready to draft",
+          "confidence": "Likely",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Robert / Beacon Point Homes"
+            ],
+            [
+              "State",
+              "Field work confirmed complete on Jul 27; no Trace drafts exist for any of the three addresses"
+            ],
+            [
+              "Next",
+              "Draft once lab results land"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Testing needed — onsite Jul 27",
+              "https://mail.google.com/mail/u/0/#all/19f85f408d1e5cb4"
+            ]
+          ]
+        },
+        {
+          "title": "New London — 18 Bushnell Street",
+          "meta": "Beacon Point Homes · revised lab report received Jul 22",
+          "status": "Blocked",
+          "confidence": "Confirmed",
+          "flags": [
+            "Blocked on WO/PO"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Nick Perez / Beacon Point Homes"
+            ],
+            [
+              "What's in hand",
+              "Big East revised lead report with site drawing (invoice 26431)"
+            ],
+            [
+              "What's missing",
+              "WO# and PO# — Scott chased Nick on Jul 23 with no reply on the thread"
+            ],
+            [
+              "Next",
+              "Re-ping for the paperwork so it can be billed"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 26431 - 18 Bushnell Street Revised Lead Report",
+              "https://mail.google.com/mail/u/0/#all/19f8a1e297f78322"
+            ],
+            [
+              "Gmail: New London - Reports for July 8",
+              "https://mail.google.com/mail/u/0/#all/19f8b1934af9d391"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "out",
+      "label": "Reports Sent",
+      "accent": "green",
+      "sub": "11 deliverables out",
+      "countOverride": 11,
+      "keywords": [
+        "please find the attached report",
+        "clearance letter",
+        "reports for"
+      ],
+      "items": [
+        {
+          "title": "Fort Story — 322B, 322D, 323B, 325D Santiago Circle (4 reports)",
+          "meta": "Fort Story Family Homes · sent Jul 29",
+          "status": "Sent to customer",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace",
+            "No project spine"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Tyrone at BBC — note the original recipient has left and mail now auto-forwards"
+            ],
+            [
+              "Field work",
+              "Jul 23, performed by EHC Impact as subcontractor"
+            ],
+            [
+              "Billing",
+              "Invoices from Rob the same day"
+            ],
+            [
+              "Gap",
+              "Fort Story has neither a tracker xlsx nor a Trace project"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Story - Reports for July 23",
+              "https://mail.google.com/mail/u/0/#all/19fae6fd1cda7f05"
+            ],
+            [
+              "Gmail: Fort Story - LBP Inspections",
+              "https://mail.google.com/mail/u/0/#all/19f6ba57c2cb896e"
+            ]
+          ]
+        },
+        {
+          "title": "Charleston — 50 Boone, 818 Petrel, 949 Tringa (3 reports)",
+          "meta": "JBWS Charleston · sent Jul 27",
+          "status": "Sent to customer",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Robert / JBWS Charleston"
+            ],
+            [
+              "Billing",
+              "Invoices same day"
+            ],
+            [
+              "Trace",
+              "Only a project-level Asbestos Survey - JBWS Charleston exists; no address-specific reports"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports from July 20",
+              "https://mail.google.com/mail/u/0/#all/19fa3f9480ebf056"
+            ],
+            [
+              "Gmail: Charleston - Invoices from July 20",
+              "https://mail.google.com/mail/u/0/#all/19fa501fdbc63bb5"
+            ]
+          ]
+        },
+        {
+          "title": "Newport — 147 Puritan Drive & 502 Read Street (2 clearance letters)",
+          "meta": "NAVSTA Newport Homes · sent Jul 23",
+          "status": "Sent to customer",
+          "confidence": "Confirmed",
+          "flags": [
+            "No QC"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Mike / NAVSTA Newport Homes"
+            ],
+            [
+              "Billing",
+              "Invoices Jul 24"
+            ],
+            [
+              "Trace",
+              "Both letters have matching Trace drafts updated Jul 23 — the only two sent deliverables this week that do"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Newport - Clearance Letters for May 6",
+              "https://mail.google.com/mail/u/0/#all/19f90491e2d6c0ce"
+            ],
+            [
+              "Trace: 147 Puritan Drive Asbestos Clearance Letter",
+              "https://trace.erblue.com/#/o/LCA/p/26-002%20(NAVSTA%20Newport%20-%20Facilities)/r/147%20Puritan%20Drive%20Asbestos%20Clearance%20Letter?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ],
+            [
+              "Trace: 502 Read Street Asbestos Clearance Letter",
+              "https://trace.erblue.com/#/o/LCA/p/26-002%20(NAVSTA%20Newport%20-%20Facilities)/r/502%20Read%20Street%20Asbestos%20Clearance%20Letter?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ]
+          ]
+        },
+        {
+          "title": "USMA — Radon Testing Report",
+          "meta": "West Point Family Homes · sent Jul 27",
+          "status": "Sent, invoice held",
+          "confidence": "Confirmed",
+          "flags": [
+            "Invoice held",
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Deb Oates"
+            ],
+            [
+              "Testing dates",
+              "Jul 17 through Jul 20"
+            ],
+            [
+              "Paperwork",
+              "PO 1860956 and WO 10569961 both eventually supplied"
+            ],
+            [
+              "Problem",
+              "Rob circulated the invoice for approval Jul 29 and the reply was \"DO NOT SEND!\" with no reason on the thread"
+            ],
+            [
+              "Trace",
+              "Only a Radon Testing Proposal - West Point exists; the report itself was never entered"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: USMA - Radon Testing Report",
+              "https://mail.google.com/mail/u/0/#all/19fa48525483b9c1"
+            ]
+          ]
+        },
+        {
+          "title": "New London — 258 Pelican Drive clearance letter",
+          "meta": "Beacon Point Homes · sent Jul 24",
+          "status": "Sent to customer",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Manny / Beacon Point Homes"
+            ],
+            [
+              "Billing",
+              "Unit failed the first visual and needed reinspection; invoice adjusted +$550 to cover the extra Big East clearance at $450 each"
+            ],
+            [
+              "Trace",
+              "No report record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: New London - Clearance Letter for 258 Pelican Drive",
+              "https://mail.google.com/mail/u/0/#all/19f95cbe3d4df038"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "qc",
+      "label": "Reports QC'd by Trace",
+      "accent": "red",
+      "display": "0 / 11",
+      "sub": "0 of 11 sent reports QC'd",
+      "denominator": 11,
+      "qcd": 0,
+      "banner": "QC convention: a QC pass creates a separate Trace report whose name contains \"QC\". Zero QC-named records were found anywhere in the LCA organization this run — that is the honest reading, not a bug. Templates are being built out, but no deliverable has been through a recorded QC pass.",
+      "breakdown": [
+        [
+          "QC report in Trace",
+          0
+        ],
+        [
+          "Draft in Trace, no QC report",
+          2
+        ],
+        [
+          "Never entered Trace",
+          9
+        ]
+      ],
+      "keywords": [
+        "qc",
+        "quality control"
+      ],
+      "items": [
+        {
+          "title": "Newport 147 Puritan Drive — asbestos clearance letter",
+          "meta": "sent Jul 23",
+          "status": "Draft in Trace, no QC report",
+          "confidence": "Confirmed",
+          "flags": [
+            "No QC"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "147 Puritan Drive Asbestos Clearance Letter, updated Jul 23"
+            ],
+            [
+              "QC sibling",
+              "None"
+            ]
+          ],
+          "evidence": [
+            [
+              "Trace: 147 Puritan Drive Asbestos Clearance Letter",
+              "https://trace.erblue.com/#/o/LCA/p/26-002%20(NAVSTA%20Newport%20-%20Facilities)/r/147%20Puritan%20Drive%20Asbestos%20Clearance%20Letter?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ]
+          ]
+        },
+        {
+          "title": "Newport 502 Read Street — asbestos clearance letter",
+          "meta": "sent Jul 23",
+          "status": "Draft in Trace, no QC report",
+          "confidence": "Confirmed",
+          "flags": [
+            "No QC"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "502 Read Street Asbestos Clearance Letter, updated Jul 23"
+            ],
+            [
+              "QC sibling",
+              "None"
+            ]
+          ],
+          "evidence": [
+            [
+              "Trace: 502 Read Street Asbestos Clearance Letter",
+              "https://trace.erblue.com/#/o/LCA/p/26-002%20(NAVSTA%20Newport%20-%20Facilities)/r/502%20Read%20Street%20Asbestos%20Clearance%20Letter?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ]
+          ]
+        },
+        {
+          "title": "Fort Story 322B Santiago Circle",
+          "meta": "sent Jul 29",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "None — no Fort Story project exists in the LCA org"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Story - Reports for July 23",
+              "https://mail.google.com/mail/u/0/#all/19fae6fd1cda7f05"
+            ]
+          ]
+        },
+        {
+          "title": "Fort Story 322D Santiago Circle",
+          "meta": "sent Jul 29",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "None"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Story - Reports for July 23",
+              "https://mail.google.com/mail/u/0/#all/19fae6fd1cda7f05"
+            ]
+          ]
+        },
+        {
+          "title": "Fort Story 323B Santiago Circle",
+          "meta": "sent Jul 29",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "None"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Story - Reports for July 23",
+              "https://mail.google.com/mail/u/0/#all/19fae6fd1cda7f05"
+            ]
+          ]
+        },
+        {
+          "title": "Fort Story 325D Santiago Circle",
+          "meta": "sent Jul 29",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "None"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Story - Reports for July 23",
+              "https://mail.google.com/mail/u/0/#all/19fae6fd1cda7f05"
+            ]
+          ]
+        },
+        {
+          "title": "Charleston 50 Boone Avenue",
+          "meta": "sent Jul 27",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "None — the project-level Asbestos Survey - JBWS Charleston is not an address-specific report"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports from July 20",
+              "https://mail.google.com/mail/u/0/#all/19fa3f9480ebf056"
+            ]
+          ]
+        },
+        {
+          "title": "Charleston 818 Petrel Street",
+          "meta": "sent Jul 27",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "None"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports from July 20",
+              "https://mail.google.com/mail/u/0/#all/19fa3f9480ebf056"
+            ]
+          ]
+        },
+        {
+          "title": "Charleston 949 Tringa Street",
+          "meta": "sent Jul 27",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "None"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports from July 20",
+              "https://mail.google.com/mail/u/0/#all/19fa3f9480ebf056"
+            ]
+          ]
+        },
+        {
+          "title": "USMA Radon Testing Report",
+          "meta": "sent Jul 27",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "Only the Radon Testing Proposal - West Point exists; a proposal is not a report"
+            ]
+          ],
+          "evidence": [
+            [
+              "Trace: Radon Testing Proposal - West Point",
+              "https://trace.erblue.com/#/o/LCA/p/USMA%20-%20Facilities%20-%20Radon%20Testing/r/Radon%20Testing%20Proposal%20-%20West%20Point?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ]
+          ]
+        },
+        {
+          "title": "New London 258 Pelican Drive clearance",
+          "meta": "sent Jul 24",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Trace record",
+              "None — 26-001 holds only 37 Sycamore Lane and 198 Michigan Drive letters of findings from June"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: New London - Clearance Letter for 258 Pelican Drive",
+              "https://mail.google.com/mail/u/0/#all/19f95cbe3d4df038"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "insp",
+      "label": "Upcoming Inspections",
+      "accent": "amber",
+      "sub": "1 booked, 2 need dates",
+      "keywords": [
+        "inspection",
+        "onsite",
+        "schedule",
+        "site visit",
+        "accessible"
+      ],
+      "items": [
+        {
+          "title": "Picatinny 104 Farley Lane",
+          "meta": "Jul 29, ~2:30 PM · Scott Gill",
+          "status": "Scheduled",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Anthony Mark Titus, Picatinny Homes"
+            ],
+            [
+              "Paperwork",
+              "PO 1871606; WO to be collected on site"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Picatinny - Proposal for 104 Farley Lane",
+              "https://mail.google.com/mail/u/0/#all/19fa99d78d03b776"
+            ]
+          ]
+        },
+        {
+          "title": "532B West Point — lead-in-water sampling",
+          "meta": "date not yet committed · requested Jul 29",
+          "status": "Needs confirmation",
+          "confidence": "Confirmed",
+          "flags": [
+            "No date",
+            "Resident health issue"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Deb Oates, West Point Family Homes"
+            ],
+            [
+              "Paperwork",
+              "WO 10598547 in hand"
+            ],
+            [
+              "Blocker",
+              "LCA has not yet named a date"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 532B WO# 10598547",
+              "https://mail.google.com/mail/u/0/#all/19faeddd61fb378d"
+            ]
+          ]
+        },
+        {
+          "title": "NCBC Gulfport — environmental testing",
+          "meta": "date TBD · agreement executed",
+          "status": "Needs confirmation",
+          "confidence": "Likely",
+          "flags": [
+            "No date"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Pat Adair, Balfour Beatty"
+            ],
+            [
+              "Agreement",
+              "BBC-0092-GP-P2602"
+            ],
+            [
+              "Blocker",
+              "Scheduling call not yet held; Pat back Jul 31"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Service Agreement Review BBC-0092-GP-P2602",
+              "https://mail.google.com/mail/u/0/#all/19f19626454adc44"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "owners": [
+    {
+      "name": "Scott Gill",
+      "role": "Field operations",
+      "color": "#2563eb",
+      "slack": "U06JSAY32GP",
+      "items": [
+        {
+          "title": "Schedule the 532B West Point lead-in-water test",
+          "priority": "High",
+          "detail": "A 9-month-old resident tested positive for lead and Deb Oates asked to be penciled in for the soonest date; WO 10598547 is already issued.",
+          "next": "Reply today with a committed sampling date.",
+          "evidence": [
+            [
+              "Gmail: 532B WO# 10598547",
+              "https://mail.google.com/mail/u/0/#all/19faeddd61fb378d"
+            ]
+          ]
+        },
+        {
+          "title": "Deliver the overdue Plainfield lead assessment reports",
+          "priority": "High",
+          "detail": "Assessments were performed Jul 16 and the city chased on Jul 27; all three drafts already exist in Trace.",
+          "next": "Accept and export the three Trace drafts and send them to Jennifer Maldonado.",
+          "evidence": [
+            [
+              "Gmail: Plainfield follow-up",
+              "https://mail.google.com/mail/u/0/#all/19f4754e862fa64d"
+            ],
+            [
+              "Trace: 813 W Third Street report",
+              "https://trace.erblue.com/#/o/LCA/p/NJ%20Lead%20Safe%20-%20813%20W%20Third%20Street/r/813%20W%20Third%20Street%20Lead%20Dust%20Wipe%20Report?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ]
+          ]
+        },
+        {
+          "title": "Break the logjam on the 71 Cormorant clearance",
+          "priority": "High",
+          "detail": "Rob has reached out several times with no response and cannot invoice until it is resolved.",
+          "next": "Contact the customer directly or tell Rob exactly what is outstanding.",
+          "evidence": [
+            [
+              "Gmail: Fwd: 71 Cormorant Clearance",
+              "https://mail.google.com/mail/u/0/#all/19fae4dae29acd59"
+            ]
+          ]
+        },
+        {
+          "title": "Submit the ESR and kick off Grand Forks AFB sampling",
+          "priority": "Medium",
+          "detail": "BBC Environmental approved the sampling proposal Jul 28 and asked for an ESR submission; this is the live successor to the wound-down Minot program.",
+          "next": "Coordinate with BBC's Gabriel, submit the ESR, and open a tracker and Trace project.",
+          "evidence": [
+            [
+              "Gmail: RE: Grand Forks - Proposal for",
+              "https://mail.google.com/mail/u/0/#all/19fa9a7a6600c1e0"
+            ]
+          ]
+        },
+        {
+          "title": "Chase the 18 Bushnell WO/PO and assign the Picatinny project number",
+          "priority": "Low",
+          "detail": "18 Bushnell's revised lead report is in hand but unbillable without the WO/PO, and Rob needs a project number for 104 Farley Lane.",
+          "next": "Re-ping Nick Perez, and reply to Rob with a number.",
+          "evidence": [
+            [
+              "Gmail: 18 Bushnell WO chase",
+              "https://mail.google.com/mail/u/0/#all/19f8b1934af9d391"
+            ],
+            [
+              "Gmail: Picatinny project # question",
+              "https://mail.google.com/mail/u/0/#all/19fa99d78d03b776"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Rob Gabriel",
+      "role": "Accounting",
+      "color": "#7c3aed",
+      "slack": "U06K08QHG3G",
+      "items": [
+        {
+          "title": "Resolve the held USMA radon invoice",
+          "priority": "Medium",
+          "detail": "The invoice was circulated Jul 29 and came back \"DO NOT SEND!\" with no reason stated on the thread (PO 1860956, WO 10569961).",
+          "next": "Hold until Justin says what needs to change, then send.",
+          "evidence": [
+            [
+              "Gmail: USMA - Radon Testing Report",
+              "https://mail.google.com/mail/u/0/#all/19fa48525483b9c1"
+            ]
+          ]
+        },
+        {
+          "title": "Send the next check against the EMSL balance",
+          "priority": "Medium",
+          "detail": "Outstanding balance is $27,198.12 across invoices dated 3/3/26 to 7/17/26, and a check was promised for this week.",
+          "next": "Cut and mail the check; confirm the remaining balance with Christine Zadravec.",
+          "evidence": [
+            [
+              "Gmail: LCOA30 statement",
+              "https://mail.google.com/mail/u/0/#all/19f8f8a6f8bf8598"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Justin Mastykarz",
+      "role": "President",
+      "color": "#15803d",
+      "slack": "U06K403NN8M",
+      "items": [
+        {
+          "title": "Say what needs to change on the held USMA radon invoice",
+          "priority": "Medium",
+          "detail": "The \"DO NOT SEND!\" reply on Jul 29 gave no reason, so Rob is holding indefinitely while the customer waits.",
+          "next": "Tell Rob what to correct.",
+          "evidence": [
+            [
+              "Gmail: USMA - Radon Testing Report",
+              "https://mail.google.com/mail/u/0/#all/19fa48525483b9c1"
+            ]
+          ]
+        },
+        {
+          "title": "Call Pat Adair to lock the NCBC Gulfport testing schedule",
+          "priority": "Medium",
+          "detail": "The service agreement is executed and Pat has asked twice about timing; the promised Monday call window has passed and she returns Jul 31.",
+          "next": "Call with a proposed testing window.",
+          "evidence": [
+            [
+              "Gmail: Service Agreement Review BBC-0092-GP-P2602",
+              "https://mail.google.com/mail/u/0/#all/19f19626454adc44"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "programs": [
+    {
+      "name": "Charleston (JBWS)",
+      "state": "active",
+      "note": "Three reports and three invoices out Jul 27; no address-level Trace records."
+    },
+    {
+      "name": "USMA / West Point",
+      "state": "active",
+      "note": "Radon report delivered, invoice held, and an urgent 532B water request landed Jul 29."
+    },
+    {
+      "name": "Fort Eustis",
+      "state": "active",
+      "note": "304A Madison LBP request in Jul 29 with WO and PO already issued."
+    },
+    {
+      "name": "Fort Carson (24-101)",
+      "state": "quiet",
+      "note": "No mail this week; four Trace reports, latest 5704 Remagen Road on Jul 15."
+    },
+    {
+      "name": "Minot AFB (26-024)",
+      "state": "dormant",
+      "note": "Wound down as expected. Successor Grand Forks proposal approved Jul 28 — no Trace or tracker record yet."
+    }
+  ],
+  "review": [
+    [
+      "USMA radon invoice hold",
+      "The \"DO NOT SEND!\" reply gives no reason; confirm what is wrong before the customer wonders where the invoice is."
+    ],
+    [
+      "Mark McCord credentials",
+      "A Jul 27 email with credentials attached and an empty body — possible new hire or subcontractor, but no context on the thread."
+    ],
+    [
+      "Voicemail from (973) 328-2992",
+      "Justin forwarded it Jul 28; the number matches Picatinny Homes, likely the 104 Farley Lane request, but nobody confirmed the content."
+    ],
+    [
+      "322B Santiago Circle window quote",
+      "Proposal sent Jul 22 and Denise Pons promised a PO on Jul 23; no PO on the thread, yet 322B appears in the Jul 29 report batch."
+    ],
+    [
+      "Fort Story has no project spine",
+      "Four reports went out Jul 29 for a site with no tracker xlsx and no Trace project. Same for Picatinny and Grand Forks."
+    ],
+    [
+      "Tracker-vs-Trace mismatch",
+      "Trace carries 10 projects the tracker has never heard of, including the live NJ Lead Safe, Princeton Lawrence, USMA B132 Bartlett and Fort Gordon work."
+    ],
+    [
+      "BBC staff changes",
+      "A new contact, Daniel, now handles scheduling at one BBC office, and the Fort Story recipient has left BBC entirely."
+    ],
+    [
+      "EHC Impact clearance form",
+      "Courtney said the remaining fields had to be completed by Scott on Jul 17; confirm it was finished so future Fort Story visits are not blocked."
+    ]
+  ]
+};
+// <<< PULSE_DATA_END
+/* baseline Gmail thread ids already cited, so the live delta only counts new mail */
+const CITED = new Set();
+const harvest = ev => (ev||[]).forEach(e => {
+  const m = String(e[1]).match(/#all\/([0-9a-f]+)/); if (m) CITED.add(m[1]);
+});
+(DATA.sections||[]).forEach(s => (s.items||[]).forEach(i => harvest(i.evidence)));
+(DATA.owners||[]).forEach(o => (o.items||[]).forEach(i => harvest(i.evidence)));
+
+const LS = "lca-pulse-sel";
+let sel = null;
+try { sel = localStorage.getItem(LS) || null; } catch(e) { sel = null; }
+if (sel && !(DATA.sections||[]).some(s => s.id === sel)) sel = null;
+let deltas = {}, openRow = null;
+
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const secById = id => DATA.sections.find(s => s.id === id);
+const countOf = s => s.countOverride != null ? s.countOverride : (s.items||[]).length;
+const cfClass = c => c === "Confirmed" ? "cf-Confirmed" : c === "Likely" ? "cf-Likely" : "cf-Review";
+const flagClass = f => /never entered|blocked|not sent|overdue|no results/i.test(f) ? "flag-bad"
+  : /no qc|not confirmed|not received|no date/i.test(f) ? "flag-warn"
+  : /qc'd|trace-clean/i.test(f) ? "flag-good" : "flag";
+
+/* breakdown colours, in the order the skill emits them */
+const BD = ["var(--green)","var(--amber)","var(--red)"];
+
+function renderTiles(){
+  document.getElementById("tiles").innerHTML = DATA.sections.map(s => {
+    let bars;
+    if (s.breakdown){
+      const tot = s.breakdown.reduce((a,b) => a + b[1], 0) || 1;
+      bars = s.breakdown.map((b,i) => b[1] ? `<i style="background:${BD[i]||"var(--sub)"};flex:${b[1]/tot}"></i>` : "").join("");
+    } else {
+      const mix = (s.items||[]).reduce((a,i) => (a[i.confidence] = (a[i.confidence]||0)+1, a), {});
+      bars = ["Confirmed","Likely","Needs Review"].filter(k => mix[k]).map(k => {
+        const c = k === "Confirmed" ? "var(--conf-confirmed)" : k === "Likely" ? "var(--conf-likely)" : "var(--conf-review)";
+        return `<i style="background:${c};flex:${mix[k]}"></i>`;
+      }).join("");
+    }
+    const d = deltas[s.id] || 0;
+    const shown = s.display != null ? s.display : countOf(s);
+    return `<button class="tile ${sel===s.id?"active":""}" data-sec="${esc(s.id)}" aria-pressed="${sel===s.id}">
+      <span class="delta ${d?"":"none"}">+${d}</span>
+      <div class="num ${s.display!=null?"ratio":""}" style="color:var(--${esc(s.accent)})">${esc(shown)}</div>
+      <div class="lbl">${esc(s.label)}</div>
+      <div class="sub">${esc(s.sub||"")}</div>
+      <div class="bar">${bars}</div>
+    </button>`;
+  }).join("");
+  document.querySelectorAll(".tile").forEach(b => b.onclick = () => {
+    sel = (sel === b.dataset.sec) ? null : b.dataset.sec;
+    openRow = null;
+    try { sel ? localStorage.setItem(LS, sel) : localStorage.removeItem(LS); } catch(e){}
+    renderTiles(); renderView();
+  });
+}
+
+function renderView(){
+  document.getElementById("view").innerHTML = sel ? drill(secById(sel)) : overview();
+  wire();
+}
+
+function overview(){
+  const own = (DATA.owners||[]).map((o,oi) => {
+    const hi = (o.items||[]).some(i => i.priority === "High");
+    const ini = o.name.split(" ").map(w => w[0]).join("");
+    return `<div class="owner" data-own="${oi}">
+      <span class="av" style="background:${esc(o.color)}">${esc(ini)}</span>
+      <span class="nm"><b>${esc(o.name)}</b><span>${esc(o.role)}</span></span>
+      <span class="cnt ${hi?"hi":""}">${(o.items||[]).length} open</span>
+    </div>
+    <div class="detail" id="own-${oi}">${(o.items||[]).map(i => `
+      <dl class="f"><dt>${esc(i.priority)} priority</dt><dd><b>${esc(i.title)}</b><br>${esc(i.detail)}<br>
+      <span style="color:var(--sub)">→ ${esc(i.next)}</span>
+      <div class="ev">${(i.evidence||[]).map(e => `<a href="${esc(e[1])}" target="_blank" rel="noopener">${esc(e[0])}</a>`).join("")}</div></dd></dl>`).join("")}</div>`;
+  }).join("");
+
+  const progs = (DATA.programs||[]).map(p => `<div class="prog">
+      <span class="pill ${esc(p.state)}">${esc(p.state)}</span>
+      <span class="nm"><b style="font-weight:640">${esc(p.name)}</b></span>
+      <span style="color:var(--sub);font-size:11.5px;text-align:right;max-width:52%">${esc(p.note)}</span>
+    </div>`).join("");
+
+  return `<div class="ovw">
+    <div class="panel"><div class="ph"><h2>Open action items by owner</h2><span class="note">click a person to expand</span></div>
+      <div class="owners">${own || '<div class="empty">No action items.</div>'}</div></div>
+    <div class="panel"><div class="ph"><h2>Standing programs</h2><span class="note">always covered</span></div>
+      <div class="progs">${progs}</div></div>
+  </div>
+  <div class="panel"><div class="ph"><h2>Human review needed</h2><span class="note">${(DATA.review||[]).length} open questions</span></div>
+    <ul class="rev">${(DATA.review||[]).map(r => `<li><span><b>${esc(r[0])}:</b> ${esc(r[1])}</span></li>`).join("")}</ul></div>`;
+}
+
+function drill(s){
+  const d = deltas[s.id] || 0;
+  const rows = (s.items||[]).map((i,ix) => `
+    <div class="row ${openRow===ix?"open":""}">
+      <button class="rhead" data-row="${ix}" aria-expanded="${openRow===ix}">
+        <span class="tw">
+          <div class="rt">${esc(i.title)}</div>
+          <div class="rm">${esc(i.meta)}</div>
+          <div class="tags">
+            <span class="tag st">${esc(i.status)}</span>
+            <span class="tag ${cfClass(i.confidence)}">${esc(i.confidence)}</span>
+            ${(i.flags||[]).map(f => `<span class="tag ${flagClass(f)}">${esc(f)}</span>`).join("")}
+          </div>
+        </span><span class="rx">▸</span>
+      </button>
+      <div class="detail">
+        ${(i.fields||[]).map(f => `<dl class="f"><dt>${esc(f[0])}</dt><dd>${esc(f[1])}</dd></dl>`).join("")}
+        <div class="ev">${(i.evidence||[]).map(e => `<a href="${esc(e[1])}" target="_blank" rel="noopener">${esc(e[0])}</a>`).join("")}</div>
+        ${i.note ? `<div class="nt">${esc(i.note)}</div>` : ""}
+      </div>
+    </div>`).join("");
+
+  const legend = s.breakdown ? `<div class="legend">${s.breakdown
+    .map((b,i) => [b,i]).filter(([b]) => b[0])
+    .map(([b,i]) => `<span><i class="sw" style="background:${BD[i]||"var(--sub)"}"></i>${esc(b[0])} <b>${b[1]}</b></span>`)
+    .join("")}</div>` : "";
+  const banner = s.banner ? `<div class="banner">${esc(s.banner)}</div>` : "";
+  const hdr = s.display != null
+    ? esc(s.label) + " — " + esc(s.display)
+    : esc(s.label) + " — " + countOf(s) + " item" + (countOf(s)===1?"":"s");
+
+  return `<div class="panel">
+    <div class="ph"><h2>${hdr}</h2>
+      <div style="display:flex;align-items:center;gap:9px">
+        ${d?`<span class="tag new">+${d} unvetted since baseline</span>`:""}
+        <button class="back" id="back">← All KPIs</button>
+      </div></div>
+    ${banner}${legend}
+    <div class="rows">${rows || '<div class="empty">No relevant activity found in the review window.</div>'}</div>
+  </div>`;
+}
+
+function wire(){
+  const b = document.getElementById("back");
+  if (b) b.onclick = () => { sel=null; openRow=null; try{localStorage.removeItem(LS)}catch(e){} renderTiles(); renderView(); };
+  document.querySelectorAll(".rhead").forEach(el => el.onclick = () => {
+    const ix = +el.dataset.row; openRow = (openRow===ix) ? null : ix; renderView();
+  });
+  document.querySelectorAll(".owner").forEach(el => el.onclick = () => {
+    const dd = document.getElementById("own-"+el.dataset.own);
+    if (dd) dd.style.display = dd.style.display === "block" ? "none" : "block";
+  });
+}
+
+function live(){
+  /* static GitHub Pages build — no window.cowork bridge here, so no live Gmail delta */
+  const dot=document.getElementById("liveDot"), out=document.getElementById("liveStamp");
+  dot.className="dot ok";
+  out.textContent="Static snapshot · Jul 29, 2026";
+  out.style.cursor="default";
+}
+
+document.getElementById("range").textContent = DATA.rangeLabel + " · vetted snapshot with live inbox delta";
+document.getElementById("baseStamp").textContent = DATA.baselineStamp;
+if (DATA.qcNote) document.getElementById("qcFoot").textContent = DATA.qcNote;
+if (DATA.reportUrl) document.getElementById("srcLink").innerHTML =
+  'Source of record: <a href="' + esc(DATA.reportUrl) + '" target="_blank" rel="noopener">LCA Snapshot Report ' + esc(DATA.rangeLabel) + '</a>';
+renderTiles(); renderView(); live();
+</script>
+</body>
+</html>
