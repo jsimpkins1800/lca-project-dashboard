@@ -552,7 +552,8 @@ const DATA = {
       "id": "req",
       "label": "Proposals Requested",
       "accent": "amber",
-      "sub": "6 of 9 from Charleston",
+      "sub": "1 urgent, 6 from Charleston",
+      "banner": "The top item predates the review window and is included anyway: a nine-month-old at 532B West Point tested positive for lead, Balfour Beatty asked twice on July 29 for the earliest possible water test, and no LCA reply appears on the thread.",
       "keywords": [
         "proposal",
         "quote",
@@ -573,6 +574,46 @@ const DATA = {
         "schedule us"
       ],
       "items": [
+        {
+          "title": "532B West Point — lead-in-water test, infant tested positive",
+          "meta": "USMA / West Point · requested Jul 29 by Deb Oates · arrived BEFORE the window",
+          "status": "Open, no reply visible",
+          "confidence": "Confirmed",
+          "flags": [
+            "Overdue",
+            "Not confirmed",
+            "Predates window"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Balfour Beatty — Deb Oates, West Point Family Homes; Chris Varmon copied"
+            ],
+            [
+              "Her words",
+              "\"We may need to have the water tested for lead at a unit here because a 9 month old tested positive, when would be the earliest you could get here?\""
+            ],
+            [
+              "Follow-up",
+              "Same afternoon: \"Can you please pencil us in for that especially if it's the soonest you can get here.\""
+            ],
+            [
+              "Work order",
+              "WO 10598547"
+            ],
+            [
+              "Status",
+              "Eight days open. No LCA reply on the thread and no date set."
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 532B WO# 10598547 (Jul 29)",
+              "https://mail.google.com/mail/u/0/#all/19faeddd61fb378d"
+            ]
+          ],
+          "note": "Included even though it falls outside July 31 - August 6, because it is live, unresolved, and a child's confirmed blood lead result outranks everything else on this board."
+        },
         {
           "title": "933 Tringa Street — drywall (ACM) testing",
           "meta": "Charleston (JBWS) · requested Jul 31 by Jim Perry",
@@ -1475,7 +1516,7 @@ const DATA = {
       "id": "insp",
       "label": "Upcoming Inspections",
       "accent": "amber",
-      "sub": "4 of 5 have no date",
+      "sub": "5 of 6 have no date",
       "keywords": [
         "schedule",
         "scheduling",
@@ -1488,6 +1529,44 @@ const DATA = {
         "next week"
       ],
       "items": [
+        {
+          "title": "532B West Point — lead-in-water sampling, no date set",
+          "meta": "USMA / West Point · requested Jul 29 as soon as possible",
+          "status": "Needs Confirmation",
+          "confidence": "Confirmed",
+          "flags": [
+            "Overdue",
+            "No date"
+          ],
+          "fields": [
+            [
+              "Date",
+              "Not set — asked for the earliest possible on Jul 29"
+            ],
+            [
+              "Site",
+              "532B, West Point Family Homes"
+            ],
+            [
+              "Customer",
+              "Balfour Beatty — Deb Oates, copied to Chris Varmon"
+            ],
+            [
+              "Work order",
+              "WO 10598547"
+            ],
+            [
+              "Why it leads this list",
+              "A nine-month-old tested positive for lead. This is the one overdue scheduling item with a child's health attached to it."
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 532B WO# 10598547 (Jul 29)",
+              "https://mail.google.com/mail/u/0/#all/19faeddd61fb378d"
+            ]
+          ]
+        },
         {
           "title": "New London clearance — Friday, August 7",
           "meta": "New London · Big East Environmental",
@@ -1654,6 +1733,18 @@ const DATA = {
       "color": "#2563eb",
       "slack": "U06JSAY32GP",
       "items": [
+        {
+          "title": "Get 532B West Point on the calendar — infant with a positive lead test",
+          "priority": "High",
+          "detail": "Deb Oates asked on Jul 29 for lead-in-water testing at 532B because a nine-month-old tested positive, then followed up the same afternoon asking to be penciled in for the soonest date. No LCA reply appears on the thread and no date is set eight days later. WO 10598547 exists. This outranks everything else here.",
+          "next": "Reply to Oates today with a specific date, not a range, and copy Rob for the WO paperwork. If LCA cannot get to West Point quickly, say so plainly and help her find someone who can.",
+          "evidence": [
+            [
+              "Gmail: 532B WO# 10598547 (Jul 29)",
+              "https://mail.google.com/mail/u/0/#all/19faeddd61fb378d"
+            ]
+          ]
+        },
         {
           "title": "Give Charleston dates for the three approved units",
           "priority": "High",
@@ -1894,8 +1985,8 @@ const DATA = {
     },
     {
       "name": "USMA / West Point",
-      "state": "quiet",
-      "note": "Radon report and revised invoice closed out in late July (WO 10569961, PO 1860956). 14 Trace records across four projects, none touched this window."
+      "state": "watch",
+      "note": "532B lead-in-water request from Jul 29 is still unanswered — a nine-month-old tested positive. Radon report and revised invoice otherwise closed out in late July."
     },
     {
       "name": "Fort Carson (24-101)",
@@ -1914,6 +2005,10 @@ const DATA = {
     }
   ],
   "review": [
+    [
+      "Did anyone answer Deb Oates about 532B?",
+      "Two messages from her on Jul 29 and nothing back from LCA on the thread. Scott may have replied by phone, but for a request driven by a child's positive lead test the absence of a written date is itself the problem. Confirm what actually happened."
+    ],
     [
       "Picatinny has no project spine",
       "A report went out for 104 Farley Lane on Aug 4 and an invoice followed, but there is no Picatinny tracker xlsx and no Picatinny project in Trace — real revenue invisible to every project tool."
