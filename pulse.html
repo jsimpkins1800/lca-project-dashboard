@@ -142,19 +142,19 @@ h1{font-size:19px;font-weight:700;letter-spacing:-.2px}
    Everything outside the two markers is the locked UI — do not edit it there. */
 // >>> PULSE_DATA_START
 const DATA = {
-  "rangeLabel": "August 7 – 13, 2026",
-  "baselineStamp": "Baseline: Aug 13, 7:05 AM vetted run",
-  "baselineAfter": "2026/08/13",
-  "baselineISO": "2026-08-13T11:05:00Z",
-  "reportUrl": "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk",
-  "qcNote": "QC convention: a QC pass creates a separate Trace report whose name contains \"QC\". Trace has no QC field or timestamp, so a QC-named record is the only detectable signal — and none exists anywhere in the LCA organization.",
+  "rangeLabel": "August 8 – 14, 2026",
+  "baselineStamp": "Baseline: Aug 14, 7:15 AM vetted run",
+  "baselineAfter": "2026/08/14",
+  "baselineISO": "2026-08-14T11:15:00Z",
+  "reportUrl": "https://docs.google.com/document/d/1YqmlNOSSJafbjufjsMgWAZ8WwsnoRfj5jlIcwC7COhk/edit",
+  "qcNote": "QC convention: a QC pass creates a separate Trace report with \"QC\" in its name. Trace has no QC status field or timestamp, so a QC-named record is the only durable signal. Zero exist org-wide.",
   "sections": [
     {
       "id": "proj",
       "label": "Active Projects",
       "accent": "blue",
       "sub": "12 current + 1 prior-year",
-      "banner": "Project spine is the xlsx trackers behind the Project Command Center. Trace carries 10 further projects the tracker has never heard of, and 5 tracker projects have no Trace presence — see Human review needed.",
+      "banner": "Project spine is the xlsx trackers behind the Project Command Center. Trace separately carries ~10 projects the tracker has never heard of — see Human review.",
       "breakdown": [
         [
           "Active with mail this week",
@@ -173,352 +173,410 @@ const DATA = {
       ],
       "items": [
         {
-          "title": "26-005 Charleston (JBWS)",
-          "meta": "tracker project · 9 Gmail threads this week",
-          "status": "Active this week",
+          "title": "26-005 Charleston (JBWS) — Facilities",
+          "meta": "10 Gmail threads this week · Trace: JBWS Charleston - Facilities, 1 report",
+          "status": "Busiest account of the week",
           "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
           "fields": [
             [
-              "Gmail activity",
-              "9 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "JBWS Charleston - Facilities (1 report)"
+              "Work type",
+              "ACM / drywall / roof covering testing, clearances"
             ],
             [
               "This week",
-              "Four reports out Aug 10 and invoiced Aug 11; five new testing requests, three priced and approved same day, 221 Fletcher and 410 Knutson still unpriced."
+              "4 reports delivered Aug 10; 6-property field day Aug 10; 4 new requests (221 Fletcher, 410 Knutson, 6 Polk, 404 Parnassus)"
+            ],
+            [
+              "Trace",
+              "One project-level Asbestos Survey record from Jul 7 — no address-specific drafts"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Gmail: Charleston - Reports for August 4, 2026",
+              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
+            ],
+            [
+              "Gmail: Charleston - Proposals",
+              "https://mail.google.com/mail/u/0/#all/19fd3934db313ab8"
             ]
           ]
         },
         {
-          "title": "24-101 Fort Carson — prior year",
-          "meta": "prior-year project · 7 Gmail threads this week",
-          "status": "Active this week",
+          "title": "26-009 Fort Eustis Lead Inspections",
+          "meta": "6 Gmail threads this week · Trace: 0 reports",
+          "status": "Active — two deliverables out, two scheduling asks open",
           "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace",
+            "No date"
+          ],
           "fields": [
             [
-              "Gmail activity",
-              "7 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "24-101 Fort Carson - Demolition ACM LBP Testing (4 reports)"
+              "Work type",
+              "LBP inspections"
             ],
             [
               "This week",
-              "Lab report for 5709 Falaise Gap and three Cherbourg Circle eCOCs landed Aug 12; Balfour Beatty held a point-count call Aug 11 and is waiting on gyp/texture counts."
+              "339H 26th St and 304D Madison delivered and invoiced; 338A and 2942B Summerall proposals out with POs; EHC Impact waiting on a date"
+            ],
+            [
+              "Trace",
+              "Project exists with zero report records"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Gmail: Fort Eustis - Reports for August 3, 2026",
+              "https://mail.google.com/mail/u/0/#all/19feca1adc3b7bfa"
+            ],
+            [
+              "Trace: Fort Eustis Lead Inspections",
+              "https://trace.erblue.com/#/o/LCA/p/Fort%20Eustis%20Lead%20Inspections?session=0a54c53d-9065-4a93-834e-e862668741db"
             ]
           ]
         },
         {
-          "title": "26-009 Fort Eustis",
-          "meta": "tracker project · 5 Gmail threads this week",
-          "status": "Active this week",
+          "title": "26-001 New London / Beacon Point",
+          "meta": "5 Gmail threads this week · Trace: 26-001 New London - Facilities, 2 reports",
+          "status": "Active — Monday field day forming",
           "confidence": "Confirmed",
+          "flags": [],
           "fields": [
             [
-              "Gmail activity",
-              "5 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "Fort Eustis Lead Inspections (0 reports)"
+              "Work type",
+              "Asbestos clearances, air tests"
             ],
             [
               "This week",
-              "Two reports out Aug 10, two new LBP proposals out Aug 10 with POs already issued, and a Friday 8/14 date nobody has confirmed."
+              "273 Ohio Ave clearance letter delivered Aug 11; 19 Wilson and 65 Poplar booked for Mon Aug 17; 34 Edison requested for the same day"
+            ],
+            [
+              "Trace",
+              "Two Jun 2026 asbestos letters of findings (37 Sycamore, 198 Michigan) — nothing current"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Gmail: 19 WILSON — WO and PO",
+              "https://mail.google.com/mail/u/0/#all/19ffd872ec86b13c"
+            ],
+            [
+              "Gmail: New London - Clearance Letter for 273 Ohio Avenue",
+              "https://mail.google.com/mail/u/0/#all/19ff1b93c6ada1a0"
+            ]
+          ]
+        },
+        {
+          "title": "24-101 Fort Carson — Demolition ACM LBP Testing",
+          "meta": "7 Gmail threads this week · Trace: 4 report drafts, last Jul 15 · prior-year",
+          "status": "Active — lab work in flight, scope decision pending",
+          "confidence": "Confirmed",
+          "flags": [
+            "Prior-year",
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Work type",
+              "Pre-demolition ACM and LBP survey, destructive testing, oversight"
+            ],
+            [
+              "This week",
+              "Eurofins eCOCs for 5636, 5637, 5642, 5655 Cherbourg Circle; RES 764216-2 for 5709 Falaise Gap; Elliott Johnson wants a gyp/texture hit count before deciding on point counts"
+            ],
+            [
+              "Trace",
+              "Four drafts, all Harr Ave / Remagen Road — none of this week's addresses"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Carson - Point Count",
+              "https://mail.google.com/mail/u/0/#all/19ff7c9706c8a791"
+            ],
+            [
+              "Gmail: eCOC RES 777252 - 5637 Cherbourg Circle",
+              "https://mail.google.com/mail/u/0/#all/19ffc981b888078b"
+            ]
+          ]
+        },
+        {
+          "title": "26-010 USMA / West Point",
+          "meta": "3 Gmail threads this week · Trace: 4 USMA projects, 14 records",
+          "status": "Active — one report out, one classification blocked",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Work type",
+              "LBP and asbestos surveys, radon, water testing"
+            ],
+            [
+              "This week",
+              "532B Winans Road report delivered Aug 10 but Rob cannot invoice until it is classed Renovations or Facilities; BBC asked for a resident-facing radon summary"
+            ],
+            [
+              "Trace",
+              "11 Exterior LBP drafts from Jun 8, plus radon and water proposals — nothing from this week"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: USMA - 532B Winans Road",
+              "https://mail.google.com/mail/u/0/#all/19fecba1699d63ec"
+            ],
+            [
+              "Gmail: FW: Radon Testing",
+              "https://mail.google.com/mail/u/0/#all/19ffc1362dbb0e31"
             ]
           ]
         },
         {
           "title": "26-011 USMA Renovations",
-          "meta": "tracker project · 4 Gmail threads this week",
-          "status": "Active this week",
+          "meta": "2 Gmail threads this week · Trace: 26-011 USMA Exterior LBP Stabilization, 11 reports",
+          "status": "Active — billing cleanup",
           "confidence": "Confirmed",
+          "flags": [],
           "fields": [
             [
-              "Gmail activity",
-              "4 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "26-011 USMA Exterior LBP Stabilization (11 reports, last Jun 8)"
+              "Work type",
+              "Exterior LBP stabilization, renovation surveys"
             ],
             [
               "This week",
-              "BBC legal challenged the Contractual Provisions pages in Lusk SCO 02; Rob reopened 78A&B Schofield invoicing and flagged 82A&B Partridge Place as having a proposal but no report."
+              "78A&B Schofield invoiced twice after an NOB sample pricing question; 82A&B Partridge Place proposal has no matching report; BBC legal asked to strip contractual provisions pages from the Lusk SCO"
+            ],
+            [
+              "Trace",
+              "11 drafts, all last touched Jun 8"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Gmail: Re: USMA - Report for 78A&B Schofield Place",
+              "https://mail.google.com/mail/u/0/#all/19f8b8fde17c6579"
+            ],
+            [
+              "Gmail: BBC-0095-WP-P2502 / SCO 02 / 78A, 82A and 82B Lusk",
+              "https://mail.google.com/mail/u/0/#all/19ff6a2b4ce5112f"
             ]
           ]
         },
         {
           "title": "26-004 Lakehurst",
-          "meta": "tracker project · 3 Gmail threads this week",
-          "status": "Active this week",
+          "meta": "3 Gmail threads this week · Trace: no Lakehurst project exists",
+          "status": "Active — clean same-day turnaround",
           "confidence": "Confirmed",
-          "fields": [
-            [
-              "Gmail activity",
-              "3 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "No Trace project"
-            ],
-            [
-              "This week",
-              "Full proposal-to-PO-to-report cycle at 212 Lansdowne Road inside one day on Aug 11, plus two Pinehurst Estates proposals awaiting response."
-            ]
-          ],
-          "evidence": [
-            [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
-            ]
-          ],
           "flags": [
-            "Not in Trace"
-          ]
-        },
-        {
-          "title": "26-010 USMA",
-          "meta": "tracker project · 2 Gmail threads this week",
-          "status": "Active this week",
-          "confidence": "Confirmed",
+            "Never entered Trace"
+          ],
           "fields": [
             [
-              "Gmail activity",
-              "2 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "USMA - Facilities - Radon Testing; 26-039 USMA Water Testing"
+              "Work type",
+              "LBP / asbestos inspections"
             ],
             [
               "This week",
-              "532B Winans Road report went out Aug 10 to two out-of-office recipients; Deb DePalma asked for the 107B radon work order on Aug 13."
+              "212 Lansdowne proposal, PO 1878565, report and invoice all inside 24 hours; 1903 and 2203 Pinehurst Estates proposals awaiting response"
+            ],
+            [
+              "Trace",
+              "No project record at all"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Gmail: Lakehurst - Report for 212 Lansdowne Road",
+              "https://mail.google.com/mail/u/0/#all/19ff1ab8cd280f59"
+            ],
+            [
+              "Gmail: Lakehurst - Requested Proposals",
+              "https://mail.google.com/mail/u/0/#all/19ff1b1628cb5316"
             ]
           ]
         },
         {
-          "title": "26-001 New London",
-          "meta": "tracker project · 1 Gmail thread this week",
-          "status": "Active this week",
-          "confidence": "Confirmed",
+          "title": "26-025 Portsmouth",
+          "meta": "0 Gmail threads this week · Trace: Portsmouth Lead in Water Testing, 2 reports (Jun 5)",
+          "status": "Quiet — stale drafts awaiting a decision",
+          "confidence": "Likely",
+          "flags": [
+            "No date"
+          ],
           "fields": [
             [
-              "Gmail activity",
-              "1 thread in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "26-001 (New London - Facilities) (2 reports)"
+              "Work type",
+              "Lead in drinking water testing, radon"
             ],
             [
               "This week",
-              "Clearance letter for 273 Ohio Avenue sent Aug 11 off the Big East PCM clearance report received Aug 10."
+              "No mail. \"Portsmouth Water Reports\" and \"Is Portsmouth Radon happening?\" both sit on Scott's Aug 13 notes"
+            ],
+            [
+              "Trace",
+              "Two water-testing drafts, both last touched Jun 5"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Gmail: Re: Notes — Scott's running list",
+              "https://mail.google.com/mail/u/0/#all/19ffc06800679282"
+            ],
+            [
+              "Trace: Portsmouth Lead in Water Testing",
+              "https://trace.erblue.com/#/o/LCA/p/Portsmouth%20Lead%20in%20Water%20Testing?session=0a54c53d-9065-4a93-834e-e862668741db"
             ]
           ]
         },
         {
-          "title": "26-002 Newport",
-          "meta": "tracker project · 0 Gmail threads this week",
+          "title": "26-024 Minot AFB",
+          "meta": "0 Gmail threads this week · Trace: no project record",
+          "status": "Wound down — expected",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Work type",
+              "Interior ACM surveys"
+            ],
+            [
+              "This week",
+              "Nothing. Delivery closed out late May, final balance invoiced May 22. Only a photo package remains outstanding"
+            ],
+            [
+              "Successor",
+              "Grand Forks AFB at $1,250/unit vs Minot's $875 — approved Jul 28, no movement since"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Minot AFB - Interior ACM Surveys delivered",
+              "https://mail.google.com/mail/u/0/#all/19e4f7f14cbe9691"
+            ],
+            [
+              "Gmail: RE: Grand Forks - Proposal",
+              "https://mail.google.com/mail/u/0/#all/19fa9a7a6600c1e0"
+            ]
+          ],
+          "note": "Minot being quiet is the correct reading, not a gap. Grand Forks is where the attention belongs."
+        },
+        {
+          "title": "26-002 NAVSTA Newport",
+          "meta": "0 Gmail threads this week · Trace: 26-002 (NAVSTA Newport - Facilities), 2 reports (Jul 23)",
           "status": "Quiet this week",
           "confidence": "Confirmed",
+          "flags": [],
           "fields": [
             [
-              "Gmail activity",
-              "0 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "26-002 (NAVSTA Newport - Facilities) (2 reports, last Jul 23)"
+              "Work type",
+              "Asbestos clearance letters"
             ],
             [
               "This week",
-              "No mail in the window."
+              "No mail in the window"
+            ],
+            [
+              "Trace",
+              "147 Puritan Drive and 502 Read Street clearance letters, both Jul 23"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Trace: 26-002 (NAVSTA Newport - Facilities)",
+              "https://trace.erblue.com/#/o/LCA/p/26-002%20(NAVSTA%20Newport%20-%20Facilities)?session=0a54c53d-9065-4a93-834e-e862668741db"
             ]
           ]
         },
         {
-          "title": "26-003 Earle",
-          "meta": "tracker project · 0 Gmail threads this week",
+          "title": "26-003 Naval Weapons Station Earle",
+          "meta": "0 Gmail threads this week · Trace: Naval Weapons Station Earle, 1 report (Jun 23)",
           "status": "Quiet this week",
           "confidence": "Confirmed",
+          "flags": [],
           "fields": [
             [
-              "Gmail activity",
-              "0 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "Naval Weapons Station Earle (1 report, last Jun 23)"
+              "Work type",
+              "LBP and asbestos surveys"
             ],
             [
               "This week",
-              "No mail in the window."
+              "No mail in the window"
+            ],
+            [
+              "Trace",
+              "LBP & Asbestos Survey - 597 Green Drive, Jun 23"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Trace: Naval Weapons Station Earle",
+              "https://trace.erblue.com/#/o/LCA/p/Naval%20Weapons%20Station%20Earle?session=0a54c53d-9065-4a93-834e-e862668741db"
             ]
           ]
         },
         {
           "title": "26-006 Fort Jackson",
-          "meta": "tracker project · 0 Gmail threads this week",
+          "meta": "0 Gmail threads this week · Trace: no project record",
           "status": "Quiet this week",
           "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
           "fields": [
             [
-              "Gmail activity",
-              "0 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "No Trace project"
+              "Work type",
+              "Not active in the window"
             ],
             [
               "This week",
-              "No mail in the window."
+              "No mail"
+            ],
+            [
+              "Trace",
+              "No project record"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Drive: 26-006_FortJackson_Site_Tracker.xlsx",
+              "https://drive.google.com/file/d/1KUtrlZ1K8oUDcszyNRy1JQLAfBlQywlI/view?usp=drivesdk"
             ]
-          ],
-          "flags": [
-            "Not in Trace"
           ]
         },
         {
           "title": "26-007 Fort Detrick",
-          "meta": "tracker project · 0 Gmail threads this week",
+          "meta": "0 Gmail threads this week · Trace: no project record",
           "status": "Quiet this week",
           "confidence": "Confirmed",
-          "fields": [
-            [
-              "Gmail activity",
-              "0 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "No Trace project"
-            ],
-            [
-              "This week",
-              "No mail in the window."
-            ]
-          ],
-          "evidence": [
-            [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
-            ]
-          ],
           "flags": [
-            "Not in Trace"
-          ]
-        },
-        {
-          "title": "26-024 Minot",
-          "meta": "tracker project · 0 Gmail threads this week",
-          "status": "Quiet this week",
-          "confidence": "Confirmed",
+            "Never entered Trace"
+          ],
           "fields": [
             [
-              "Gmail activity",
-              "0 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "No Trace project"
+              "Work type",
+              "Not active in the window"
             ],
             [
               "This week",
-              "Dormant since May. Successor Grand Forks has a BBC-approved proposal from Jul 28 awaiting an ESR, and no tracker or Trace project of its own."
+              "No mail"
+            ],
+            [
+              "Trace",
+              "No project record"
             ]
           ],
           "evidence": [
             [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
-            ]
-          ],
-          "flags": [
-            "Not in Trace"
-          ]
-        },
-        {
-          "title": "26-025 Portsmouth",
-          "meta": "tracker project · 0 Gmail threads this week",
-          "status": "Quiet this week",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Gmail activity",
-              "0 threads in Aug 7–13"
-            ],
-            [
-              "Trace",
-              "Portsmouth Lead in Water Testing (2 reports, last Jun 5)"
-            ],
-            [
-              "This week",
-              "No mail in the window."
-            ]
-          ],
-          "evidence": [
-            [
-              "Full report — LCA Snapshot Report Aug 7–13",
-              "https://docs.google.com/document/d/16l1oZKw31j4hYZIEiuUrSGeML1uLU3-YWarBFLANm8Y/edit?usp=drivesdk"
+              "Drive: 26-007_FortDetrick_Site_Tracker.xlsx",
+              "https://drive.google.com/file/d/1fSLBqVrJEOgCom6fYnNTGO0o6DHctP4M/view?usp=drivesdk"
             ]
           ]
         }
@@ -528,7 +586,7 @@ const DATA = {
       "id": "req",
       "label": "Proposals Requested",
       "accent": "amber",
-      "sub": "4 still open",
+      "sub": "10 inbound asks, 5 still open",
       "keywords": [
         "proposal",
         "quote",
@@ -546,60 +604,93 @@ const DATA = {
         "testing",
         "get here",
         "come out",
-        "schedule us"
+        "schedule us",
+        "add this",
+        "pricing"
       ],
       "items": [
         {
-          "title": "Franklin Township NJ — 4 Somerset residences, lead + radon",
-          "meta": "New municipal account · requested Aug 8",
-          "status": "Open — no cost estimate sent",
+          "title": "34 Edison — full test requested for Monday",
+          "meta": "Beacon Point Homes (BBC) · Nick Perez · requested Aug 14, 12:44 AM",
+          "status": "Open — no proposal sent",
           "confidence": "Confirmed",
+          "flags": [
+            "New today",
+            "Not confirmed"
+          ],
           "fields": [
             [
               "Customer",
-              "Christine Woodbury, Franklin Township NJ"
+              "Nick Perez, Maintenance Manager"
             ],
             [
               "Scope",
-              "149 Girard Ave, 24 Austin Ave, 20 Archer Ave (lead + radon); 45 Van Doren Ave (lead only)"
+              "Full test if possible; at minimum sheet rock and tiles around the bay window"
             ],
             [
-              "Blocker",
-              "She asked for a cost estimate and three dates. Only availability was sent. She is on vacation until Aug 24."
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: Inspections (Aug 8)",
-              "https://mail.google.com/mail/u/0/#all/19fe376492b46467"
-            ],
-            [
-              "Gmail: Soos offers Aug 25/26 (Aug 11)",
-              "https://mail.google.com/mail/u/0/#all/19ff0f329d39772f"
+              "Gmail: 34 EDISON (Aug 14)",
+              "https://mail.google.com/mail/u/0/#all/19ffdbad7ba6fb2a"
             ]
           ],
-          "flags": [
-            "Overdue"
-          ],
-          "note": "Only genuinely new customer this window."
+          "note": "Still unread. Requested for Mon Aug 17, the same day as the confirmed 19 Wilson and 65 Poplar air tests."
         },
         {
-          "title": "221 Fletcher Street — roof covering and drywall testing",
-          "meta": "JBWS Charleston · requested Aug 11",
-          "status": "Open — no proposal",
+          "title": "Fort Eustis — EHC Impact testing for Friday Aug 14",
+          "meta": "EHC Impact · Tehsin Aurangabadwala · asked Aug 10, chased Aug 12",
+          "status": "Open and overdue",
           "confidence": "Confirmed",
+          "flags": [
+            "Overdue",
+            "No date"
+          ],
           "fields": [
             [
               "Customer",
-              "Robert Kirtland, JBWS Charleston Homes"
+              "Tehsin Aurangabadwala, with Courtney Braxton"
             ],
             [
-              "Work order",
-              "WO 10612256 already issued"
+              "Ask",
+              "\"Could we please schedule this for Friday 8/14\" then \"Any word for this Friday?\""
             ],
             [
-              "Blocker",
-              "Pricing and scheduling requested; no reply through Aug 13."
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Re: Eustis - Testing Request 8/10",
+              "https://mail.google.com/mail/u/0/#all/19fec5c8b105c982"
+            ]
+          ],
+          "note": "The requested date is today and no reply appears in the mailbox."
+        },
+        {
+          "title": "221 Fletcher — roof covering and drywall testing throughout",
+          "meta": "JBWS Charleston · Robert Kirtland · requested Aug 11 · WO 10612256",
+          "status": "Open — pricing requested, no proposal found",
+          "confidence": "Needs Review",
+          "flags": [
+            "Overdue"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Robert Kirtland, Maintenance Manager"
+            ],
+            [
+              "Ask",
+              "Pricing and scheduling so roof and ceiling repairs can proceed"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
@@ -608,125 +699,114 @@ const DATA = {
               "https://mail.google.com/mail/u/0/#all/19ff0cf9c204a6e0"
             ]
           ],
-          "flags": [
-            "Overdue"
-          ]
+          "note": "Every other Kirtland request this week was turned around within a day. Three days elapsed on this one."
         },
         {
-          "title": "410 Knutson Street — ceiling leak, roof covering testing",
-          "meta": "JBWS Charleston · requested Aug 12",
-          "status": "Open — no proposal",
+          "title": "338A — additional LBP area, upstairs bathroom",
+          "meta": "Fort Eustis · Carlos Fulghum · requested Aug 13 · WO 10595408",
+          "status": "Open — asked to be added to schedule",
           "confidence": "Confirmed",
-          "fields": [
-            [
-              "Customer",
-              "Robert Kirtland, JBWS Charleston Homes"
-            ],
-            [
-              "Work order",
-              "WO 10594458 already issued"
-            ],
-            [
-              "Blocker",
-              "Wet spot in bedroom 2 ceiling; pricing and scheduling requested, no reply."
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: 410 Knutson (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff72158b032d1b"
-            ]
-          ],
-          "flags": [
-            "Overdue"
-          ]
-        },
-        {
-          "title": "Fort Eustis — EHC Impact testing request for Friday 8/14",
-          "meta": "Fort Eustis · requested Aug 10, chased Aug 12",
-          "status": "Open and unanswered",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Customer",
-              "Tehsin Aurangabadwala, EHC Impact"
-            ],
-            [
-              "Blocker",
-              "Asked for Friday 8/14 twice and got no answer either time. Friday is tomorrow."
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Eustis - Testing Request 8/10",
-              "https://mail.google.com/mail/u/0/#all/19fec5c8b105c982"
-            ],
-            [
-              "Gmail: \"Any word for this Friday?\" (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff6be9701a8596"
-            ]
-          ],
           "flags": [
             "Not confirmed"
-          ]
-        },
-        {
-          "title": "404 Parnassus — drywall testing after master bath leak",
-          "meta": "JBWS Charleston · requested Aug 7",
-          "status": "Answered — PO 1877986",
-          "confidence": "Confirmed",
+          ],
           "fields": [
             [
-              "Work order",
-              "WO 10601071"
+              "Customer",
+              "Carlos Fulghum, Maintenance Manager"
             ],
             [
-              "Turnaround",
-              "Proposal Aug 10, PO same afternoon"
+              "Scope",
+              "Second area next to the tub, upstairs bathroom"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: OCC 404 Parnassus (Aug 7)",
-              "https://mail.google.com/mail/u/0/#all/19fdd087808d49f6"
+              "Gmail: 338A WO 10595408",
+              "https://mail.google.com/mail/u/0/#all/19ffbee68a7595af"
             ]
-          ]
+          ],
+          "note": "The original 338A half-bath ceiling proposal went out Aug 10 under PO 1877321."
         },
         {
-          "title": "37 Hamilton Street — roof covering testing after tree-limb damage",
-          "meta": "JBWS Charleston · requested Aug 7",
-          "status": "Answered — PO 1877990",
+          "title": "Franklin Township, NJ — lead and radon, multiple residences",
+          "meta": "Township of Franklin · Christine Woodbury · requested Aug 8",
+          "status": "Open — dates offered for week of Aug 24",
           "confidence": "Confirmed",
+          "flags": [
+            "No project spine",
+            "Not confirmed"
+          ],
           "fields": [
             [
-              "Work order",
-              "WO 10569974"
+              "Sites",
+              "149 Girard Avenue (Somerset), 24 Austin Avenue and others"
             ],
             [
-              "Turnaround",
-              "Proposal Aug 10 with an inspector already onsite; PO same day"
+              "Blocker",
+              "Christine Woodbury out of office Aug 10-24 with no email access"
+            ],
+            [
+              "Trace",
+              "No project record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: 37 Hamilton (Aug 7–10)",
-              "https://mail.google.com/mail/u/0/#all/19fdc49dd893bbae"
+              "Gmail: Inspections (Aug 8)",
+              "https://mail.google.com/mail/u/0/#all/19fe376492b46467"
+            ]
+          ],
+          "note": "Justin asked on Aug 10 whether Soos is still doing radon — if not, LCA takes it in-house. Unanswered."
+        },
+        {
+          "title": "410 Knutson — roof covering and drywall, bedroom 2 ceiling",
+          "meta": "JBWS Charleston · Robert Kirtland · requested Aug 12 · WO 10594458",
+          "status": "Closed — PO 1880461 issued Aug 13",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Robert Kirtland"
+            ],
+            [
+              "Outcome",
+              "\"That will work. PO is 1880461.\""
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: RE: 410 Knutson",
+              "https://mail.google.com/mail/u/0/#all/19ff72158b032d1b"
             ]
           ]
         },
         {
-          "title": "6 Polk — roof covering materials testing",
-          "meta": "JBWS Charleston · requested Aug 10",
-          "status": "Answered — PO 1878135",
+          "title": "6 Polk — roof covering materials",
+          "meta": "JBWS Charleston · Robert Kirtland · requested and closed Aug 10 · WO 10578330",
+          "status": "Closed same day — PO 1878135",
           "confidence": "Confirmed",
+          "flags": [],
           "fields": [
             [
-              "Work order",
-              "WO 10578330"
+              "Customer",
+              "Robert Kirtland"
             ],
             [
-              "Note",
-              "Interior previously tested"
+              "Scope",
+              "Roof covering materials only; interior previously tested"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
@@ -737,77 +817,87 @@ const DATA = {
           ]
         },
         {
-          "title": "338 26th Street #A, Fort Eustis — LBP inspection, half bath ceiling",
-          "meta": "Fort Eustis · requested Aug 7",
-          "status": "Proposal sent Aug 10",
+          "title": "65 & 67 Poplar Road — air test",
+          "meta": "Beacon Point Homes · Michael Metzermacher · requested and closed Aug 13",
+          "status": "Closed same day — booked for Mon Aug 17",
           "confidence": "Confirmed",
+          "flags": [],
           "fields": [
             [
               "Customer",
-              "Carlos Fulghum, Fort Eustis Family Homes"
+              "Michael Metzermacher, Maintenance Manager"
             ],
             [
-              "Work order",
-              "WO 10595408; PO 1877321 same day"
+              "Outcome",
+              "Proposal issued alongside 19 Wilson Road"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: 338 26th Street #A (Aug 7)",
-              "https://mail.google.com/mail/u/0/#all/19fdcf4e04d1ac44"
+              "Gmail: air test (Aug 13)",
+              "https://mail.google.com/mail/u/0/#all/19ffb3fee28a6d5f"
             ]
-          ],
-          "flags": [
-            "No date"
           ]
         },
         {
-          "title": "2942B Summerall Circle, Fort Eustis — LBP inspection, laundry room wall",
-          "meta": "Fort Eustis · requested Aug 7",
-          "status": "Proposal sent Aug 10",
+          "title": "19 Constitution Avenue — lead cert for eviction filing",
+          "meta": "BBC · James Malo · requested Aug 7, escalated Aug 13",
+          "status": "Accepted on price and date, blocked on a document error",
           "confidence": "Confirmed",
-          "fields": [
-            [
-              "Customer",
-              "Carlos Fulghum, Fort Eustis Family Homes"
-            ],
-            [
-              "Work order",
-              "WO 10584407; PO 1877310 same day"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: 2942B Summerall Circle (Aug 7)",
-              "https://mail.google.com/mail/u/0/#all/19fdceb941c7cbbf"
-            ]
-          ],
           "flags": [
-            "No date"
-          ]
-        },
-        {
-          "title": "Lower Bucks Hospital — 827 Old Orchard Lane",
-          "meta": "Prime Healthcare · Aug 10",
-          "status": "Needs Review",
-          "confidence": "Likely",
+            "Blocked on WO/PO"
+          ],
           "fields": [
             [
               "Customer",
-              "Dana Cummando, Lower Bucks Hospital"
-            ],
-            [
-              "Status",
-              "Ready to move forward; asked whether LCA does abatement. Scott declined on conflict-of-interest grounds and offered referrals."
+              "James Malo, with Chris O'Reilly and Michele Schukoske"
             ],
             [
               "Blocker",
-              "No referral and no scope proposal has followed."
+              "BBC will not sign until page 1, paragraph 1 reads 19 Constitution Ave"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: Lower Bucks Hospital (Aug 10)",
+              "Gmail: Lead Cert RI Requirement RE: Eviction Filing",
+              "https://mail.google.com/mail/u/0/#all/19fdcc885773f07e"
+            ]
+          ],
+          "note": "This is the error that triggered Justin's Aug 13 directive to sanity-check documents in Trace before sending."
+        },
+        {
+          "title": "Lower Bucks Hospital — ready to proceed, asked about abatement",
+          "meta": "Prime Healthcare · Dana Cummando · Aug 10",
+          "status": "Open referral opportunity, no scope defined",
+          "confidence": "Likely",
+          "flags": [
+            "No project spine"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Dana Cummando, Facilities Supervisor"
+            ],
+            [
+              "Outcome",
+              "Scott declined abatement on conflict-of-interest grounds and offered to source recommendations"
+            ],
+            [
+              "Trace",
+              "No project record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Lower Bucks Hospital - Report for 827 Old Orchard Lane",
               "https://mail.google.com/mail/u/0/#all/19fec7dca21c9f52"
             ]
           ]
@@ -818,131 +908,115 @@ const DATA = {
       "id": "sent",
       "label": "Proposals Sent",
       "accent": "blue",
-      "sub": "6 of 8 already have POs",
+      "sub": "12 properties · 9 returned a PO or WO",
       "keywords": [
-        "proposal attached",
+        "proposal",
+        "attached proposal",
         "please find the attached proposal",
-        "po is",
-        "purchase order"
+        "requested proposals"
       ],
       "items": [
         {
-          "title": "404 Parnassus — drywall testing proposal",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Approved — PO 1877986",
+          "title": "19 Wilson Road and 65 Poplar Road — air tests",
+          "meta": "New London · sent Aug 13 · Beacon Point Homes",
+          "status": "Accepted — WO and PO returned same evening",
           "confidence": "Confirmed",
+          "flags": [],
           "fields": [
             [
               "Customer",
-              "Robert Kirtland"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Re: OCC 404 Parnassus",
-              "https://mail.google.com/mail/u/0/#all/19feb61daa40cbcd"
-            ]
-          ]
-        },
-        {
-          "title": "37 Hamilton Street — roof covering proposal",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Approved — PO 1877990",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Customer",
-              "Robert Kirtland"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Re: 37 Hamilton",
-              "https://mail.google.com/mail/u/0/#all/19feb6c597962e67"
-            ]
-          ]
-        },
-        {
-          "title": "6 Polk — roof covering proposal",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Approved — PO 1878135",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Customer",
-              "Robert Kirtland"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: RE: 6 Polk",
-              "https://mail.google.com/mail/u/0/#all/19fecadc27cd2718"
-            ]
-          ]
-        },
-        {
-          "title": "338A 26th Street — LBP proposal",
-          "meta": "Fort Eustis · sent Aug 10",
-          "status": "PO 1877321 in hand",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Customer",
-              "Laurie Becker"
+              "Michael Metzermacher and Nick Perez"
             ],
             [
-              "Open",
-              "Scheduling still unconfirmed"
+              "Outcome",
+              "\"See you Monday for the AIR test.\" Booked Mon Aug 17"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: Re: 338 26th Street #A",
-              "https://mail.google.com/mail/u/0/#all/19feb68646a57345"
+              "Gmail: 19 WILSON — WO and PO",
+              "https://mail.google.com/mail/u/0/#all/19ffd872ec86b13c"
             ]
-          ],
+          ]
+        },
+        {
+          "title": "19 Constitution Avenue — RI lead certificate",
+          "meta": "Middletown RI · sent Aug 13 · BBC",
+          "status": "Accepted on price and date, signature withheld",
+          "confidence": "Confirmed",
           "flags": [
-            "No date"
-          ]
-        },
-        {
-          "title": "2942B Summerall Circle — LBP proposal",
-          "meta": "Fort Eustis · sent Aug 10",
-          "status": "PO 1877310 in hand",
-          "confidence": "Confirmed",
+            "Blocked on WO/PO"
+          ],
           "fields": [
             [
               "Customer",
-              "Laurie Becker"
+              "James Malo"
             ],
             [
-              "Open",
-              "Scheduling still unconfirmed"
+              "Blocker",
+              "Wrong address on page 1, paragraph 1"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: Re: 2942B Summerall Circle",
-              "https://mail.google.com/mail/u/0/#all/19feb679ca00c169"
+              "Gmail: Re: Lead Cert RI Requirement",
+              "https://mail.google.com/mail/u/0/#all/19fdcc885773f07e"
             ]
-          ],
-          "flags": [
-            "No date"
           ]
         },
         {
-          "title": "212 Lansdowne Road — inspection proposal",
-          "meta": "Lakehurst · sent Aug 11",
-          "status": "Approved same day — PO 1878565",
+          "title": "410 Knutson — Charleston",
+          "meta": "Charleston (JBWS) · sent Aug 12-13",
+          "status": "Accepted — PO 1880461",
           "confidence": "Confirmed",
+          "flags": [],
           "fields": [
             [
               "Customer",
-              "Mary Woodiel, Lakehurst Homes"
+              "Robert Kirtland"
             ],
             [
-              "Turnaround",
-              "Proposal 8:24 AM, PO 8:50 AM, signed WO 9:32 AM, report 12:32 PM"
+              "Outcome",
+              "Approved Aug 13"
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: RE: 410 Knutson",
+              "https://mail.google.com/mail/u/0/#all/19ff72158b032d1b"
+            ]
+          ]
+        },
+        {
+          "title": "212 Lansdowne Road — Lakehurst",
+          "meta": "Lakehurst · sent Aug 11 · Mary Woodiel",
+          "status": "Accepted — PO 1878565, report delivered same day",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Mary Woodiel, Operations Director"
+            ],
+            [
+              "Outcome",
+              "Vendor paperwork signed and returned; invoiced Aug 11"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
@@ -953,14 +1027,25 @@ const DATA = {
           ]
         },
         {
-          "title": "1903 Pinehurst Estates — proposal",
-          "meta": "Lakehurst · sent Aug 11",
-          "status": "Sent — awaiting response",
+          "title": "1903 Pinehurst Estates — Lakehurst",
+          "meta": "Lakehurst · sent Aug 11 · Mary Woodiel",
+          "status": "Awaiting response",
           "confidence": "Confirmed",
+          "flags": [
+            "No date"
+          ],
           "fields": [
             [
               "Customer",
-              "Mary Woodiel, Lakehurst Homes"
+              "Mary Woodiel, cc Dana Henry and Kasey Zook"
+            ],
+            [
+              "Outcome",
+              "No PO or approval seen as of Aug 14"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
@@ -971,20 +1056,197 @@ const DATA = {
           ]
         },
         {
-          "title": "2203 Pinehurst Estates — proposal",
-          "meta": "Lakehurst · sent Aug 11",
-          "status": "Sent — awaiting response",
+          "title": "2203 Pinehurst Estates — Lakehurst",
+          "meta": "Lakehurst · sent Aug 11 · Mary Woodiel",
+          "status": "Awaiting response",
           "confidence": "Confirmed",
+          "flags": [
+            "No date"
+          ],
           "fields": [
             [
               "Customer",
-              "Mary Woodiel, Lakehurst Homes"
+              "Mary Woodiel, cc Dana Henry and Kasey Zook"
+            ],
+            [
+              "Outcome",
+              "No PO or approval seen as of Aug 14"
+            ],
+            [
+              "Trace",
+              "No record"
             ]
           ],
           "evidence": [
             [
               "Gmail: Lakehurst - Requested Proposals",
               "https://mail.google.com/mail/u/0/#all/19ff1b1628cb5316"
+            ]
+          ]
+        },
+        {
+          "title": "338A 26th Street — Fort Eustis LBP",
+          "meta": "Fort Eustis · sent Aug 10 · Laurie Becker",
+          "status": "PO 1877321 in hand, scheduling unconfirmed",
+          "confidence": "Confirmed",
+          "flags": [
+            "Not confirmed"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Laurie Becker, request from Carlos Fulghum"
+            ],
+            [
+              "Outcome",
+              "PO created before the proposal went out; Friday Aug 14 proposed by LCA, no answer"
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 338 26th Street #A LBP Testing",
+              "https://mail.google.com/mail/u/0/#all/19fdcf4e04d1ac44"
+            ]
+          ]
+        },
+        {
+          "title": "2942B Summerall Circle — Fort Eustis LBP",
+          "meta": "Fort Eustis · sent Aug 10 · WO 10584407",
+          "status": "PO 1877310 in hand, scheduling unconfirmed",
+          "confidence": "Confirmed",
+          "flags": [
+            "Not confirmed"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Laurie Becker, request from Carlos Fulghum"
+            ],
+            [
+              "Scope",
+              "Laundry room wall"
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 2942B Summerall Circle LBP Inspection",
+              "https://mail.google.com/mail/u/0/#all/19fdceb941c7cbbf"
+            ]
+          ]
+        },
+        {
+          "title": "404 Parnassus — Charleston drywall testing",
+          "meta": "Charleston (JBWS) · sent Aug 10 · WO 10601071",
+          "status": "Accepted — PO 1877986, inspected same day",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Robert Kirtland"
+            ],
+            [
+              "Outcome",
+              "Squeezed into the Aug 10 Charleston run"
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: OCC 404 Parnassus",
+              "https://mail.google.com/mail/u/0/#all/19fdd087808d49f6"
+            ]
+          ]
+        },
+        {
+          "title": "37 Hamilton — Charleston roof covering",
+          "meta": "Charleston (JBWS) · sent Aug 10 · WO 10569974",
+          "status": "Accepted — PO 1877990",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Robert Kirtland"
+            ],
+            [
+              "Scope",
+              "Storm damage — fallen tree limb, shingles and screen porch"
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 37 Hamilton",
+              "https://mail.google.com/mail/u/0/#all/19fdc49dd893bbae"
+            ]
+          ]
+        },
+        {
+          "title": "6 Polk — Charleston roof covering",
+          "meta": "Charleston (JBWS) · sent Aug 10 · WO 10578330",
+          "status": "Accepted — PO 1878135 same day",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Robert Kirtland"
+            ],
+            [
+              "Outcome",
+              "\"Looks good. PO is 1878135\""
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: RE: 6 Polk",
+              "https://mail.google.com/mail/u/0/#all/19febe3581bb1fcc"
+            ]
+          ]
+        },
+        {
+          "title": "933 Tringa Street — Charleston drywall",
+          "meta": "Charleston (JBWS) · proposal Aug 3, delivered Aug 10 · PO 1874558",
+          "status": "Accepted and delivered",
+          "confidence": "Confirmed",
+          "flags": [],
+          "fields": [
+            [
+              "Customer",
+              "Jim Perry, with Martina Roy issuing the PO"
+            ],
+            [
+              "Outcome",
+              "Inspector onsite Aug 4, report out Aug 10, invoiced Aug 11"
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 933 Tringa drywall testing needed",
+              "https://mail.google.com/mail/u/0/#all/19fb9986f594b921"
             ]
           ]
         }
@@ -994,132 +1256,283 @@ const DATA = {
       "id": "ready",
       "label": "Reports Ready",
       "accent": "purple",
-      "sub": "2 ready, 1 blocked, 1 review",
+      "sub": "9 groups awaiting drafting or a decision",
       "keywords": [
         "lab results",
         "coc",
         "chain of custody",
         "field notes",
-        "results attached",
-        "ecoc"
+        "results",
+        "draft",
+        "ready"
       ],
       "items": [
         {
-          "title": "JBWS Charleston — Monday Aug 10 batch (647 Chanticleer, 215 Fletcher, 404 Parnassus, 37 Hamilton, 6 Polk)",
-          "meta": "JBWS Charleston · inspected Aug 10",
+          "title": "Charleston — Aug 10 field day, six properties",
+          "meta": "Charleston (JBWS) · inspected Aug 10 · Ready to Draft",
           "status": "Ready to Draft",
-          "confidence": "Likely",
-          "fields": [
-            [
-              "Customer",
-              "Robert Kirtland"
-            ],
-            [
-              "Basis",
-              "Scott committed to a Monday 11 AM batch; POs landed for three of them Aug 10 and 647 Chanticleer was approved Aug 6 under PO 1876396."
-            ],
-            [
-              "Trace",
-              "No matching draft — JBWS Charleston - Facilities holds only a project-level survey for 338 Florikan Street."
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Charleston - Proposals (Aug 7)",
-              "https://mail.google.com/mail/u/0/#all/19fd3934db313ab8"
-            ],
-            [
-              "Trace: JBWS Charleston - Facilities",
-              "https://trace.erblue.com/#/o/LCA/p/JBWS%20Charleston%20-%20Facilities"
-            ]
-          ],
+          "confidence": "Confirmed",
           "flags": [
             "Never entered Trace"
           ],
-          "note": "215 Fletcher access was never confirmed with the resident."
-        },
-        {
-          "title": "Fort Carson — 5709 Falaise Gap Road",
-          "meta": "24-101 · lab report Aug 12",
-          "status": "Ready to Draft",
-          "confidence": "Confirmed",
           "fields": [
             [
-              "Lab",
-              "Eurofins RES 764216-2, issued Aug 12"
+              "Properties",
+              "647 Chanticleer, 813 Petrel, 215 Fletcher, 404 Parnassus, 37 Hamilton, 6 Polk"
+            ],
+            [
+              "POs",
+              "1876396, 1876405, 1876406, 1877986, 1877990, 1878135"
             ],
             [
               "Trace",
-              "24-101 holds four drafts; none covers 5709 Falaise Gap Road."
+              "Only a project-level Jul 7 Asbestos Survey record — not address-specific"
             ]
           ],
           "evidence": [
             [
-              "Gmail: RES 764216-2 (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff7100dd0066d9"
-            ],
-            [
-              "Trace: 24-101 Fort Carson",
-              "https://trace.erblue.com/#/o/LCA/p/24-101%20Fort%20Carson%20-%20Demolition%20ACM%20LBP%20Testing"
+              "Gmail: Charleston - Proposals, scheduling for Monday",
+              "https://mail.google.com/mail/u/0/#all/19fd3934db313ab8"
             ]
-          ]
+          ],
+          "note": "215 Fletcher was the one address Kirtland had not confirmed with the resident as of Aug 7 — verify access before drafting."
         },
         {
-          "title": "Fort Carson — Cherbourg Circle batch (5636, 5642, 5655)",
-          "meta": "24-101 · COCs executed Aug 12",
-          "status": "Blocked",
+          "title": "Fort Carson — Cherbourg Circle and Falaise Gap, five sample sets",
+          "meta": "24-101 Fort Carson · eCOCs Aug 12-13 · at Eurofins",
+          "status": "Ready to Draft as results land",
           "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
           "fields": [
             [
-              "Lab",
-              "RES 776555, 776559, 776564 — analysis not returned"
+              "Addresses",
+              "5636, 5637, 5642, 5655 Cherbourg Circle; 5709 Falaise Gap Road (RES 764216-2)"
             ],
             [
               "Blocker",
-              "Eurofins is holding an extra sample 5637-70 that is not on any COC and needs a yes/no before analysing."
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: 5637 Cherbourg - Extra Sample (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff67deba1a8a2a"
-            ],
-            [
-              "Gmail: eCOC RES 776555 (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff66a388533dfd"
-            ]
-          ],
-          "flags": [
-            "Blocked"
-          ]
-        },
-        {
-          "title": "82A & B Partridge Place, USMA",
-          "meta": "26-011 USMA · raised Aug 12",
-          "status": "Needs Review",
-          "confidence": "Needs Review",
-          "fields": [
-            [
-              "Raised by",
-              "Rob Gabriel"
-            ],
-            [
-              "Issue",
-              "A proposal exists, created the same day as 78A+B Schofield, but no report was ever seen. Scott has not responded."
+              "Eurofins flagged an extra sample 5637-70 not on the COC and asked whether to analyse it — unanswered since Aug 12"
             ],
             [
               "Trace",
-              "No Partridge Place record in any USMA project."
+              "Four drafts exist but all are Harr Ave / Remagen Road"
             ]
           ],
           "evidence": [
             [
-              "Gmail: 82A & B Partridge Place (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff754bec98d3d2"
+              "Gmail: eCOC RES 777252 - 5637 Cherbourg Circle",
+              "https://mail.google.com/mail/u/0/#all/19ffc981b888078b"
+            ],
+            [
+              "Gmail: 5637 Cherbourg Circle - Extra Sample",
+              "https://mail.google.com/mail/u/0/#all/19ff67deba1a8a2a"
+            ]
+          ]
+        },
+        {
+          "title": "USMA — simplified resident-facing radon report",
+          "meta": "USMA - Facilities - Radon Testing · requested Aug 13",
+          "status": "Needs Review — format undecided",
+          "confidence": "Confirmed",
+          "flags": [
+            "Not confirmed"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Kasey Zook, Regional Environmental Specialist, originating with Deb Oates"
+            ],
+            [
+              "Ask",
+              "A simpler version of USMA_RadonReport_072726.pdf to issue to a resident"
+            ],
+            [
+              "Trace",
+              "Only a Jun 25 radon proposal for this project"
             ]
           ],
+          "evidence": [
+            [
+              "Gmail: FW: Radon Testing",
+              "https://mail.google.com/mail/u/0/#all/19ffc1362dbb0e31"
+            ]
+          ],
+          "note": "Justin flagged this as a relationship opening and wanted to shape the response. Call set for ~11 AM Fri Aug 14."
+        },
+        {
+          "title": "82A & B Partridge Place — proposal issued, no report ever produced",
+          "meta": "USMA · raised by Rob Gabriel Aug 12",
+          "status": "Needs Review — unclear whether the inspection happened",
+          "confidence": "Needs Review",
+          "flags": [
+            "Never entered Trace",
+            "Overdue"
+          ],
+          "fields": [
+            [
+              "Signal",
+              "Proposal created the same day as 78A+B Schofield Place; Rob has never seen a report"
+            ],
+            [
+              "Risk",
+              "Either work was never done, or it was delivered and never billed"
+            ],
+            [
+              "Trace",
+              "No record under either name"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 82A & B Partridge Place",
+              "https://mail.google.com/mail/u/0/#all/19ff754bec98d3d2"
+            ]
+          ]
+        },
+        {
+          "title": "Portsmouth — water testing reports outstanding",
+          "meta": "26-025 Portsmouth · Trace drafts last touched Jun 5",
+          "status": "Draft Exists in Trace — stale",
+          "confidence": "Likely",
+          "flags": [
+            "No date"
+          ],
+          "fields": [
+            [
+              "Signal",
+              "\"Portsmouth Water Reports\" and \"Is Portsmouth Radon happening?\" on Scott's Aug 13 notes"
+            ],
+            [
+              "Trace",
+              "NSY Portsmouth Lead in Water Testing Report and Lead in Drinking Water Testing Report, both Jun 5"
+            ],
+            [
+              "Decision",
+              "Finish these or supersede them"
+            ]
+          ],
+          "evidence": [
+            [
+              "Trace: Portsmouth Lead in Water Testing",
+              "https://trace.erblue.com/#/o/LCA/p/Portsmouth%20Lead%20in%20Water%20Testing?session=0a54c53d-9065-4a93-834e-e862668741db"
+            ]
+          ]
+        },
+        {
+          "title": "Charleston — clearance reports and 607 Hickory Hall LBP",
+          "meta": "Charleston (JBWS) · on Scott's Aug 13 notes",
+          "status": "Needs Review",
+          "confidence": "Likely",
           "flags": [
             "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Signal",
+              "\"Charleston Clearance Reports?\" and \"LBP for 607 Hickory Hall?? (2 units waiting on LBP)\""
+            ],
+            [
+              "Trace",
+              "No records"
+            ],
+            [
+              "Next",
+              "Scott to say what is outstanding"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Re: Notes",
+              "https://mail.google.com/mail/u/0/#all/19ffc06800679282"
+            ]
+          ]
+        },
+        {
+          "title": "535 Wheatland Avenue — XRF report",
+          "meta": "Unassigned project · on Scott's Aug 13 notes",
+          "status": "Needs Review",
+          "confidence": "Likely",
+          "flags": [
+            "No project spine"
+          ],
+          "fields": [
+            [
+              "Signal",
+              "Listed as an open deliverable on Scott's running notes to Justin"
+            ],
+            [
+              "Customer",
+              "Not identified in the window"
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Re: Notes",
+              "https://mail.google.com/mail/u/0/#all/19ffc06800679282"
+            ]
+          ]
+        },
+        {
+          "title": "HABcore — report and invoice outstanding",
+          "meta": "No project spine · on Scott's Aug 13 notes",
+          "status": "Needs Review",
+          "confidence": "Likely",
+          "flags": [
+            "No project spine"
+          ],
+          "fields": [
+            [
+              "Signal",
+              "\"HABcore Report/Invoice\""
+            ],
+            [
+              "Spine",
+              "No tracker xlsx and no Trace project"
+            ],
+            [
+              "Trace",
+              "No record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Re: Notes",
+              "https://mail.google.com/mail/u/0/#all/19ffc06800679282"
+            ]
+          ]
+        },
+        {
+          "title": "Minot AFB — photo package still owed",
+          "meta": "26-024 Minot · project wound down in May",
+          "status": "Needs Review — documentation tail",
+          "confidence": "Likely",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Signal",
+              "\"Photos for Minot\" on Scott's Aug 13 notes"
+            ],
+            [
+              "Context",
+              "Interior ACM surveys delivered and confirmed received May 28; final balance invoiced May 22"
+            ],
+            [
+              "Trace",
+              "Minot has no project or report record at all"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Minot AFB - Interior ACM Surveys",
+              "https://mail.google.com/mail/u/0/#all/19e4f7f14cbe9691"
+            ]
           ]
         }
       ]
@@ -1128,247 +1541,277 @@ const DATA = {
       "id": "out",
       "label": "Reports Sent",
       "accent": "green",
-      "sub": "9 deliverables to customers",
+      "sub": "9 deliverables out to customers",
       "keywords": [
-        "please find the attached report",
+        "report",
         "clearance letter",
-        "reports for",
-        "report for"
+        "letter of findings",
+        "please find the attached report"
       ],
       "items": [
         {
-          "title": "339H 26th Street — LBP inspection report",
-          "meta": "Fort Eustis · sent Aug 10",
-          "status": "Sent to Customer",
+          "title": "273 Ohio Avenue — asbestos clearance letter",
+          "meta": "New London · sent Aug 11 · Manny Arias",
+          "status": "Sent to customer",
           "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
           "fields": [
             [
-              "Acknowledged",
-              "Laurie Becker same day; invoiced Aug 11"
+              "Customer",
+              "Beacon Point Homes (BBC) — Manny Arias"
+            ],
+            [
+              "Lab",
+              "Big East PCM Clearance Report received Aug 10, invoice 26503 for $450"
             ],
             [
               "Trace",
-              "Never entered Trace"
+              "No report record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: Fort Eustis - Reports for August 3 (Aug 10)",
+              "Gmail: New London - Clearance Letter for 273 Ohio Avenue",
+              "https://mail.google.com/mail/u/0/#all/19ff1b93c6ada1a0"
+            ]
+          ]
+        },
+        {
+          "title": "212 Lansdowne Road — report",
+          "meta": "Lakehurst · sent Aug 11 · Mary Woodiel",
+          "status": "Sent to customer — invoiced same day",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Lakehurst Homes — Mary Woodiel"
+            ],
+            [
+              "Cycle",
+              "Proposal, PO, report and invoice all inside 24 hours"
+            ],
+            [
+              "Trace",
+              "No report record, and no Lakehurst project exists in Trace"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Lakehurst - Report for 212 Lansdowne Road",
+              "https://mail.google.com/mail/u/0/#all/19ff1ab8cd280f59"
+            ]
+          ]
+        },
+        {
+          "title": "339H 26th Street — report",
+          "meta": "Fort Eustis · sent Aug 10 · Laurie Becker",
+          "status": "Sent to customer — invoiced Aug 11",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Fort Eustis Family Homes — Laurie Becker"
+            ],
+            [
+              "Field date",
+              "August 3, 2026"
+            ],
+            [
+              "Trace",
+              "The Fort Eustis Lead Inspections project holds zero reports"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Eustis - Reports for August 3, 2026",
               "https://mail.google.com/mail/u/0/#all/19feca1adc3b7bfa"
-            ],
-            [
-              "Trace: Fort Eustis Lead Inspections (0 records)",
-              "https://trace.erblue.com/#/o/LCA/p/Fort%20Eustis%20Lead%20Inspections"
             ]
-          ],
-          "flags": [
-            "Never entered Trace"
           ]
         },
         {
-          "title": "304D Madison Avenue — LBP inspection report",
-          "meta": "Fort Eustis · sent Aug 10",
-          "status": "Follow-Up Needed",
+          "title": "304D Madison Avenue — report",
+          "meta": "Fort Eustis · sent Aug 10 · Laurie Becker",
+          "status": "Follow-up needed — no proposal on file",
           "confidence": "Confirmed",
-          "fields": [
-            [
-              "Issue",
-              "Rob asked whether a proposal exists and got no answer before invoicing Aug 11."
-            ],
-            [
-              "Trace",
-              "Never entered Trace"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Fort Eustis - Reports for August 3 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19feca1adc3b7bfa"
-            ],
-            [
-              "Gmail: \"do you have a proposal for 304D Madison?\"",
-              "https://mail.google.com/mail/u/0/#all/19fed3f3b8692c08"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace",
-            "No proposal on file"
-          ]
-        },
-        {
-          "title": "933 Tringa Street report",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Sent to Customer",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Trace",
-              "Never entered Trace"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Charleston - Reports for August 4 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
-            ],
-            [
-              "Gmail: 933 Tringa drywall testing needed (Jul 31)",
-              "https://mail.google.com/mail/u/0/#all/19fb9986f594b921"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "404 Knutson Street report",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Sent to Customer",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Trace",
-              "Never entered Trace"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Charleston - Reports for August 4 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "288 Fletcher Street report",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Sent to Customer",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Note",
-              "Distinct from the open 221 Fletcher and 215 Fletcher requests"
-            ],
-            [
-              "Trace",
-              "Never entered Trace"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Charleston - Reports for August 4 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "306 Guadalcanal Street report",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Sent to Customer",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Trace",
-              "Never entered Trace"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Charleston - Reports for August 4 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "532B Winans Road report",
-          "meta": "USMA / West Point · sent Aug 10",
-          "status": "Follow-Up Needed",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Issue",
-              "Both recipients auto-replied out of office; Rob's Renovations-vs-Facilities question is unanswered."
-            ],
-            [
-              "Trace",
-              "Never entered Trace"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: USMA - 532B Winans Road (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fecba1699d63ec"
-            ],
-            [
-              "Gmail: \"Is this Renovations or Facilities?\"",
-              "https://mail.google.com/mail/u/0/#all/19fed4aa00bf08c8"
-            ]
-          ],
           "flags": [
             "Never entered Trace",
             "Not confirmed"
-          ]
-        },
-        {
-          "title": "273 Ohio Avenue clearance letter",
-          "meta": "New London · sent Aug 11",
-          "status": "Sent to Customer",
-          "confidence": "Confirmed",
+          ],
           "fields": [
             [
-              "Basis",
-              "Big East PCM Clearance Report, 273 Ohio Avenue, Groton CT"
+              "Customer",
+              "Fort Eustis Family Homes — Laurie Becker"
+            ],
+            [
+              "Gap",
+              "Rob asked Aug 10 whether a proposal exists and invoiced Aug 11 without an answer"
             ],
             [
               "Trace",
-              "Never entered Trace"
+              "No report record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: New London - Clearance Letter (Aug 11)",
-              "https://mail.google.com/mail/u/0/#all/19ff1b93c6ada1a0"
-            ],
-            [
-              "Gmail: 26503 PCM Clearance Report (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec71841893780"
+              "Gmail: Re: Fort Eustis - Reports for August 3, 2026",
+              "https://mail.google.com/mail/u/0/#all/19feca1adc3b7bfa"
             ]
-          ],
-          "flags": [
-            "Never entered Trace"
           ]
         },
         {
-          "title": "212 Lansdowne Road report",
-          "meta": "Lakehurst · sent Aug 11",
-          "status": "Sent to Customer",
+          "title": "933 Tringa Street — report",
+          "meta": "Charleston (JBWS) · sent Aug 10 · Jim Perry · PO 1874558",
+          "status": "Sent to customer — invoiced Aug 11",
           "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
           "fields": [
             [
-              "Note",
-              "Lakehurst has no Trace project at all"
+              "Customer",
+              "JBWS Charleston Homes — Jim Perry"
+            ],
+            [
+              "Scope",
+              "Drywall testing, 2-story 4-bed home in Menriv D"
             ],
             [
               "Trace",
-              "Never entered Trace"
+              "No report record"
             ]
           ],
           "evidence": [
             [
-              "Gmail: Lakehurst - Report for 212 Lansdowne Road (Aug 11)",
-              "https://mail.google.com/mail/u/0/#all/19ff1ab8cd280f59"
+              "Gmail: Charleston - Reports for August 4, 2026",
+              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
             ]
-          ],
+          ]
+        },
+        {
+          "title": "404 Knutson Street — report",
+          "meta": "Charleston (JBWS) · sent Aug 10 · Jim Perry",
+          "status": "Sent to customer — invoiced Aug 11",
+          "confidence": "Confirmed",
           "flags": [
             "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "JBWS Charleston Homes — Jim Perry"
+            ],
+            [
+              "Field date",
+              "August 4, 2026"
+            ],
+            [
+              "Trace",
+              "No report record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports for August 4, 2026",
+              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
+            ]
+          ],
+          "note": "Distinct from 410 Knutson, requested Aug 12 and not yet inspected."
+        },
+        {
+          "title": "288 Fletcher Street — report",
+          "meta": "Charleston (JBWS) · sent Aug 10 · Jim Perry",
+          "status": "Sent to customer — invoiced Aug 11",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "JBWS Charleston Homes — Jim Perry"
+            ],
+            [
+              "Field date",
+              "August 4, 2026"
+            ],
+            [
+              "Trace",
+              "No report record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports for August 4, 2026",
+              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
+            ]
+          ],
+          "note": "Distinct from 215 Fletcher and 221 Fletcher, both separate live items this week."
+        },
+        {
+          "title": "306 Guadalcanal Street — report",
+          "meta": "Charleston (JBWS) · sent Aug 10 · Jim Perry",
+          "status": "Sent to customer — invoiced Aug 11",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "JBWS Charleston Homes — Jim Perry"
+            ],
+            [
+              "Field date",
+              "August 4, 2026"
+            ],
+            [
+              "Trace",
+              "No report record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports for August 4, 2026",
+              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
+            ]
+          ]
+        },
+        {
+          "title": "532B Winans Road — report",
+          "meta": "USMA / West Point · sent Aug 10 · Deb DePalma",
+          "status": "Follow-up needed — cannot be invoiced",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace",
+            "Blocked on WO/PO"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "West Point Family Homes — Deb DePalma, cc Rick Chew and Christopher Varmon"
+            ],
+            [
+              "Blocker",
+              "Rob asked Aug 10 whether this is Renovations or Facilities; both BBC recipients auto-replied out of office"
+            ],
+            [
+              "Trace",
+              "The 11 USMA drafts are all Jun 8 Exterior LBP addresses, none of them Winans Road"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: USMA - 532B Winans Road",
+              "https://mail.google.com/mail/u/0/#all/19fecba1699d63ec"
+            ]
           ]
         }
       ]
@@ -1381,7 +1824,7 @@ const DATA = {
       "sub": "0 of 9 sent reports QC'd",
       "denominator": 9,
       "qcd": 0,
-      "banner": "QC convention: a QC pass creates a separate Trace report record whose name contains \"QC\". Zero QC-named records exist org-wide — and this week none of the nine sent deliverables has any Trace report record at all, not even a draft.",
+      "banner": "QC convention: a QC pass creates a separate Trace report record whose name contains \"QC\". Zero such records exist anywhere in the LCA organization, and all nine of this week's deliverables are absent from Trace entirely.",
       "breakdown": [
         [
           "QC report in Trace",
@@ -1402,212 +1845,192 @@ const DATA = {
       ],
       "items": [
         {
-          "title": "339H 26th Street — LBP inspection report",
-          "meta": "Fort Eustis · sent Aug 10",
-          "status": "Never entered Trace",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Bucket",
-              "Never entered Trace — no report record of any kind, so no QC sibling is possible"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Fort Eustis - Reports for August 3 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19feca1adc3b7bfa"
-            ],
-            [
-              "Trace: Fort Eustis Lead Inspections (0 records)",
-              "https://trace.erblue.com/#/o/LCA/p/Fort%20Eustis%20Lead%20Inspections"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "304D Madison Avenue — LBP inspection report",
-          "meta": "Fort Eustis · sent Aug 10",
-          "status": "Never entered Trace",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Bucket",
-              "Never entered Trace — no report record of any kind, so no QC sibling is possible"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Fort Eustis - Reports for August 3 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19feca1adc3b7bfa"
-            ],
-            [
-              "Gmail: \"do you have a proposal for 304D Madison?\"",
-              "https://mail.google.com/mail/u/0/#all/19fed3f3b8692c08"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "933 Tringa Street report",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Never entered Trace",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Bucket",
-              "Never entered Trace — no report record of any kind, so no QC sibling is possible"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Charleston - Reports for August 4 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
-            ],
-            [
-              "Gmail: 933 Tringa drywall testing needed (Jul 31)",
-              "https://mail.google.com/mail/u/0/#all/19fb9986f594b921"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "404 Knutson Street report",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Never entered Trace",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Bucket",
-              "Never entered Trace — no report record of any kind, so no QC sibling is possible"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Charleston - Reports for August 4 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "288 Fletcher Street report",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Never entered Trace",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Bucket",
-              "Never entered Trace — no report record of any kind, so no QC sibling is possible"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Charleston - Reports for August 4 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "306 Guadalcanal Street report",
-          "meta": "JBWS Charleston · sent Aug 10",
-          "status": "Never entered Trace",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Bucket",
-              "Never entered Trace — no report record of any kind, so no QC sibling is possible"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: Charleston - Reports for August 4 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "532B Winans Road report",
-          "meta": "USMA / West Point · sent Aug 10",
-          "status": "Never entered Trace",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Bucket",
-              "Never entered Trace — no report record of any kind, so no QC sibling is possible"
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: USMA - 532B Winans Road (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fecba1699d63ec"
-            ],
-            [
-              "Gmail: \"Is this Renovations or Facilities?\"",
-              "https://mail.google.com/mail/u/0/#all/19fed4aa00bf08c8"
-            ]
-          ],
-          "flags": [
-            "Never entered Trace"
-          ]
-        },
-        {
-          "title": "273 Ohio Avenue clearance letter",
+          "title": "273 Ohio Avenue — clearance letter",
           "meta": "New London · sent Aug 11",
           "status": "Never entered Trace",
           "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
           "fields": [
             [
               "Bucket",
-              "Never entered Trace — no report record of any kind, so no QC sibling is possible"
+              "No report record and no QC-named sibling"
             ]
           ],
           "evidence": [
             [
-              "Gmail: New London - Clearance Letter (Aug 11)",
+              "Gmail: New London - Clearance Letter for 273 Ohio Avenue",
               "https://mail.google.com/mail/u/0/#all/19ff1b93c6ada1a0"
-            ],
-            [
-              "Gmail: 26503 PCM Clearance Report (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec71841893780"
             ]
-          ],
-          "flags": [
-            "Never entered Trace"
           ]
         },
         {
-          "title": "212 Lansdowne Road report",
+          "title": "212 Lansdowne Road",
           "meta": "Lakehurst · sent Aug 11",
           "status": "Never entered Trace",
           "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
           "fields": [
             [
               "Bucket",
-              "Never entered Trace — no report record of any kind, so no QC sibling is possible"
+              "No report record; no Lakehurst project exists in Trace"
             ]
           ],
           "evidence": [
             [
-              "Gmail: Lakehurst - Report for 212 Lansdowne Road (Aug 11)",
+              "Gmail: Lakehurst - Report for 212 Lansdowne Road",
               "https://mail.google.com/mail/u/0/#all/19ff1ab8cd280f59"
             ]
-          ],
+          ]
+        },
+        {
+          "title": "339H 26th Street",
+          "meta": "Fort Eustis · sent Aug 10",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
           "flags": [
             "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Bucket",
+              "Fort Eustis Lead Inspections project holds zero reports"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Eustis - Reports for August 3, 2026",
+              "https://mail.google.com/mail/u/0/#all/19feca1adc3b7bfa"
+            ]
+          ]
+        },
+        {
+          "title": "304D Madison Avenue",
+          "meta": "Fort Eustis · sent Aug 10",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Bucket",
+              "No report record and no proposal on file either"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Fort Eustis - Reports for August 3, 2026",
+              "https://mail.google.com/mail/u/0/#all/19feca1adc3b7bfa"
+            ]
+          ]
+        },
+        {
+          "title": "933 Tringa Street",
+          "meta": "Charleston · sent Aug 10",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Bucket",
+              "Only a project-level Jul 7 Asbestos Survey record exists for Charleston"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports for August 4, 2026",
+              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
+            ]
+          ]
+        },
+        {
+          "title": "404 Knutson Street",
+          "meta": "Charleston · sent Aug 10",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Bucket",
+              "No address-specific record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports for August 4, 2026",
+              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
+            ]
+          ]
+        },
+        {
+          "title": "288 Fletcher Street",
+          "meta": "Charleston · sent Aug 10",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Bucket",
+              "No address-specific record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports for August 4, 2026",
+              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
+            ]
+          ]
+        },
+        {
+          "title": "306 Guadalcanal Street",
+          "meta": "Charleston · sent Aug 10",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Bucket",
+              "No address-specific record"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Charleston - Reports for August 4, 2026",
+              "https://mail.google.com/mail/u/0/#all/19fec882f08beebc"
+            ]
+          ]
+        },
+        {
+          "title": "532B Winans Road",
+          "meta": "USMA · sent Aug 10",
+          "status": "Never entered Trace",
+          "confidence": "Confirmed",
+          "flags": [
+            "Never entered Trace"
+          ],
+          "fields": [
+            [
+              "Bucket",
+              "The 11 USMA drafts are Jun 8 Exterior LBP addresses — Winans Road is not among them"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: USMA - 532B Winans Road",
+              "https://mail.google.com/mail/u/0/#all/19fecba1699d63ec"
+            ]
           ]
         }
       ]
@@ -1616,143 +2039,194 @@ const DATA = {
       "id": "insp",
       "label": "Upcoming Inspections",
       "accent": "amber",
-      "sub": "2 unconfirmed for tomorrow",
+      "sub": "2 confirmed · 3 need confirmation · 1 tentative",
       "keywords": [
-        "schedule",
-        "scheduled",
         "inspection",
+        "schedule",
         "onsite",
         "site visit",
-        "friday",
-        "appointment"
+        "air test",
+        "monday",
+        "confirmation"
       ],
       "items": [
         {
-          "title": "Fort Eustis — 338A 26th Street and 2942B Summerall Circle",
-          "meta": "Friday, August 14, 2026 · proposed",
-          "status": "Needs Confirmation",
+          "title": "19 Wilson Road and 65 Poplar Road — air tests",
+          "meta": "Mon Aug 17 · Groton CT · Beacon Point Homes",
+          "status": "Scheduled",
           "confidence": "Confirmed",
+          "flags": [],
           "fields": [
             [
               "Customer",
-              "Laurie Becker, Fort Eustis Family Homes"
-            ],
-            [
-              "Project",
-              "26-009 Fort Eustis"
-            ],
-            [
-              "Status",
-              "Scott asked on Aug 10 at 11:52 AM; no reply through Aug 13. Both units already have POs (1877321, 1877310)."
+              "Nick Perez and Michael Metzermacher"
             ],
             [
               "Inspector",
-              "Not named"
+              "Big East Environmental sub — Steve DiNapoli confirmed \"All set for Monday\""
+            ],
+            [
+              "Paperwork",
+              "WO and PO in hand"
             ]
           ],
           "evidence": [
             [
-              "Gmail: \"Can we schedule these for Friday?\" (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fec6097844f3a7"
+              "Gmail: RE: New London - Clearance Request",
+              "https://mail.google.com/mail/u/0/#all/19ffcbd529be7b38"
+            ],
+            [
+              "Gmail: 19 WILSON",
+              "https://mail.google.com/mail/u/0/#all/19ffd872ec86b13c"
             ]
-          ],
-          "flags": [
-            "Not confirmed"
           ]
         },
         {
-          "title": "Fort Eustis — EHC Impact testing visit",
-          "meta": "Friday, August 14, 2026 · customer-requested",
-          "status": "Needs Confirmation",
-          "confidence": "Needs Review",
+          "title": "19 Constitution Avenue — lead inspection for eviction filing",
+          "meta": "Tue Aug 18, 2:30 PM · Middletown RI · BBC",
+          "status": "Scheduled but at risk",
+          "confidence": "Confirmed",
+          "flags": [
+            "Blocked on WO/PO"
+          ],
           "fields": [
             [
               "Customer",
-              "Tehsin Aurangabadwala, EHC Impact"
+              "James Malo"
             ],
             [
-              "Status",
-              "Requested Aug 10, chased Aug 12, no answer either time."
+              "Inspector",
+              "Confirmed Aug 13; allow 15 minutes from arrival for traffic and access"
             ],
             [
-              "Ambiguity",
-              "May or may not be the same visit as the two Fulghum units — if not, it is a separate uncommitted crew day."
+              "Risk",
+              "Signed contract withheld until the page 1 address is corrected"
             ]
           ],
           "evidence": [
             [
-              "Gmail: \"Any word for this Friday?\" (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff6be9701a8596"
+              "Gmail: Lead Inspection Confirmation",
+              "https://mail.google.com/mail/u/0/#all/19ffc3043ec08876"
             ]
-          ],
-          "flags": [
-            "Not confirmed"
           ]
         },
         {
-          "title": "Franklin Township NJ — four Somerset residences",
-          "meta": "Tuesday Aug 25 or Wednesday Aug 26 · 12:30–1:30 PM setup",
+          "title": "Fort Eustis — EHC Impact testing",
+          "meta": "Fri Aug 14 (today, requested) · EHC Impact",
+          "status": "Needs confirmation — date is today",
+          "confidence": "Confirmed",
+          "flags": [
+            "Overdue",
+            "No date"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Tehsin Aurangabadwala, with Courtney Braxton"
+            ],
+            [
+              "Inspector",
+              "Courtney Braxton has covered additional units on this account before"
+            ],
+            [
+              "Gap",
+              "Asked Aug 10, chased Aug 12, no reply found"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Re: Eustis - Testing Request 8/10",
+              "https://mail.google.com/mail/u/0/#all/19fec5c8b105c982"
+            ]
+          ]
+        },
+        {
+          "title": "34 Edison — testing requested for Monday",
+          "meta": "Mon Aug 17 (requested) · Beacon Point Homes",
+          "status": "Needs confirmation",
+          "confidence": "Confirmed",
+          "flags": [
+            "New today",
+            "Not confirmed"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Nick Perez"
+            ],
+            [
+              "Inspector",
+              "Not assigned"
+            ],
+            [
+              "Gap",
+              "No proposal, no WO, no PO — request arrived 12:44 AM Aug 14 and is unread"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: 34 EDISON",
+              "https://mail.google.com/mail/u/0/#all/19ffdbad7ba6fb2a"
+            ]
+          ]
+        },
+        {
+          "title": "338A 26th Street and 2942B Summerall Circle",
+          "meta": "Fri Aug 14 (proposed by LCA) · Fort Eustis VA",
+          "status": "Needs confirmation",
+          "confidence": "Confirmed",
+          "flags": [
+            "Not confirmed"
+          ],
+          "fields": [
+            [
+              "Customer",
+              "Laurie Becker"
+            ],
+            [
+              "Paperwork",
+              "POs 1877321 and 1877310 already in hand"
+            ],
+            [
+              "Gap",
+              "Scott asked \"Can we schedule these for Friday?\" on Aug 10; no answer. 338A has since picked up a second scope item"
+            ]
+          ],
+          "evidence": [
+            [
+              "Gmail: Re: 338 26th Street #A LBP Testing",
+              "https://mail.google.com/mail/u/0/#all/19fdcf4e04d1ac44"
+            ]
+          ]
+        },
+        {
+          "title": "Franklin Township, NJ — radon test set-up",
+          "meta": "Tue Aug 25 or Wed Aug 26, 12:30-1:30 PM · Somerset NJ",
           "status": "Tentative",
           "confidence": "Likely",
+          "flags": [
+            "No project spine",
+            "No date"
+          ],
           "fields": [
             [
               "Customer",
-              "Christine Woodbury, Franklin Township NJ"
-            ],
-            [
-              "Sites",
-              "149 Girard Ave, 24 Austin Ave, 20 Archer Ave (lead + radon); 45 Van Doren Ave (lead only)"
-            ],
-            [
-              "Status",
-              "Soos Radon offered the slots Aug 11. Christine is away until Aug 24, no date picked, no estimate and no PO."
+              "Township of Franklin — Christine Woodbury"
             ],
             [
               "Inspector",
-              "Scott Gill for lead; Soos Radon for radon, pending the self-perform decision"
+              "Soos Radon for radon; lead scope not yet assigned"
+            ],
+            [
+              "Blocker",
+              "Christine out of office until Aug 24, so nothing can be confirmed with the township before then"
             ]
           ],
           "evidence": [
             [
-              "Gmail: Soos offers Aug 25/26 (Aug 11)",
-              "https://mail.google.com/mail/u/0/#all/19ff0f329d39772f"
+              "Gmail: Re: Inspections",
+              "https://mail.google.com/mail/u/0/#all/19fe376492b46467"
             ]
-          ],
-          "flags": [
-            "No date"
-          ]
-        },
-        {
-          "title": "JBWS Charleston — 221 Fletcher and 410 Knutson",
-          "meta": "No date set",
-          "status": "Needs Review",
-          "confidence": "Confirmed",
-          "fields": [
-            [
-              "Customer",
-              "Robert Kirtland, JBWS Charleston Homes"
-            ],
-            [
-              "Work orders",
-              "WO 10612256 and WO 10594458, both live"
-            ],
-            [
-              "Status",
-              "Pricing and scheduling requested; no proposal and no date. Repairs are waiting behind the testing."
-            ]
-          ],
-          "evidence": [
-            [
-              "Gmail: 221 Fletcher (Aug 11)",
-              "https://mail.google.com/mail/u/0/#all/19ff0cf9c204a6e0"
-            ],
-            [
-              "Gmail: 410 Knutson (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff72158b032d1b"
-            ]
-          ],
-          "flags": [
-            "Overdue"
           ]
         }
       ]
@@ -1766,118 +2240,170 @@ const DATA = {
       "slack": "U06JSAY32GP",
       "items": [
         {
-          "title": "Confirm or release both Friday 8/14 Fort Eustis slots",
+          "title": "Answer EHC Impact on today's Fort Eustis testing",
           "priority": "High",
-          "detail": "Laurie Becker never replied to your Aug 10 request for 338A 26th Street and 2942B Summerall, and Tehsin Aurangabadwala has asked twice for the same Friday with no answer. Both units already carry POs.",
-          "next": "Reply to both threads today with a firm yes or no.",
+          "detail": "Asked Aug 10, chased Aug 12, and the requested date is today. No reply found in the mailbox.",
+          "next": "Reply this morning confirming today or offering the next concrete date.",
           "evidence": [
             [
-              "Gmail: \"Can we schedule these for Friday?\"",
-              "https://mail.google.com/mail/u/0/#all/19fec6097844f3a7"
-            ],
-            [
-              "Gmail: \"Any word for this Friday?\"",
-              "https://mail.google.com/mail/u/0/#all/19ff6be9701a8596"
+              "Gmail: Re: Eustis - Testing Request 8/10",
+              "https://mail.google.com/mail/u/0/#all/19fec5c8b105c982"
             ]
           ]
         },
         {
-          "title": "Send Franklin Township a priced cost estimate",
+          "title": "Reissue 19 Constitution Ave with the corrected address",
           "priority": "High",
-          "detail": "Christine Woodbury asked on Aug 8 for a cost estimate and three dates across four Somerset residences. She got availability but no pricing, and she is on vacation until Aug 24.",
-          "next": "Price all four residences and email the estimate now so it is waiting when she returns.",
+          "detail": "Price and time accepted; BBC will not sign until page 1, paragraph 1 reads 19 Constitution Ave. Inspection is Tue Aug 18 and it supports an eviction filing.",
+          "next": "Correct paragraph 1, sanity-check it in Trace, resend for signature today.",
           "evidence": [
             [
-              "Gmail: Inspections (Aug 8)",
-              "https://mail.google.com/mail/u/0/#all/19fe376492b46467"
+              "Gmail: Lead Cert RI Requirement",
+              "https://mail.google.com/mail/u/0/#all/19fdcc885773f07e"
             ]
           ]
         },
         {
-          "title": "Price 221 Fletcher and 410 Knutson",
+          "title": "Acknowledge Justin's Trace directive",
           "priority": "High",
-          "detail": "Both have live work orders (10612256, 10594458) and explicit asks for pricing and scheduling. Every other Charleston request this week was priced within a day.",
-          "next": "Send both proposals and offer a combined site visit.",
+          "detail": "Justin asked for an acknowledgement on Aug 13 and none is visible. QC coverage this week is 0 of 9 and none of the nine sent deliverables exists in Trace.",
+          "next": "Reply confirming, then agree one concrete rule — every proposal and report gets a Trace record before it leaves.",
+          "evidence": [
+            [
+              "Gmail: Fwd: Lead Cert RI Requirement",
+              "https://mail.google.com/mail/u/0/#all/19ffd32f29b9b17c"
+            ]
+          ]
+        },
+        {
+          "title": "Respond to 34 Edison — Monday testing requested",
+          "priority": "High",
+          "detail": "Nick Perez asked at 12:44 AM for Monday and the message is unread. Scope is ambiguous: full test versus sheet rock and tiles around the bay window.",
+          "next": "Confirm scope, price it, and either add it to Monday's Groton run or give a firm alternative date.",
+          "evidence": [
+            [
+              "Gmail: 34 EDISON",
+              "https://mail.google.com/mail/u/0/#all/19ffdbad7ba6fb2a"
+            ]
+          ]
+        },
+        {
+          "title": "Price and schedule 221 Fletcher",
+          "priority": "Medium",
+          "detail": "WO 10612256 requested Aug 11 and no proposal found. Every other Kirtland request this week turned around within a day.",
+          "next": "Send pricing and a date; say if it can ride along with the next Charleston field day.",
           "evidence": [
             [
               "Gmail: 221 Fletcher",
               "https://mail.google.com/mail/u/0/#all/19ff0cf9c204a6e0"
-            ],
-            [
-              "Gmail: 410 Knutson",
-              "https://mail.google.com/mail/u/0/#all/19ff72158b032d1b"
             ]
           ]
         },
         {
-          "title": "Give Elliott Johnson the Fort Carson gyp/texture counts",
+          "title": "Kasey Zook call — resident-facing radon summary",
           "priority": "Medium",
-          "detail": "Balfour Beatty will not discuss point counts until LCA says how many buildings and units are not testing hot for gyp/texture. It changes the sampling scope and the fee on the largest live draw project.",
-          "next": "Pull the results across the tested inventory and send Elliott the count.",
+          "detail": "First contact with a BBC regional environmental specialist. Call set for ~11 AM today. Justin wanted to shape the response first.",
+          "next": "Align with Justin before the call, then agree a reusable format rather than a one-off edit.",
           "evidence": [
             [
-              "Gmail: Fort Carson - Point Count (Aug 12)",
+              "Gmail: Radon Testing",
+              "https://mail.google.com/mail/u/0/#all/19ffc1362dbb0e31"
+            ]
+          ]
+        },
+        {
+          "title": "Fort Carson — gyp/texture hit count for Elliott Johnson",
+          "priority": "Medium",
+          "detail": "Elliott wants the count of buildings and units NOT testing hot before deciding on point counts. Recent results: 5726 ND, 5711 <1% (4), 5722 ND, 5723 2% (6).",
+          "next": "Pull the counts and reply with a clean tally rather than raw data.",
+          "evidence": [
+            [
+              "Gmail: Fort Carson - Point Count",
               "https://mail.google.com/mail/u/0/#all/19ff7c9706c8a791"
             ]
           ]
         },
         {
-          "title": "Answer Eurofins on the unlisted 5637 Cherbourg sample",
+          "title": "Answer Eurofins on the unlisted 5637-70 sample",
           "priority": "Medium",
-          "detail": "Sample 5637-70 is not on any COC and Eurofins needs a yes or no before analysing it. The 5637 Cherbourg portion of the Fort Carson batch cannot close until then.",
-          "next": "Authorise or decline the analysis in writing.",
+          "detail": "An extra sample arrived at the lab that is not on the COC. Until LCA answers, the 5637 Cherbourg Circle report is incomplete.",
+          "next": "Tell Eurofins yes or no in writing and reconcile the field notes.",
           "evidence": [
             [
-              "Gmail: 5637 Cherbourg - Extra Sample (Aug 12)",
+              "Gmail: 5637 Cherbourg Circle - Extra Sample",
               "https://mail.google.com/mail/u/0/#all/19ff67deba1a8a2a"
             ]
           ]
         },
         {
-          "title": "Answer Rob on the 258 Pelican sampling invoice",
+          "title": "78A&B Schofield — confirm 78B scope and NOB sample rate",
           "priority": "Medium",
-          "detail": "Rob holds an EMSL invoice for 3 PLMs and 3 PLM 400-point counts but LCA only invoiced a clearance. He has asked twice whether a full asbestos inspection was also performed.",
-          "next": "Tell Rob what work was actually done so he can bill it or write it off deliberately.",
+          "detail": "Rob only holds a proposal for 78A and had to guess on 4 PLM 198.6 NOB samples: $21 cost versus $31 historic charge. A revised invoice went out on that assumption.",
+          "next": "Confirm the scope and rate so Rob can correct the invoice.",
           "evidence": [
             [
-              "Gmail: 258 pelican (Aug 12)",
+              "Gmail: Re: USMA - 78A&B Schofield Place",
+              "https://mail.google.com/mail/u/0/#all/19f8b8fde17c6579"
+            ]
+          ]
+        },
+        {
+          "title": "82A & B Partridge Place — did the inspection happen?",
+          "priority": "Medium",
+          "detail": "A proposal was created the same day as 78A+B Schofield and no report ever followed. Either work was never done, or it was delivered and never billed.",
+          "next": "State whether the inspection occurred; produce the report or tell BBC the proposal is still open.",
+          "evidence": [
+            [
+              "Gmail: 82A & B Partridge Place",
+              "https://mail.google.com/mail/u/0/#all/19ff754bec98d3d2"
+            ]
+          ]
+        },
+        {
+          "title": "258 Pelican — confirm what was actually performed",
+          "priority": "Medium",
+          "detail": "EMSL billed 3 PLMs and 3 PLM 400-point counts but LCA only invoiced a clearance.",
+          "next": "Confirm the scope so Rob can raise a separate sample invoice if warranted.",
+          "evidence": [
+            [
+              "Gmail: 258 pelican",
               "https://mail.google.com/mail/u/0/#all/19ff70d9d5e7c5ef"
             ]
           ]
         },
         {
-          "title": "Complete the 107B radon work orders for West Point",
+          "title": "Send EHC Impact the NY and PA licenses",
           "priority": "Medium",
-          "detail": "Deb DePalma asked on Aug 13 for a completed WO 10438891 for radon testing already performed, and says she needs one per day of testing.",
-          "next": "Return the WO and confirm how many days need separate forms.",
+          "detail": "Requested Aug 6 \"by tomorrow\" — eight days overdue. Same partner also waiting on the Fort Eustis date.",
+          "next": "Send the license copies with the Fort Eustis reply so it is one message.",
           "evidence": [
             [
-              "Gmail: 107B WO# 10438891 (Aug 13)",
-              "https://mail.google.com/mail/u/0/#all/19ff89d80f03c523"
+              "Gmail: Copy of licenses",
+              "https://mail.google.com/mail/u/0/#all/19fd8559c85ba421"
             ]
           ]
         },
         {
-          "title": "Confirm 78B Schofield scope so Rob can finalise the invoice",
+          "title": "Confirm the Rhode Island lead license is current",
           "priority": "Medium",
-          "detail": "Rob holds a proposal for 78A Schofield but not 78B, and needs to know how to bill four PLM 198.6 NOB samples charged at $21 and historically billed at $31.",
-          "next": "Confirm scope and pricing back to Rob.",
+          "detail": "An RI lead inspection is booked for Tue Aug 18 supporting an eviction filing, and RI licensing sits on your own Aug 13 notes as an open item.",
+          "next": "Confirm the credential is current and on file before Tuesday.",
           "evidence": [
             [
-              "Gmail: Re: 78A&B Schofield Place (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff729a976641b7"
+              "Gmail: Re: Notes",
+              "https://mail.google.com/mail/u/0/#all/19ffc06800679282"
             ]
           ]
         },
         {
-          "title": "Close out the 304D Madison Avenue proposal gap",
+          "title": "Grand Forks AFB — call to get the ESR moving",
           "priority": "Medium",
-          "detail": "The report went out Aug 10 and was invoiced Aug 11 with no proposal on file — the same pattern that produced the 246 Ohio Avenue dispute at New London.",
-          "next": "Locate or retro-issue the proposal and check the invoice matches.",
+          "detail": "BBC Environmental approved the sampling proposal Jul 28 and asked Gabriel Hayes to coordinate and submit an ESR. Seventeen days, no movement. $1,250/unit versus Minot's $875.",
+          "next": "Call Gabriel Hayes and Chad Vincent to get the ESR submitted and a unit count confirmed.",
           "evidence": [
             [
-              "Gmail: \"do you have a proposal for 304D Madison?\"",
-              "https://mail.google.com/mail/u/0/#all/19fed3f3b8692c08"
+              "Gmail: RE: Grand Forks - Proposal",
+              "https://mail.google.com/mail/u/0/#all/19fa9a7a6600c1e0"
             ]
           ]
         }
@@ -1890,82 +2416,86 @@ const DATA = {
       "slack": "U06K08QHG3G",
       "items": [
         {
-          "title": "Finalise the 78A&B Schofield Place invoice",
+          "title": "78A&B Schofield — missing 78B proposal, NOB pricing unresolved",
           "priority": "Medium",
-          "detail": "No invoice was ever issued for a report delivered July 22, the proposal covers 78A only, and the NOB sample pricing is unresolved. You have issued one invoice and one revision without confirmation.",
-          "next": "Hold until Scott confirms scope and NOB pricing, then reissue once.",
+          "detail": "The report went out Jul 22 and was never invoiced until this week. You only hold a proposal for 78A, and the 4 PLM 198.6 NOB samples were billed on an assumption ($21 cost, $31 historic charge).",
+          "next": "Once Scott confirms, correct the invoice and file the missing 78B proposal.",
           "evidence": [
             [
-              "Gmail: Re: 78A&B Schofield Place (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff729a976641b7"
-            ],
-            [
-              "Gmail: revised invoice (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff77c4fa9737ee"
+              "Gmail: Re: USMA - 78A&B Schofield Place",
+              "https://mail.google.com/mail/u/0/#all/19f8b8fde17c6579"
             ]
           ]
         },
         {
-          "title": "Chase the 304D Madison Avenue proposal",
+          "title": "82A & B Partridge Place — proposal with no report",
           "priority": "Medium",
-          "detail": "You invoiced Aug 11 without an answer on whether a proposal exists. Without one there is no agreed price to point at if Fort Eustis queries it.",
-          "next": "Get the proposal from Scott or retro-issue it before the invoice is paid.",
+          "detail": "You raised this Aug 12 and it is still unanswered. Risk is delivered work that was never billed.",
+          "next": "Chase Scott for a yes/no on whether the inspection happened.",
           "evidence": [
             [
-              "Gmail: Re: Fort Eustis - Reports for August 3 (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19fed3f3b8692c08"
+              "Gmail: 82A & B Partridge Place",
+              "https://mail.google.com/mail/u/0/#all/19ff754bec98d3d2"
             ]
           ]
         },
         {
-          "title": "Complete the 107B radon work order with Scott",
+          "title": "258 Pelican — EMSL charges with no matching LCA line",
           "priority": "Medium",
-          "detail": "Deb DePalma needs WO 10438891 returned, and one form per day of testing. Unreturned WOs are the recurring cause of stalled Balfour Beatty payments this quarter.",
-          "next": "Coordinate with Scott and return the forms.",
+          "detail": "EMSL invoiced 3 PLMs and 3 PLM 400-point counts; LCA only invoiced a clearance. Either unbilled work or absorbed lab cost.",
+          "next": "Raise a separate sample invoice once Scott confirms what was performed.",
           "evidence": [
             [
-              "Gmail: 107B WO# 10438891 (Aug 13)",
-              "https://mail.google.com/mail/u/0/#all/19ff89d80f03c523"
+              "Gmail: 258 pelican",
+              "https://mail.google.com/mail/u/0/#all/19ff70d9d5e7c5ef"
             ]
           ]
         },
         {
-          "title": "File Scott's new MDEQ Mississippi asbestos inspector certification",
+          "title": "Apply the new rule: no sub or lab check without a matching LCA unit invoice",
+          "priority": "Medium",
+          "detail": "Issued Aug 10 mid-way through paying Big East invoice 26121 ($450, from February, missed on two remittances). 258 Pelican and 78A&B Schofield are both instances of this leak.",
+          "next": "Confirm the check-writing process includes the invoice check, and sweep outstanding lab invoices for other unbilled units.",
+          "evidence": [
+            [
+              "Gmail: Re: Invoice 26121 from Big East",
+              "https://mail.google.com/mail/u/0/#all/19cb966942297afc"
+            ]
+          ]
+        },
+        {
+          "title": "532B Winans Road — Renovations or Facilities?",
+          "priority": "Medium",
+          "detail": "You cannot invoice until this is classified, and both BBC recipients auto-replied out of office.",
+          "next": "Get the classification from Scott so the invoice can go out.",
+          "evidence": [
+            [
+              "Gmail: USMA - 532B Winans Road",
+              "https://mail.google.com/mail/u/0/#all/19fecba1699d63ec"
+            ]
+          ]
+        },
+        {
+          "title": "304D Madison Avenue — invoiced without a proposal on file",
+          "priority": "Medium",
+          "detail": "You asked Aug 10 whether a proposal exists and invoiced Aug 11 without an answer.",
+          "next": "Reconstruct the paperwork so the file is complete.",
+          "evidence": [
+            [
+              "Gmail: Re: Fort Eustis - Reports for August 3",
+              "https://mail.google.com/mail/u/0/#all/19feca1adc3b7bfa"
+            ]
+          ]
+        },
+        {
+          "title": "ICHRA and HSA administration pricing — now overdue",
           "priority": "Low",
-          "detail": "MDEQ issued the certificate Aug 12. EHC Impact asked for NY and PA licences on Aug 6 with no visible reply, so the register is worth a pass while you are in it.",
-          "next": "Save the certificate, log the expiry, and confirm the NY/PA licences went out.",
+          "detail": "Justin said \"let's discuss early next week\" on Aug 8; that week has passed and the target effective date is September 1.",
+          "next": "Put 20 minutes on the calendar and send the request to Paychex this week.",
           "evidence": [
             [
-              "Gmail: Asbestos Inspector Certification (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff6fa6a66826be"
-            ],
-            [
-              "Gmail: Copy of licenses (Aug 6)",
-              "https://mail.google.com/mail/u/0/#all/19fd8559c85ba421"
-            ]
-          ]
-        },
-        {
-          "title": "Settle the ICHRA and HSA pricing with Paychex",
-          "priority": "Low",
-          "detail": "The pricing request was drafted Aug 8 for discussion early last week, with a September 1 effective date. That week has passed without a visible decision.",
-          "next": "Hold the discussion this week and send it, or move the effective date.",
-          "evidence": [
-            [
-              "Gmail: ICHRA and HSA pricing request (Aug 8)",
+              "Gmail: ICHRA and HSA administration – pricing request",
               "https://mail.google.com/mail/u/0/#all/19fe14d06bfcbdf7"
-            ]
-          ]
-        },
-        {
-          "title": "Reconcile the inbound wire fee",
-          "priority": "Low",
-          "detail": "A $15 fee was charged on an inbound wire and the question of whether LCA was also charged $30 was never answered.",
-          "next": "Confirm the outbound side and close the thread.",
-          "evidence": [
-            [
-              "Gmail: Fwd: You've received a wire (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19feb1e4a2b7f5c2"
             ]
           ]
         }
@@ -1974,78 +2504,66 @@ const DATA = {
     {
       "name": "Justin Mastykarz",
       "role": "President",
-      "color": "#b45309",
+      "color": "#059669",
       "slack": "U06K403NN8M",
       "items": [
         {
-          "title": "Answer BBC on striking the Contractual Provisions pages from Lusk SCO 02",
+          "title": "Trace directive — get an acknowledgement and set one concrete rule",
           "priority": "High",
-          "detail": "BBC's legal team will not push SCO 02 through while pages 6–7 and 12–13 remain, saying they were not in the executed PSA. Justin Donoghue asked outright whether LCA objects. Those pages are LCA's contractual protections.",
-          "next": "Review 095-WP-P2502-02 LCA.pdf against the PSA and reply, either agreeing to strike or countering.",
+          "detail": "You asked Scott to acknowledge on Aug 13 and nothing has come back. QC coverage this week is 0 of 9 and none of the nine sent deliverables exists in Trace in any form.",
+          "next": "Agree a single enforceable rule rather than a general intention — e.g. every proposal and report gets a Trace record before it leaves.",
           "evidence": [
             [
-              "Gmail: BBC-0095-WP-P2502 / SCO 02 / Lusk (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff6a2b4ce5112f"
+              "Gmail: Fwd: Lead Cert RI Requirement",
+              "https://mail.google.com/mail/u/0/#all/19ffd32f29b9b17c"
             ]
           ]
         },
         {
-          "title": "Decide whether LCA self-performs radon at Franklin Township",
-          "priority": "High",
-          "detail": "The open question of whether Soos is still doing radon changes the price, the margin, and who LCA presents as responsible on a brand-new municipal account. It gates the estimate Scott needs to send.",
-          "next": "Confirm Soos's status and tell Scott how to quote the radon line.",
-          "evidence": [
-            [
-              "Gmail: \"Is Soos even doing radon any more?\" (Aug 10)",
-              "https://mail.google.com/mail/u/0/#all/19feb1d375e177c0"
-            ]
-          ]
-        },
-        {
-          "title": "Decide whether the Trace QC convention is actually in use",
-          "priority": "High",
-          "detail": "All nine deliverables sent this week have no Trace report record at all, and no QC-named record exists anywhere. Trace logged zero activity for the full seven days. The report cannot tell whether QC is happening off-tool or not happening.",
-          "next": "Name who creates QC records in Trace, or say plainly that QC lives elsewhere so the metric can be redefined.",
-          "evidence": [
-            [
-              "Trace: LCA organization",
-              "https://trace.erblue.com/#/o/LCA"
-            ]
-          ]
-        },
-        {
-          "title": "Chase Sid Hussain for the Florida licence documents",
+          "title": "Grand Forks AFB — approved Jul 28, no movement since",
           "priority": "Medium",
-          "detail": "The DBPR ALU 11 application under the 10-year endorsement path waives the Florida exam, but cannot be filed until Sid returns the supporting documents requested Aug 12.",
-          "next": "Follow up within a week and set a target filing date.",
+          "detail": "BBC Environmental approved the sampling proposal and asked Gabriel Hayes to submit an ESR. This is Minot's successor at $1,250/unit versus $875 — a 25% uplift on a program LCA has already delivered.",
+          "next": "Call Chad Vincent and Gabriel Hayes to get the ESR submitted and a unit count confirmed.",
           "evidence": [
             [
-              "Gmail: Florida Asbestos Consultant License (Aug 12)",
-              "https://mail.google.com/mail/u/0/#all/19ff709cdd6dc75b"
-            ]
-          ]
-        },
-        {
-          "title": "Decide whether Grand Forks is live or parked",
-          "priority": "Medium",
-          "detail": "BBC Environmental approved the sampling proposal on July 28 and asked Gabriel Hayes to submit an ESR. Sixteen days on there is no movement, no Trace project and no tracker. Pricing is set at $1,250/unit.",
-          "next": "Nudge Gabriel Hayes on the ESR or park it explicitly.",
-          "evidence": [
-            [
-              "Gmail: Grand Forks - BBC approval (Jul 28)",
+              "Gmail: RE: Grand Forks - Proposal",
               "https://mail.google.com/mail/u/0/#all/19fa9a7a6600c1e0"
             ]
           ]
         },
         {
-          "title": "Settle the ICHRA and HSA pricing with Paychex",
-          "priority": "Low",
-          "detail": "Discussion was meant to happen early last week for a September 1 effective date.",
-          "next": "Close it out with Rob this week.",
+          "title": "Kasey Zook — shape the resident-facing radon response",
+          "priority": "Medium",
+          "detail": "You said you wanted to think about the response before Scott replies, and a call is set for ~11 AM today. First contact with a BBC regional environmental specialist.",
+          "next": "Align with Scott before the call and decide on a standard resident-summary format.",
           "evidence": [
             [
-              "Gmail: ICHRA and HSA pricing request (Aug 8)",
-              "https://mail.google.com/mail/u/0/#all/19fe14d06bfcbdf7"
+              "Gmail: Re: Radon Testing",
+              "https://mail.google.com/mail/u/0/#all/19ffc1362dbb0e31"
+            ]
+          ]
+        },
+        {
+          "title": "Florida asbestos consultant license — chase Sid's documents",
+          "priority": "Low",
+          "detail": "You sent the DBPR Form ALU 11 document list on Aug 12. The ten-year endorsement path waives the Florida exam but depends on documents LCA does not hold.",
+          "next": "Chase the document set from Sid; nothing else can proceed until it arrives.",
+          "evidence": [
+            [
+              "Gmail: Florida Asbestos Consultant License",
+              "https://mail.google.com/mail/u/0/#all/19ff709cdd6dc75b"
+            ]
+          ]
+        },
+        {
+          "title": "Jennifer Sterin / Mitchel — plan and cost to finish",
+          "priority": "Low",
+          "detail": "Carried on Scott's Aug 13 notes as yours to work on, with open questions on roofing and Wyoming. No supporting thread in this window.",
+          "next": "Say what the scope is so it can be tracked properly.",
+          "evidence": [
+            [
+              "Gmail: Re: Notes",
+              "https://mail.google.com/mail/u/0/#all/19ffc06800679282"
             ]
           ]
         }
@@ -2056,65 +2574,66 @@ const DATA = {
     {
       "name": "Fort Carson (24-101)",
       "state": "active",
-      "note": "Busiest program this week — lab results, three eCOCs, and an open point-count data request."
+      "note": "Five Cherbourg/Falaise sample sets at Eurofins; point-count decision waiting on a gyp/texture hit count for Elliott Johnson."
     },
     {
-      "name": "Minot AFB",
+      "name": "Minot AFB (26-024)",
       "state": "dormant",
-      "note": "Wound down in May; successor Grand Forks has a BBC-approved proposal stalled 16 days awaiting an ESR."
+      "note": "Closed out in May, final balance invoiced May 22; only a photo package outstanding. No Trace presence at all — expected, not a gap."
+    },
+    {
+      "name": "Grand Forks AFB (successor)",
+      "state": "watch",
+      "note": "BBC Environmental approved the sampling proposal Jul 28 and asked for an ESR. Seventeen days, no movement. $1,250/unit vs Minot's $875."
     },
     {
       "name": "USMA / West Point",
       "state": "active",
-      "note": "Four fronts live; the Lusk SCO is blocked on a contract-terms decision."
+      "note": "532B Winans Road delivered but unclassified for invoicing; BBC wants a resident-facing radon summary; 78A&B Schofield and 82A&B Partridge both have paperwork gaps."
     },
     {
       "name": "Charleston (JBWS)",
       "state": "active",
-      "note": "Nine threads — four reports out, five new requests, two still unpriced."
+      "note": "Busiest account this week — four reports out, a six-property field day Aug 10, and four new requests. 221 Fletcher still unpriced."
     },
     {
-      "name": "Fort Eustis",
-      "state": "watch",
-      "note": "Delivering reports monthly with zero Trace records, and two parties waiting on tomorrow's date."
+      "name": "Fort Eustis (26-009)",
+      "state": "active",
+      "note": "Two reports delivered and invoiced; two proposals with POs awaiting a date; EHC Impact has been waiting since Aug 10 for today's slot."
     }
   ],
   "review": [
     [
-      "Tracker vs Trace",
-      "Ten Trace projects have no tracker xlsx and five tracker projects have no Trace presence — the spine and the reporting tool disagree on 15 projects."
+      "Revenue with no project spine",
+      "Lower Bucks Hospital, Picatinny (104 Farley Lane), Franklin Township NJ and HABcore all had work or billing this window with neither a tracker xlsx nor a Trace project."
     ],
     [
-      "Lakehurst off both tools",
-      "A full proposal-to-PO-to-report cycle ran Aug 11 with no Trace project of any kind."
+      "Tracker vs Trace mismatch",
+      "The tracker spine holds 13 projects; Trace holds 18, including NJ Lead Safe 475 and 477 W Front Street as two distinct projects, 813 W Third Street, Princeton Lawrence, USMA B132 Bartlett and Fort Gordon Azalea Terrace."
     ],
     [
-      "Sites with no spine",
-      "Picatinny and Fort Story have billed work with neither a tracker nor a Trace project; Lower Bucks Hospital and Franklin Township are heading the same way."
+      "Zero Trace records touched Aug 8-14",
+      "But template work was active Aug 4 and Aug 6. The precise finding is that this week's sent deliverables have no matching project drafts — not that anyone stopped using Trace."
     ],
     [
-      "Grand Forks ESR",
-      "Approved July 28, nothing since. Live or parked?"
+      "Is Soos still doing radon?",
+      "Justin asked Aug 10 and it is unanswered. Soos has since offered dates for the week of Aug 24, which suggests yes — but it changes the shape of the Franklin Township job."
     ],
     [
-      "Princeton Lawrence Apartments",
-      "Princeton cannot line up an escort and is pushing the work out. Needs a revised target date."
+      "What belongs in a resident-facing radon summary?",
+      "There is a real question about liability and about what gets omitted. Agreeing a standard format beats editing one PDF."
     ],
     [
-      "215 Fletcher",
-      "Unverified whether it was inspected on the Monday batch — resident access was never confirmed."
+      "Lower Bucks abatement referral",
+      "Scott declined abatement on conflict-of-interest grounds and offered to source recommendations. Confirm a referral does not create the same conflict."
     ],
     [
-      "Eurofins layered materials",
-      "The July 1 question about being charged for layered-material analysis, and Justin's refund instruction, is still unresolved."
+      "Was 215 Fletcher actually accessed on Aug 10?",
+      "Kirtland had not reached the resident as of Aug 7. Confirm before the Charleston reports are drafted."
     ],
     [
-      "Freehold zoning",
-      "The 1 Cottage Place Lead Safe Certificate was copied to Freehold Township zoning instead of the Borough. Confirm it was resent."
-    ],
-    [
-      "Trace silence",
-      "No reports, datasets, templates, snippets, licences or attachments were touched in Trace for the full seven days."
+      "Unmapped items on Scott's Aug 13 notes",
+      "86 Wood Avenue block/lot, \"Schedule 132, call Trini\", the PA DMV visit, and calls owed to Paul Kelley, Josh Nestor and Anthony Brown have no supporting thread in this window."
     ]
   ]
 };
@@ -2269,7 +2788,7 @@ function live(){
   /* static GitHub Pages build — no window.cowork bridge here, so no live Gmail delta */
   const dot=document.getElementById("liveDot"), out=document.getElementById("liveStamp");
   dot.className="dot ok";
-  out.textContent="Static snapshot · Aug 13, 2026";
+  out.textContent="Static snapshot · Aug 14, 2026";
   out.style.cursor="default";
 }
 
